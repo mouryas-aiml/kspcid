@@ -1,0 +1,123 @@
+{
+  "generation_version": "kspcid-etl-1.0.0",
+  "updated_at": "2026-07-25T19:39:42.339Z",
+  "entries": {
+    "app/data/derived/incident_stations.parquet": {
+      "step": "02_station_crosswalk",
+      "path": "app/data/derived/incident_stations.parquet",
+      "rows": 425408,
+      "sha256": "e5c29bf2ba6c7bfb2c31db188feff20e52bb044d7a6f05c001ee639200948333",
+      "bytes": 11998100,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents_raw.parquet",
+          "sha256": "175fdbdc5d3f822cb3e72e728e434bf0c970a2a86203fff948f31375356be3bb"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T19:39:27.686Z",
+      "notes": {
+        "case_refs_assigned": 425408
+      }
+    },
+    "app/data/derived/incidents.parquet": {
+      "step": "03_geo_resolve",
+      "path": "app/data/derived/incidents.parquet",
+      "rows": 425408,
+      "sha256": "0a1370f82e1ce5c1f25fccb27fb50f122c93e5e43f178b6f6a5c23b715849ba1",
+      "bytes": 28643878,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        },
+        {
+          "path": "app/reference/processed/anchors.json",
+          "sha256": "b574d9cc990bd0418fbec0a5c81080f8a11f971bb17d7c805f5beb5dda8f72b1"
+        },
+        {
+          "path": "app/Data_Docs/third_party/kaggle/fir_details_karnataka_police_v2/FIR_Details_Data.csv",
+          "sha256": "9191e0caebf62d6cfb625800ded84fbb492d9ea59ffe9359b51fd2c33172a604"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T19:39:42.339Z",
+      "notes": {
+        "tiers": {
+          "reported": 104443,
+          "inferred": 192241,
+          "reported_corrected": 8209,
+          "unlocatable": 120515
+        },
+        "boundary_corrections": 8209,
+        "demoted_non_adjacent": 4178,
+        "anchor_class_fallbacks": 0,
+        "pin_eligible": 112652
+      }
+    },
+    "app/data/derived/incidents_raw.parquet": {
+      "step": "01_ingest_fir",
+      "path": "app/data/derived/incidents_raw.parquet",
+      "rows": 425408,
+      "sha256": "175fdbdc5d3f822cb3e72e728e434bf0c970a2a86203fff948f31375356be3bb",
+      "bytes": 24503021,
+      "inputs": [
+        {
+          "path": "app/Data_Docs/third_party/kaggle/fir_details_karnataka_police_v2/FIR_Details_Data.csv",
+          "sha256": "9191e0caebf62d6cfb625800ded84fbb492d9ea59ffe9359b51fd2c33172a604"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T19:39:25.950Z",
+      "notes": {
+        "source_rows_scanned": 1674734,
+        "within_complete_window": 412754,
+        "outside_complete_window": 12654,
+        "analysis_cutoff": "2023-12-31",
+        "rejects": 0
+      }
+    },
+    "app/data/derived/statewide_rollup.parquet": {
+      "step": "01_ingest_fir",
+      "path": "app/data/derived/statewide_rollup.parquet",
+      "rows": 19599,
+      "sha256": "e488ed2f31454ca0d8b6a2fa35e1cfc88517423382f1bf030b6ef9a050bf5394",
+      "bytes": 36406,
+      "inputs": [
+        {
+          "path": "app/Data_Docs/third_party/kaggle/fir_details_karnataka_police_v2/FIR_Details_Data.csv",
+          "sha256": "9191e0caebf62d6cfb625800ded84fbb492d9ea59ffe9359b51fd2c33172a604"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T19:39:25.950Z"
+    },
+    "app/data/derived/stations.parquet": {
+      "step": "02_station_crosswalk",
+      "path": "app/data/derived/stations.parquet",
+      "rows": 178,
+      "sha256": "780edb656c93f727e297390752e7ba225352d7b96f0b0b4053bd8c03ffda2d69",
+      "bytes": 5422,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        },
+        {
+          "path": "app/Data_Docs/official/opencity/police_station_locations/bengaluru_urban_police_stations.kml",
+          "sha256": "6958c742c89022b0f9d9f60d3f2db9df31a133388735e5ccd8fc9fabe465cacd"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T19:39:27.667Z",
+      "notes": {
+        "units_total": 178,
+        "territorial": 106,
+        "non_territorial": 62,
+        "unresolved": 0,
+        "polygons_claimed": 106,
+        "polygons_total": 106
+      }
+    }
+  }
+}

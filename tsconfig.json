@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // The legacy HMAC choice function lives in scripts/ and is reused verbatim
+    // (BUILD_SPEC §6.1). allowJs lets etl/lib/hash.ts import it; checkJs stays
+    // off because that file is frozen LA-donor code we do not type or modify.
+    // No rootDir is set — one would exclude scripts/.
+    "allowJs": true,
+    "checkJs": false,
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["etl/**/*.ts", "scripts/lib.mjs"],
+  "exclude": ["node_modules", "etl/__fixtures__"]
+}

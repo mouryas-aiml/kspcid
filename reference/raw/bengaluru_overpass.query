@@ -1,0 +1,10 @@
+[out:json][timeout:240][maxsize:268435456];
+(
+  way["highway"]["name"](12.7300,77.3500,13.1800,77.8500);
+  node["amenity"](12.7300,77.3500,13.1800,77.8500);
+  node["shop"](12.7300,77.3500,13.1800,77.8500);
+  node["public_transport"](12.7300,77.3500,13.1800,77.8500);
+  node["railway"~"station|halt|tram_stop"](12.7300,77.3500,13.1800,77.8500);
+  node["leisure"~"park|playground|sports_centre"](12.7300,77.3500,13.1800,77.8500);
+);
+out geom;

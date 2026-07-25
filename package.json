@@ -1,0 +1,39 @@
+{
+  "name": "kspcid",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "KSPCID — Karnataka Police State Crime Intelligence Dashboard. Build-time ETL compiler (BUILD_SPEC §2.2, §6.4). Nothing here is deployed.",
+  "scripts": {
+    "etl:audit": "tsx etl/00_audit_data_truth.ts",
+    "lint:truth": "tsx etl/lint_data_truth.ts",
+    "etl:01": "tsx etl/01_ingest_fir.ts",
+    "etl:02": "tsx etl/02_station_crosswalk.ts",
+    "etl:03": "tsx etl/03_geo_resolve.ts",
+    "etl:spine": "tsx etl/audit_demo_spine.ts",
+    "typecheck": "tsc --noEmit",
+    "verify": "tsx etl/verify_reconciliation.ts",
+    "etl:all": "npm run etl:01 && npm run etl:02 && npm run etl:03 && npm run etl:spine",
+    "check": "npm run typecheck && npm run lint:truth && npm run verify",
+    "donor:refs": "node scripts/prepare-references.mjs",
+    "donor:generate": "node scripts/generate-dataset.mjs",
+    "donor:validate": "node scripts/validate-dataset.mjs",
+    "donor:build": "npm run donor:refs && npm run donor:generate && npm run donor:validate"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "1.4.0-r.1",
+    "@turf/turf": "7.2.0",
+    "csv-parse": "6.1.0",
+    "csv-stringify": "6.6.0",
+    "fast-xml-parser": "^5.10.1",
+    "h3-js": "4.2.1",
+    "parquetjs-lite": "0.8.7",
+    "uuid": "^11.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "tsx": "^4.23.1",
+    "typescript": "5.7.2",
+    "zcatalyst-cli": "^1.27.0"
+  }
+}

@@ -1,0 +1,1564 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="blr_police_station_locs" id="blr_police_station_locs">
+	<SimpleField name="OBJECTID" type="float"></SimpleField>
+	<SimpleField name="DepartmentCode" type="string"></SimpleField>
+	<SimpleField name="KGISVillageID" type="float"></SimpleField>
+	<SimpleField name="KGISWardID" type="float"></SimpleField>
+	<SimpleField name="KGISCode" type="string"></SimpleField>
+	<SimpleField name="KGISPOL_STAID" type="int"></SimpleField>
+	<SimpleField name="POL_STAName" type="string"></SimpleField>
+	<SimpleField name="KGISPSCode" type="string"></SimpleField>
+</Schema>
+<Folder><name>blr_police_station_locs</name>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">81</SimpleData>
+		<SimpleData name="DepartmentCode">164431398</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0003</SimpleData>
+		<SimpleData name="KGISPOL_STAID">84</SimpleData>
+		<SimpleData name="POL_STAName">Cubbon Park PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 84</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5979641429556,12.9800298427157</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">82</SimpleData>
+		<SimpleData name="DepartmentCode">164431397</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0004</SimpleData>
+		<SimpleData name="KGISPOL_STAID">85</SimpleData>
+		<SimpleData name="POL_STAName">Vidhana Soudha PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 85</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5886142885905,12.9773209692159</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">83</SimpleData>
+		<SimpleData name="DepartmentCode">164431390</SimpleData>
+		<SimpleData name="KGISVillageID">15151</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0005</SimpleData>
+		<SimpleData name="KGISPOL_STAID">86</SimpleData>
+		<SimpleData name="POL_STAName">Viveknagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 86</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6222989999259,12.951547000394</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">84</SimpleData>
+		<SimpleData name="DepartmentCode">164431386</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0006</SimpleData>
+		<SimpleData name="KGISPOL_STAID">87</SimpleData>
+		<SimpleData name="POL_STAName">Halasurgate PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 87</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5867767998637,12.9679059997634</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">85</SimpleData>
+		<SimpleData name="DepartmentCode">164431391</SimpleData>
+		<SimpleData name="KGISVillageID">15150</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0007</SimpleData>
+		<SimpleData name="KGISPOL_STAID">88</SimpleData>
+		<SimpleData name="POL_STAName">Sampangiramanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 88</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5921599999535,12.9630649998591</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">86</SimpleData>
+		<SimpleData name="DepartmentCode">164431388</SimpleData>
+		<SimpleData name="KGISVillageID">15075</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0008</SimpleData>
+		<SimpleData name="KGISPOL_STAID">89</SimpleData>
+		<SimpleData name="POL_STAName">Wilsongarden PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 89</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5961980000424,12.9500430001231</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">87</SimpleData>
+		<SimpleData name="DepartmentCode">164431394</SimpleData>
+		<SimpleData name="KGISVillageID">15087</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0009</SimpleData>
+		<SimpleData name="KGISPOL_STAID">90</SimpleData>
+		<SimpleData name="POL_STAName">High Grounds PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 90</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5927664453475,12.9899573531302</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">88</SimpleData>
+		<SimpleData name="DepartmentCode">164431396</SimpleData>
+		<SimpleData name="KGISVillageID">15168</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0010</SimpleData>
+		<SimpleData name="KGISPOL_STAID">91</SimpleData>
+		<SimpleData name="POL_STAName">Sadashivanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 91</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5725447841245,13.0149094111584</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">89</SimpleData>
+		<SimpleData name="DepartmentCode">164431393</SimpleData>
+		<SimpleData name="KGISVillageID">30090</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0011</SimpleData>
+		<SimpleData name="KGISPOL_STAID">92</SimpleData>
+		<SimpleData name="POL_STAName">Seshadripuram PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 92</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5735902002227,12.9879292996002</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">90</SimpleData>
+		<SimpleData name="DepartmentCode">164431395</SimpleData>
+		<SimpleData name="KGISVillageID">15161</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0012</SimpleData>
+		<SimpleData name="KGISPOL_STAID">93</SimpleData>
+		<SimpleData name="POL_STAName">Vyalikaval PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 93</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5786416004447,13.0014925000938</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">91</SimpleData>
+		<SimpleData name="DepartmentCode">164431406</SimpleData>
+		<SimpleData name="KGISVillageID">15124</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0013</SimpleData>
+		<SimpleData name="KGISPOL_STAID">94</SimpleData>
+		<SimpleData name="POL_STAName">Banaswadi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 94</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6403087004,13.0196345004026</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">92</SimpleData>
+		<SimpleData name="DepartmentCode">164431402</SimpleData>
+		<SimpleData name="KGISVillageID">15088</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0014</SimpleData>
+		<SimpleData name="KGISPOL_STAID">95</SimpleData>
+		<SimpleData name="POL_STAName">Devarajeevanahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 95</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6103367001824,13.0093318996255</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">93</SimpleData>
+		<SimpleData name="DepartmentCode">164431408</SimpleData>
+		<SimpleData name="KGISVillageID">21401</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0015</SimpleData>
+		<SimpleData name="KGISPOL_STAID">96</SimpleData>
+		<SimpleData name="POL_STAName">Hennur PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 96</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6457466922352,13.024142138905</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">94</SimpleData>
+		<SimpleData name="DepartmentCode">164431407</SimpleData>
+		<SimpleData name="KGISVillageID">15124</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0016</SimpleData>
+		<SimpleData name="KGISPOL_STAID">97</SimpleData>
+		<SimpleData name="POL_STAName">Kadugondana Halli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 97</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6274595998832,13.0250519004078</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">95</SimpleData>
+		<SimpleData name="DepartmentCode">164431409</SimpleData>
+		<SimpleData name="KGISVillageID">21404</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0017</SimpleData>
+		<SimpleData name="KGISPOL_STAID">98</SimpleData>
+		<SimpleData name="POL_STAName">Ramamurthy Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 98</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6676147006279,13.0121958894059</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">96</SimpleData>
+		<SimpleData name="DepartmentCode">164431411</SimpleData>
+		<SimpleData name="KGISVillageID">21387</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0018</SimpleData>
+		<SimpleData name="KGISPOL_STAID">99</SimpleData>
+		<SimpleData name="POL_STAName">Byappanahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 99</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6568733672614,12.99146656405</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">97</SimpleData>
+		<SimpleData name="DepartmentCode">164431410</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0019</SimpleData>
+		<SimpleData name="KGISPOL_STAID">100</SimpleData>
+		<SimpleData name="POL_STAName">Halasur PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 100</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6253330610102,12.9748128797954</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">98</SimpleData>
+		<SimpleData name="DepartmentCode">164431412</SimpleData>
+		<SimpleData name="KGISVillageID">15118</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0020</SimpleData>
+		<SimpleData name="KGISPOL_STAID">101</SimpleData>
+		<SimpleData name="POL_STAName">Indiranagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 101</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.638280000055,12.9829857001463</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">99</SimpleData>
+		<SimpleData name="DepartmentCode">164431413</SimpleData>
+		<SimpleData name="KGISVillageID">21477</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0021</SimpleData>
+		<SimpleData name="KGISPOL_STAID">102</SimpleData>
+		<SimpleData name="POL_STAName">Jeevan Bheemanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 102</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6553852996563,12.9676990004541</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">100</SimpleData>
+		<SimpleData name="DepartmentCode">164431401</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0022</SimpleData>
+		<SimpleData name="KGISPOL_STAID">103</SimpleData>
+		<SimpleData name="POL_STAName">Bharathi Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 103</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6120856003067,12.9912025002823</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">101</SimpleData>
+		<SimpleData name="DepartmentCode">164431400</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0023</SimpleData>
+		<SimpleData name="KGISPOL_STAID">104</SimpleData>
+		<SimpleData name="POL_STAName">Commercial Street PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 104</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6064306996423,12.9820757996245</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">102</SimpleData>
+		<SimpleData name="DepartmentCode">164431399</SimpleData>
+		<SimpleData name="KGISVillageID">15123</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0024</SimpleData>
+		<SimpleData name="KGISPOL_STAID">105</SimpleData>
+		<SimpleData name="POL_STAName">Pulakeshinagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 105</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6196531704426,12.9992725573424</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">103</SimpleData>
+		<SimpleData name="DepartmentCode">164431403</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0025</SimpleData>
+		<SimpleData name="KGISPOL_STAID">106</SimpleData>
+		<SimpleData name="POL_STAName">Shivajinagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 106</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6052475001124,12.9855097999292</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">113</SimpleData>
+		<SimpleData name="DepartmentCode">164431384</SimpleData>
+		<SimpleData name="KGISVillageID">15680</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0072</SimpleData>
+		<SimpleData name="KGISPOL_STAID">158</SimpleData>
+		<SimpleData name="POL_STAName">Tilak Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 158</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5905730004444,12.9283629998263</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">114</SimpleData>
+		<SimpleData name="DepartmentCode">164431364</SimpleData>
+		<SimpleData name="KGISVillageID">15081</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0073</SimpleData>
+		<SimpleData name="KGISPOL_STAID">159</SimpleData>
+		<SimpleData name="POL_STAName">Chamarajpet PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 159</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5670263999736,12.9605426996297</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">115</SimpleData>
+		<SimpleData name="DepartmentCode">164431432</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0074</SimpleData>
+		<SimpleData name="KGISPOL_STAID">160</SimpleData>
+		<SimpleData name="POL_STAName">City Market PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 160</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5761266577661,12.964957672278</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">116</SimpleData>
+		<SimpleData name="DepartmentCode">164431417</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0075</SimpleData>
+		<SimpleData name="KGISPOL_STAID">161</SimpleData>
+		<SimpleData name="POL_STAName">Cottonpet PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 161</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5700979326779,12.9680170243514</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">117</SimpleData>
+		<SimpleData name="DepartmentCode">164431431</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0076</SimpleData>
+		<SimpleData name="KGISPOL_STAID">162</SimpleData>
+		<SimpleData name="POL_STAName">Kalasipalya PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 162</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5773576933696,12.9573704167974</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">118</SimpleData>
+		<SimpleData name="DepartmentCode">164431430</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0077</SimpleData>
+		<SimpleData name="KGISPOL_STAID">163</SimpleData>
+		<SimpleData name="POL_STAName">Upparpet PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 163</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5748211347527,12.9744759561439</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">123</SimpleData>
+		<SimpleData name="DepartmentCode">169772003</SimpleData>
+		<SimpleData name="KGISVillageID">15586</SimpleData>
+		<SimpleData name="KGISCode">29572055436130620000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">239</SimpleData>
+		<SimpleData name="POL_STAName">Kumbalagudu PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 239</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.4441459996032,12.8751639997321</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">130</SimpleData>
+		<SimpleData name="DepartmentCode">169770277</SimpleData>
+		<SimpleData name="KGISVillageID">15658</SimpleData>
+		<SimpleData name="KGISCode">29572055436129790000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">247</SimpleData>
+		<SimpleData name="POL_STAName">Tavarekere PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 247</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.4007709999584,12.9662440004315</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">133</SimpleData>
+		<SimpleData name="DepartmentCode">164431357</SimpleData>
+		<SimpleData name="KGISVillageID">30090</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0026</SimpleData>
+		<SimpleData name="KGISPOL_STAID">107</SimpleData>
+		<SimpleData name="POL_STAName">Malleshwarm PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 107</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.569587000137,12.9966449997394</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">134</SimpleData>
+		<SimpleData name="DepartmentCode">164431358</SimpleData>
+		<SimpleData name="KGISVillageID">15481</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0027</SimpleData>
+		<SimpleData name="KGISPOL_STAID">108</SimpleData>
+		<SimpleData name="POL_STAName">Srirampura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 108</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5650049998011,12.9899929995949</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">135</SimpleData>
+		<SimpleData name="DepartmentCode">164431361</SimpleData>
+		<SimpleData name="KGISVillageID">15481</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0028</SimpleData>
+		<SimpleData name="KGISPOL_STAID">109</SimpleData>
+		<SimpleData name="POL_STAName">Subramanya Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 109</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5536799999682,13.0033419996475</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">136</SimpleData>
+		<SimpleData name="DepartmentCode">164431360</SimpleData>
+		<SimpleData name="KGISVillageID">15481</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0029</SimpleData>
+		<SimpleData name="KGISPOL_STAID">110</SimpleData>
+		<SimpleData name="POL_STAName">Rajajinagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 110</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5542170001696,12.9946259998528</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">137</SimpleData>
+		<SimpleData name="DepartmentCode">164431362</SimpleData>
+		<SimpleData name="KGISVillageID">15483</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0030</SimpleData>
+		<SimpleData name="KGISPOL_STAID">111</SimpleData>
+		<SimpleData name="POL_STAName">Rajgopal Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 111</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5135710004188,13.017349999738</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">138</SimpleData>
+		<SimpleData name="DepartmentCode">164431363</SimpleData>
+		<SimpleData name="KGISVillageID">15369</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0032</SimpleData>
+		<SimpleData name="KGISPOL_STAID">113</SimpleData>
+		<SimpleData name="POL_STAName">Nandini Layout PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 113</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5367059999833,13.0123670002594</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">139</SimpleData>
+		<SimpleData name="DepartmentCode">164430006</SimpleData>
+		<SimpleData name="KGISVillageID">15480</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0033</SimpleData>
+		<SimpleData name="KGISPOL_STAID">114</SimpleData>
+		<SimpleData name="POL_STAName">Yeshwanthapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 114</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5580990000111,13.018195000432</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">140</SimpleData>
+		<SimpleData name="DepartmentCode">164431349</SimpleData>
+		<SimpleData name="KGISVillageID">15480</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0034</SimpleData>
+		<SimpleData name="KGISPOL_STAID">115</SimpleData>
+		<SimpleData name="POL_STAName">RMC Yard PS, Yeshwanthpura</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 115</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5499230793907,13.023521263115</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">141</SimpleData>
+		<SimpleData name="DepartmentCode">164431350</SimpleData>
+		<SimpleData name="KGISVillageID">15491</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0035</SimpleData>
+		<SimpleData name="KGISPOL_STAID">116</SimpleData>
+		<SimpleData name="POL_STAName">Peenya PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 116</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5211640244163,13.0360401362993</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">142</SimpleData>
+		<SimpleData name="DepartmentCode">164432195</SimpleData>
+		<SimpleData name="KGISVillageID">15450</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0036</SimpleData>
+		<SimpleData name="KGISPOL_STAID">117</SimpleData>
+		<SimpleData name="POL_STAName">Bagalgunte PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 117</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5036570001419,13.0595489998628</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">143</SimpleData>
+		<SimpleData name="DepartmentCode">164431348</SimpleData>
+		<SimpleData name="KGISVillageID">15449</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0037</SimpleData>
+		<SimpleData name="KGISPOL_STAID">118</SimpleData>
+		<SimpleData name="POL_STAName">Gangammagudi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 118</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5299849997112,13.0721550001859</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">144</SimpleData>
+		<SimpleData name="DepartmentCode">164430030</SimpleData>
+		<SimpleData name="KGISVillageID">15311</SimpleData>
+		<SimpleData name="KGISCode">29572055426128790000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">119</SimpleData>
+		<SimpleData name="POL_STAName">Soladevanahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 119</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.489040000408,13.0934310001467</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">145</SimpleData>
+		<SimpleData name="DepartmentCode">164430014</SimpleData>
+		<SimpleData name="KGISVillageID">15469</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0038</SimpleData>
+		<SimpleData name="KGISPOL_STAID">120</SimpleData>
+		<SimpleData name="POL_STAName">Jalahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 120</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5495399998899,13.0486679996027</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">146</SimpleData>
+		<SimpleData name="DepartmentCode">164431351</SimpleData>
+		<SimpleData name="KGISVillageID">15141</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0039</SimpleData>
+		<SimpleData name="KGISPOL_STAID">121</SimpleData>
+		<SimpleData name="POL_STAName">J.C. NagarPS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 121</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5935739997935,13.0055789999663</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">147</SimpleData>
+		<SimpleData name="DepartmentCode">164431352</SimpleData>
+		<SimpleData name="KGISVillageID">15098</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0040</SimpleData>
+		<SimpleData name="KGISPOL_STAID">122</SimpleData>
+		<SimpleData name="POL_STAName">R.T. Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 122</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5931990004551,13.0247279997493</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">148</SimpleData>
+		<SimpleData name="DepartmentCode">164431353</SimpleData>
+		<SimpleData name="KGISVillageID">15100</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0041</SimpleData>
+		<SimpleData name="KGISPOL_STAID">123</SimpleData>
+		<SimpleData name="POL_STAName">Sanjay Nagara PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 123</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5757999996612,13.0333540002619</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">149</SimpleData>
+		<SimpleData name="DepartmentCode">164431354</SimpleData>
+		<SimpleData name="KGISVillageID">15112</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0042</SimpleData>
+		<SimpleData name="KGISPOL_STAID">124</SimpleData>
+		<SimpleData name="POL_STAName">Hebbal PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 124</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5896609998677,13.0383900002421</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">151</SimpleData>
+		<SimpleData name="DepartmentCode">164430268</SimpleData>
+		<SimpleData name="KGISVillageID">15322</SimpleData>
+		<SimpleData name="KGISCode">29572055426128970000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">126</SimpleData>
+		<SimpleData name="POL_STAName">Chikkajala PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 126</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6332139995524,13.1732849997572</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">153</SimpleData>
+		<SimpleData name="DepartmentCode">164431818</SimpleData>
+		<SimpleData name="KGISVillageID">15390</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0043</SimpleData>
+		<SimpleData name="KGISPOL_STAID">128</SimpleData>
+		<SimpleData name="POL_STAName">Amruthahally PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 128</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5985649995896,13.0568580000581</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">154</SimpleData>
+		<SimpleData name="DepartmentCode">164431875</SimpleData>
+		<SimpleData name="KGISVillageID">21419</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0044</SimpleData>
+		<SimpleData name="KGISPOL_STAID">129</SimpleData>
+		<SimpleData name="POL_STAName">Kothanur PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 129</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6464059600349,13.0555134900539</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">155</SimpleData>
+		<SimpleData name="DepartmentCode">164431874</SimpleData>
+		<SimpleData name="KGISVillageID">15426</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0045</SimpleData>
+		<SimpleData name="KGISPOL_STAID">130</SimpleData>
+		<SimpleData name="POL_STAName">Sampigehalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 130</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6333430004523,13.0753290001411</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">156</SimpleData>
+		<SimpleData name="DepartmentCode">164431873</SimpleData>
+		<SimpleData name="KGISVillageID">15413</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0046</SimpleData>
+		<SimpleData name="KGISPOL_STAID">131</SimpleData>
+		<SimpleData name="POL_STAName">Kodigehalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 131</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5740659996586,13.0621039996126</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">157</SimpleData>
+		<SimpleData name="DepartmentCode">164431356</SimpleData>
+		<SimpleData name="KGISVillageID">15447</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0047</SimpleData>
+		<SimpleData name="KGISPOL_STAID">132</SimpleData>
+		<SimpleData name="POL_STAName">Yelahanka New Town PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 132</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5838171135637,13.0999964496935</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">158</SimpleData>
+		<SimpleData name="DepartmentCode">164431355</SimpleData>
+		<SimpleData name="KGISVillageID">15447</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0048</SimpleData>
+		<SimpleData name="KGISPOL_STAID">133</SimpleData>
+		<SimpleData name="POL_STAName">Yelahanka PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 133</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.594093907309,13.0948982140093</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">159</SimpleData>
+		<SimpleData name="DepartmentCode">164431375</SimpleData>
+		<SimpleData name="KGISVillageID">15721</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0049</SimpleData>
+		<SimpleData name="KGISPOL_STAID">134</SimpleData>
+		<SimpleData name="POL_STAName">Banashankari PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 134</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5679710003444,12.9292740000901</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">160</SimpleData>
+		<SimpleData name="DepartmentCode">164431376</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0050</SimpleData>
+		<SimpleData name="KGISPOL_STAID">135</SimpleData>
+		<SimpleData name="POL_STAName">Basavanagudi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 135</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5742406181053,12.9419994209918</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">161</SimpleData>
+		<SimpleData name="DepartmentCode">164431372</SimpleData>
+		<SimpleData name="KGISVillageID">15720</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0051</SimpleData>
+		<SimpleData name="KGISPOL_STAID">136</SimpleData>
+		<SimpleData name="POL_STAName">Jayanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 136</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5813879997279,12.9285749996732</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">162</SimpleData>
+		<SimpleData name="DepartmentCode">164431373</SimpleData>
+		<SimpleData name="KGISVillageID">15707</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0052</SimpleData>
+		<SimpleData name="KGISPOL_STAID">137</SimpleData>
+		<SimpleData name="POL_STAName">Jayaprakash Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 137</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5876000003785,12.9118000000068</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">163</SimpleData>
+		<SimpleData name="DepartmentCode">164431385</SimpleData>
+		<SimpleData name="KGISVillageID">15153</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0053</SimpleData>
+		<SimpleData name="KGISPOL_STAID">138</SimpleData>
+		<SimpleData name="POL_STAName">Siddapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 138</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5941780002841,12.9396290002763</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">164</SimpleData>
+		<SimpleData name="DepartmentCode">164431377</SimpleData>
+		<SimpleData name="KGISVillageID">15721</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0054</SimpleData>
+		<SimpleData name="KGISPOL_STAID">139</SimpleData>
+		<SimpleData name="POL_STAName">Basavanagudi Women PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 139</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5678107000166,12.9290081004219</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">165</SimpleData>
+		<SimpleData name="DepartmentCode">164432202</SimpleData>
+		<SimpleData name="KGISVillageID">15703</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0055</SimpleData>
+		<SimpleData name="KGISPOL_STAID">140</SimpleData>
+		<SimpleData name="POL_STAName">Konanakunte PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 140</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.56640799997,12.8839319997207</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">166</SimpleData>
+		<SimpleData name="DepartmentCode">164431378</SimpleData>
+		<SimpleData name="KGISVillageID">15696</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0056</SimpleData>
+		<SimpleData name="KGISPOL_STAID">141</SimpleData>
+		<SimpleData name="POL_STAName">Kumaraswamy Layout PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 141</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5632979997497,12.9053291296562</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">167</SimpleData>
+		<SimpleData name="DepartmentCode">164432203</SimpleData>
+		<SimpleData name="KGISVillageID">15711</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0057</SimpleData>
+		<SimpleData name="KGISPOL_STAID">142</SimpleData>
+		<SimpleData name="POL_STAName">Puttenahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 142</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5819750000366,12.9024027782159</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">168</SimpleData>
+		<SimpleData name="DepartmentCode">164431379</SimpleData>
+		<SimpleData name="KGISVillageID">15717</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0058</SimpleData>
+		<SimpleData name="KGISPOL_STAID">143</SimpleData>
+		<SimpleData name="POL_STAName">Subramanyapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 143</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5443170617634,12.901203319357</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">169</SimpleData>
+		<SimpleData name="DepartmentCode">164431347</SimpleData>
+		<SimpleData name="KGISVillageID">15713</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0059</SimpleData>
+		<SimpleData name="KGISPOL_STAID">144</SimpleData>
+		<SimpleData name="POL_STAName">Thalaghattapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 144</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5362860003164,12.8690240001717</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">170</SimpleData>
+		<SimpleData name="DepartmentCode">164431365</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0060</SimpleData>
+		<SimpleData name="KGISPOL_STAID">145</SimpleData>
+		<SimpleData name="POL_STAName">V.V. Puram PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 145</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5722658495622,12.9596195803045</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">171</SimpleData>
+		<SimpleData name="DepartmentCode">164431797</SimpleData>
+		<SimpleData name="KGISVillageID">15698</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0061</SimpleData>
+		<SimpleData name="KGISPOL_STAID">146</SimpleData>
+		<SimpleData name="POL_STAName">Channammanakere Achu Kattu PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 146</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.560604590239,12.9301162396181</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">172</SimpleData>
+		<SimpleData name="DepartmentCode">164431367</SimpleData>
+		<SimpleData name="KGISVillageID">15099</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0062</SimpleData>
+		<SimpleData name="KGISPOL_STAID">147</SimpleData>
+		<SimpleData name="POL_STAName">Kempegowda Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 147</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5631800000979,12.9491600000604</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">173</SimpleData>
+		<SimpleData name="DepartmentCode">164431368</SimpleData>
+		<SimpleData name="KGISVillageID">15688</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0063</SimpleData>
+		<SimpleData name="KGISPOL_STAID">148</SimpleData>
+		<SimpleData name="POL_STAName">Girinagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 148</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5438999998846,12.9360000002911</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">174</SimpleData>
+		<SimpleData name="DepartmentCode">164432193</SimpleData>
+		<SimpleData name="KGISVillageID">15549</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0064</SimpleData>
+		<SimpleData name="KGISPOL_STAID">149</SimpleData>
+		<SimpleData name="POL_STAName">Bandepalya PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 149</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6415333333942,12.9056000003551</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">175</SimpleData>
+		<SimpleData name="DepartmentCode">164432188</SimpleData>
+		<SimpleData name="KGISVillageID">15488</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0078</SimpleData>
+		<SimpleData name="KGISPOL_STAID">164</SimpleData>
+		<SimpleData name="POL_STAName">Annapoorneshwari Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 164</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5127363002522,12.9764945003794</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">176</SimpleData>
+		<SimpleData name="DepartmentCode">164431418</SimpleData>
+		<SimpleData name="KGISVillageID">15084</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0079</SimpleData>
+		<SimpleData name="KGISPOL_STAID">165</SimpleData>
+		<SimpleData name="POL_STAName">Byatarayanapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 165</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5401247181361,12.9513964930184</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">177</SimpleData>
+		<SimpleData name="DepartmentCode">164431420</SimpleData>
+		<SimpleData name="KGISVillageID">15116</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0080</SimpleData>
+		<SimpleData name="KGISPOL_STAID">166</SimpleData>
+		<SimpleData name="POL_STAName">Chandra Layout PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 166</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5283954172681,12.9588991588048</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">178</SimpleData>
+		<SimpleData name="DepartmentCode">164431421</SimpleData>
+		<SimpleData name="KGISVillageID">15081</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0081</SimpleData>
+		<SimpleData name="KGISPOL_STAID">167</SimpleData>
+		<SimpleData name="POL_STAName">Jagajeevanram Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 167</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5550759389811,12.964081607397</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">179</SimpleData>
+		<SimpleData name="DepartmentCode">164431422</SimpleData>
+		<SimpleData name="KGISVillageID">15486</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0082</SimpleData>
+		<SimpleData name="KGISPOL_STAID">168</SimpleData>
+		<SimpleData name="POL_STAName">Jnanabharathi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 168</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5002666799548,12.9505529290118</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">180</SimpleData>
+		<SimpleData name="DepartmentCode">164431423</SimpleData>
+		<SimpleData name="KGISVillageID">15582</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0083</SimpleData>
+		<SimpleData name="KGISPOL_STAID">169</SimpleData>
+		<SimpleData name="POL_STAName">Kengeri PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 169</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.4815711889913,12.9104775156184</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">181</SimpleData>
+		<SimpleData name="DepartmentCode">164431877</SimpleData>
+		<SimpleData name="KGISVillageID">15570</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0084</SimpleData>
+		<SimpleData name="KGISPOL_STAID">170</SimpleData>
+		<SimpleData name="POL_STAName">Rajarajeshwari Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 170</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5206330486244,12.9128403426384</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">182</SimpleData>
+		<SimpleData name="DepartmentCode">164431426</SimpleData>
+		<SimpleData name="KGISVillageID">15470</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0085</SimpleData>
+		<SimpleData name="KGISPOL_STAID">171</SimpleData>
+		<SimpleData name="POL_STAName">Basaveshwara Nagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 171</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.542571994291,12.9853070014035</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">183</SimpleData>
+		<SimpleData name="DepartmentCode">164431428</SimpleData>
+		<SimpleData name="KGISVillageID">15494</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0086</SimpleData>
+		<SimpleData name="KGISPOL_STAID">172</SimpleData>
+		<SimpleData name="POL_STAName">Kamakshipalya PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 172</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5320189022735,12.9822236602558</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">184</SimpleData>
+		<SimpleData name="DepartmentCode">164431427</SimpleData>
+		<SimpleData name="KGISVillageID">15116</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0087</SimpleData>
+		<SimpleData name="KGISPOL_STAID">173</SimpleData>
+		<SimpleData name="POL_STAName">Kempapura Agrahara PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 173</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5615773208425,12.9725125392007</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">185</SimpleData>
+		<SimpleData name="DepartmentCode">164431425</SimpleData>
+		<SimpleData name="KGISVillageID">15116</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0088</SimpleData>
+		<SimpleData name="KGISPOL_STAID">174</SimpleData>
+		<SimpleData name="POL_STAName">Magadi Road PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 174</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5501698999891,12.9755660999865</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">186</SimpleData>
+		<SimpleData name="DepartmentCode">164431424</SimpleData>
+		<SimpleData name="KGISVillageID">15116</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0089</SimpleData>
+		<SimpleData name="KGISPOL_STAID">175</SimpleData>
+		<SimpleData name="POL_STAName">Vijayanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 175</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.538467437727,12.9723502644423</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">294</SimpleData>
+		<SimpleData name="DepartmentCode">169771937</SimpleData>
+		<SimpleData name="KGISVillageID">15664</SimpleData>
+		<SimpleData name="KGISCode">29572055436130420000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">234</SimpleData>
+		<SimpleData name="POL_STAName">Kaggalipura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 234</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5100820000121,12.7995459998704</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">454</SimpleData>
+		<SimpleData name="DepartmentCode">164431799</SimpleData>
+		<SimpleData name="KGISVillageID">15514</SimpleData>
+		<SimpleData name="KGISCode">29572055436130580000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">150</SimpleData>
+		<SimpleData name="POL_STAName">Electronic City PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 150</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6630639999462,12.8400089995489</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">455</SimpleData>
+		<SimpleData name="DepartmentCode">164431800</SimpleData>
+		<SimpleData name="KGISVillageID">15531</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0065</SimpleData>
+		<SimpleData name="KGISPOL_STAID">151</SimpleData>
+		<SimpleData name="POL_STAName">Parappana Agrahara PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 151</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6673555559925,12.8773138893884</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">456</SimpleData>
+		<SimpleData name="DepartmentCode">164431382</SimpleData>
+		<SimpleData name="KGISVillageID">15500</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0066</SimpleData>
+		<SimpleData name="KGISPOL_STAID">152</SimpleData>
+		<SimpleData name="POL_STAName">Adugodi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 152</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6115419998195,12.941430999878</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">457</SimpleData>
+		<SimpleData name="DepartmentCode">164431796</SimpleData>
+		<SimpleData name="KGISVillageID">15501</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0067</SimpleData>
+		<SimpleData name="KGISPOL_STAID">153</SimpleData>
+		<SimpleData name="POL_STAName">H.S.R.Layout PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 153</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6513889997284,12.9201510003798</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">458</SimpleData>
+		<SimpleData name="DepartmentCode">164431383</SimpleData>
+		<SimpleData name="KGISVillageID">15530</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0068</SimpleData>
+		<SimpleData name="KGISPOL_STAID">154</SimpleData>
+		<SimpleData name="POL_STAName">Koramangala PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 154</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6213416671002,12.9412138887662</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">547</SimpleData>
+		<SimpleData name="DepartmentCode">164432198</SimpleData>
+		<SimpleData name="KGISVillageID">21436</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0091</SimpleData>
+		<SimpleData name="KGISPOL_STAID">783</SimpleData>
+		<SimpleData name="POL_STAName">Bellanduru PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 783</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6678679998158,12.9191619996926</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">548</SimpleData>
+		<SimpleData name="DepartmentCode">164431416</SimpleData>
+		<SimpleData name="KGISVillageID">21433</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0092</SimpleData>
+		<SimpleData name="KGISPOL_STAID">784</SimpleData>
+		<SimpleData name="POL_STAName">H.A.L. PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 784</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6828550001031,12.9550059996707</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">549</SimpleData>
+		<SimpleData name="DepartmentCode">164432199</SimpleData>
+		<SimpleData name="KGISVillageID">21442</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0093</SimpleData>
+		<SimpleData name="KGISPOL_STAID">785</SimpleData>
+		<SimpleData name="POL_STAName">Marathahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 785</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6980390002911,12.9456189996246</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">550</SimpleData>
+		<SimpleData name="DepartmentCode">164430259</SimpleData>
+		<SimpleData name="KGISVillageID">21491</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0094</SimpleData>
+		<SimpleData name="KGISPOL_STAID">786</SimpleData>
+		<SimpleData name="POL_STAName">Varthur PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 786</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7469200001009,12.9380340003015</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">551</SimpleData>
+		<SimpleData name="DepartmentCode">164431405</SimpleData>
+		<SimpleData name="KGISVillageID">21420</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0095</SimpleData>
+		<SimpleData name="KGISPOL_STAID">787</SimpleData>
+		<SimpleData name="POL_STAName">K.R. Puram PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 787</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.693286999959,13.0090160001236</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">552</SimpleData>
+		<SimpleData name="DepartmentCode">164430257</SimpleData>
+		<SimpleData name="KGISVillageID">21356</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0096</SimpleData>
+		<SimpleData name="KGISPOL_STAID">788</SimpleData>
+		<SimpleData name="POL_STAName">Kadugodi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 788</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7578210000384,12.9954149997581</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">553</SimpleData>
+		<SimpleData name="DepartmentCode">164431414</SimpleData>
+		<SimpleData name="KGISVillageID">21394</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0097</SimpleData>
+		<SimpleData name="KGISPOL_STAID">789</SimpleData>
+		<SimpleData name="POL_STAName">Mahadevapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 789</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6928279998912,12.9966939998372</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">554</SimpleData>
+		<SimpleData name="DepartmentCode">164430258</SimpleData>
+		<SimpleData name="KGISVillageID">21434</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0098</SimpleData>
+		<SimpleData name="KGISPOL_STAID">790</SimpleData>
+		<SimpleData name="POL_STAName">Whitefield PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 790</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7510760001927,12.9753560004434</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">555</SimpleData>
+		<SimpleData name="DepartmentCode">164421330</SimpleData>
+		<SimpleData name="KGISVillageID">21159</SimpleData>
+		<SimpleData name="KGISCode">29572055458031630000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">791</SimpleData>
+		<SimpleData name="POL_STAName">Anekal PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 791</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.692886400445,12.7101184001285</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">556</SimpleData>
+		<SimpleData name="DepartmentCode">164421331</SimpleData>
+		<SimpleData name="KGISVillageID">15031</SimpleData>
+		<SimpleData name="KGISCode">29572055456131320000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">792</SimpleData>
+		<SimpleData name="POL_STAName">Bannerghatta PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 792</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5792525001605,12.8135433004012</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">557</SimpleData>
+		<SimpleData name="DepartmentCode">164422000</SimpleData>
+		<SimpleData name="KGISVillageID">15056</SimpleData>
+		<SimpleData name="KGISCode">29572055456133600000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">793</SimpleData>
+		<SimpleData name="POL_STAName">Jigani PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 793</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6392150996301,12.7824606995826</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">558</SimpleData>
+		<SimpleData name="DepartmentCode">164421333</SimpleData>
+		<SimpleData name="KGISVillageID">15006</SimpleData>
+		<SimpleData name="KGISCode">29572055456133550000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">794</SimpleData>
+		<SimpleData name="POL_STAName">Hebbagodi PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 794</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6799321002329,12.8263711001822</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">559</SimpleData>
+		<SimpleData name="DepartmentCode">164421334</SimpleData>
+		<SimpleData name="KGISVillageID">21296</SimpleData>
+		<SimpleData name="KGISCode">29572055456133580000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">795</SimpleData>
+		<SimpleData name="POL_STAName">Sarjapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 795</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7812827002306,12.8607281002345</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">561</SimpleData>
+		<SimpleData name="DepartmentCode">164421916</SimpleData>
+		<SimpleData name="KGISVillageID">21334</SimpleData>
+		<SimpleData name="KGISCode">29572055446131070000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">797</SimpleData>
+		<SimpleData name="POL_STAName">Avalahally PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 797</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7457209996652,13.042326000046</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">569</SimpleData>
+		<SimpleData name="DepartmentCode">164421336</SimpleData>
+		<SimpleData name="KGISVillageID">15277</SimpleData>
+		<SimpleData name="KGISCode">29572055426128340000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">805</SimpleData>
+		<SimpleData name="POL_STAName">Rajanukunte PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 805</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5624243997917,13.1739705001471</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">602</SimpleData>
+		<SimpleData name="DepartmentCode">164421332</SimpleData>
+		<SimpleData name="KGISVillageID">14990</SimpleData>
+		<SimpleData name="KGISCode">29572055456133590000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">843</SimpleData>
+		<SimpleData name="POL_STAName">Attibele PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 843</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7716710001049,12.7789360000593</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">606</SimpleData>
+		<SimpleData name="DepartmentCode">164421914</SimpleData>
+		<SimpleData name="KGISVillageID">15229</SimpleData>
+		<SimpleData name="KGISCode">29572055426129510000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">848</SimpleData>
+		<SimpleData name="POL_STAName">Madhanayakanahally PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 848</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.4623099998741,13.0622470002623</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">607</SimpleData>
+		<SimpleData name="DepartmentCode">164422144</SimpleData>
+		<SimpleData name="KGISVillageID">15009</SimpleData>
+		<SimpleData name="KGISCode">29572055456132650000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">849</SimpleData>
+		<SimpleData name="POL_STAName">Suryanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 849</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7049370001704,12.7928960000553</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">608</SimpleData>
+		<SimpleData name="DepartmentCode">164431389</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0100</SimpleData>
+		<SimpleData name="KGISPOL_STAID">850</SimpleData>
+		<SimpleData name="POL_STAName">Ashoknagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 850</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6101850003906,12.9716320001726</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">610</SimpleData>
+		<SimpleData name="DepartmentCode">164431392</SimpleData>
+		<SimpleData name="KGISVillageID">15089</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0101</SimpleData>
+		<SimpleData name="KGISPOL_STAID">851</SimpleData>
+		<SimpleData name="POL_STAName">S.J. Park PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 851</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5831449995862,12.9609289995745</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">611</SimpleData>
+		<SimpleData name="DepartmentCode">164431822</SimpleData>
+		<SimpleData name="KGISVillageID">15317</SimpleData>
+		<SimpleData name="KGISCode">29572055426129150000HMPOLPUOFFPOS0001</SimpleData>
+		<SimpleData name="KGISPOL_STAID">852</SimpleData>
+		<SimpleData name="POL_STAName">Bagalur PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 852</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6704359997402,13.1400419997494</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">612</SimpleData>
+		<SimpleData name="DepartmentCode">164431366</SimpleData>
+		<SimpleData name="KGISVillageID">15158</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0102</SimpleData>
+		<SimpleData name="KGISPOL_STAID">853</SimpleData>
+		<SimpleData name="POL_STAName">Hanumathanagar PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 853</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5614549998024,12.9362359996876</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">613</SimpleData>
+		<SimpleData name="DepartmentCode">164432194</SimpleData>
+		<SimpleData name="KGISVillageID">15505</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0103</SimpleData>
+		<SimpleData name="KGISPOL_STAID">854</SimpleData>
+		<SimpleData name="POL_STAName">Begur PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 854</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6243380001586,12.8782620001631</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">614</SimpleData>
+		<SimpleData name="DepartmentCode">164431798</SimpleData>
+		<SimpleData name="KGISVillageID">15520</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0104</SimpleData>
+		<SimpleData name="KGISPOL_STAID">855</SimpleData>
+		<SimpleData name="POL_STAName">Hulimavu PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 855</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6000710004058,12.8766460003129</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">615</SimpleData>
+		<SimpleData name="DepartmentCode">164431381</SimpleData>
+		<SimpleData name="KGISVillageID">15536</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0105</SimpleData>
+		<SimpleData name="KGISPOL_STAID">856</SimpleData>
+		<SimpleData name="POL_STAName">Mico Layout PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 856</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.610659000147,12.9086119998238</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">620</SimpleData>
+		<SimpleData name="DepartmentCode">164430015</SimpleData>
+		<SimpleData name="KGISVillageID">15436</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0106</SimpleData>
+		<SimpleData name="KGISPOL_STAID">857</SimpleData>
+		<SimpleData name="POL_STAName">Vidyaranyapura PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 857</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5643861813388,13.0839867258753</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">636</SimpleData>
+		<SimpleData name="DepartmentCode">164431380</SimpleData>
+		<SimpleData name="KGISVillageID">15536</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0069</SimpleData>
+		<SimpleData name="KGISPOL_STAID">155</SimpleData>
+		<SimpleData name="POL_STAName">Madiwala PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 155</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.620667999617,12.9209999998742</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">637</SimpleData>
+		<SimpleData name="DepartmentCode">164432141</SimpleData>
+		<SimpleData name="KGISVillageID">15509</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000HMPOLPUOFFPOS0070</SimpleData>
+		<SimpleData name="KGISPOL_STAID">156</SimpleData>
+		<SimpleData name="POL_STAName">Bommanahalli PS</SimpleData>
+		<SimpleData name="KGISPSCode">PS - 156</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6249800003253,12.9106199997205</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">850</SimpleData>
+		<SimpleData name="DepartmentCode">164431359</SimpleData>
+		<SimpleData name="POL_STAName">Mahalakshmipuram PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5473078440129,13.0027389161188</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">851</SimpleData>
+		<SimpleData name="DepartmentCode">164431369</SimpleData>
+		<SimpleData name="POL_STAName">Shankarpura PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5699948247066,12.9536079559543</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">852</SimpleData>
+		<SimpleData name="DepartmentCode">164432197</SimpleData>
+		<SimpleData name="POL_STAName">Suddaguntepalya PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6077477934414,12.9257789780078</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">869</SimpleData>
+		<SimpleData name="DepartmentCode">169842021</SimpleData>
+		<SimpleData name="POL_STAName">ISD PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6167567858431,12.9693319402999</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">873</SimpleData>
+		<SimpleData name="DepartmentCode">164422222</SimpleData>
+		<SimpleData name="POL_STAName">Bengaluru CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5916650107377,12.9898319905977</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">874</SimpleData>
+		<SimpleData name="DepartmentCode">164432146</SimpleData>
+		<SimpleData name="POL_STAName">Central CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5871719906891,12.9667990246362</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">875</SimpleData>
+		<SimpleData name="DepartmentCode">164432147</SimpleData>
+		<SimpleData name="POL_STAName">East CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.603634427068,12.9878455956193</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">876</SimpleData>
+		<SimpleData name="DepartmentCode">164432149</SimpleData>
+		<SimpleData name="POL_STAName">North CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5584169553286,13.0180495928218</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">877</SimpleData>
+		<SimpleData name="DepartmentCode">164432260</SimpleData>
+		<SimpleData name="POL_STAName">NorthEast CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5985408010627,13.0568918670573</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">878</SimpleData>
+		<SimpleData name="DepartmentCode">164432258</SimpleData>
+		<SimpleData name="POL_STAName">South CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5792168169108,12.9364239699816</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">879</SimpleData>
+		<SimpleData name="DepartmentCode">164432259</SimpleData>
+		<SimpleData name="POL_STAName">SouthEast CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6214107811294,12.9411769638892</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">880</SimpleData>
+		<SimpleData name="DepartmentCode">164432148</SimpleData>
+		<SimpleData name="POL_STAName">West CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5425355880706,12.9854783207063</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">881</SimpleData>
+		<SimpleData name="DepartmentCode">164432261</SimpleData>
+		<SimpleData name="POL_STAName">Whitefield CEN Crime PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.7511256717663,12.9754099257775</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">912</SimpleData>
+		<SimpleData name="DepartmentCode">164432268</SimpleData>
+		<SimpleData name="POL_STAName">Govindapura PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.619463595785,13.0344587360155</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">913</SimpleData>
+		<SimpleData name="DepartmentCode">164432303</SimpleData>
+		<SimpleData name="POL_STAName">Govindaraja Nagar PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5292191043584,12.972337140279</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">914</SimpleData>
+		<SimpleData name="DepartmentCode">164432200</SimpleData>
+		<SimpleData name="POL_STAName">Cyber Crime Police Station</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.5862511278321,12.9821582373495</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">918</SimpleData>
+		<SimpleData name="DepartmentCode">164432123</SimpleData>
+		<SimpleData name="POL_STAName">Byadarahalli PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.4913220422091,12.9869611703651</coordinates></Point></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#blr_police_station_locs">
+		<SimpleData name="OBJECTID">920</SimpleData>
+		<SimpleData name="DepartmentCode">164431387</SimpleData>
+		<SimpleData name="POL_STAName">East Zone Women PS</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>77.6037380166751,12.9880379848679</coordinates></Point></MultiGeometry>
+  </Placemark>
+</Folder>
+</Document></kml>
