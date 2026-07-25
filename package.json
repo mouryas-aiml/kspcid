@@ -16,6 +16,7 @@
     "etl:08:corridor": "node --import tsx etl/08_routing_matrix.ts",
     "etl:08:full": "node --import tsx etl/08_full_routing.ts",
     "etl:08:full:start": "node scripts/start-full-routing.mjs",
+    "etl:10:patrol": "node --import tsx etl/10_patrol_fixture.ts",
     "etl:spine": "node --import tsx etl/audit_demo_spine.ts",
     "verify:adapter": "node --import tsx etl/verify_data_adapter.ts",
     "verify:a7": "node --import tsx etl/verify_a7.ts",

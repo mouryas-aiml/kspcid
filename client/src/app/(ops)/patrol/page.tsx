@@ -1,11 +1,5 @@
-import { OpsModulePlaceholder } from '@/components/shell/OpsModulePlaceholder'
+import { PatrolLab } from '@/components/patrol/PatrolLab'
 
 export default function PatrolPage() {
-  return (
-    <OpsModulePlaceholder
-      title="Namma Patrol Lab"
-      stage="PLAN"
-      description="The audited corridor fixture is ready. Coverage, scoring, deployment, and simulation are the next build task."
-    />
-  )
+  return <PatrolLab />
 }

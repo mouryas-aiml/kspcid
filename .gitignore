@@ -38,6 +38,7 @@ reference/raw/bengaluru_osm_overpass.json
 functions/**/node_modules/
 client/.next/
 client/out/
+client/public/data/
 
 # ── Local ────────────────────────────────────────────────────────────────────
 .DS_Store

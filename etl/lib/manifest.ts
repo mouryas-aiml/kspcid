@@ -8,7 +8,7 @@
  * and the output checksum. Re-running a step must reproduce the output
  * checksum exactly.
  */
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, rename, rm } from 'node:fs/promises'
 import { dirname, relative } from 'node:path'
 
 import { APP_ROOT, OUTPUT, SOURCE_ROOT } from '../00_config.js'
@@ -46,6 +46,23 @@ export async function readManifest(): Promise<Manifest> {
   }
 }
 
+async function acquireManifestLock(): Promise<() => Promise<void>> {
+  const lockPath = `${OUTPUT.manifest}.lock`
+  for (let attempt = 0; attempt < 600; attempt += 1) {
+    try {
+      await mkdir(lockPath)
+      return async () => {
+        await rm(lockPath, { recursive: true, force: true })
+      }
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code
+      if (code !== 'EEXIST') throw error
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+  }
+  throw new Error(`Timed out acquiring manifest lock: ${lockPath}`)
+}
+
 /**
  * Record one output file. Reads the file to checksum it, so call after writing.
  */
@@ -69,20 +86,28 @@ export async function recordOutput(
     ...(notes ? { notes } : {}),
   }
 
-  const manifest = await readManifest()
-  manifest.generation_version = GENERATION_VERSION
-  manifest.updated_at = entry.generated_at
-  manifest.entries[entry.path] = entry
-
   await mkdir(dirname(OUTPUT.manifest), { recursive: true })
-  await writeFile(
-    OUTPUT.manifest,
-    `${JSON.stringify(
-      { ...manifest, entries: Object.fromEntries(Object.entries(manifest.entries).sort()) },
-      null,
-      2,
-    )}\n`,
-    'utf8',
-  )
+  const release = await acquireManifestLock()
+  try {
+    // Re-read only after acquiring the lock so concurrent ETL workers merge
+    // entries instead of replacing one another's just-written manifest.
+    const manifest = await readManifest()
+    manifest.generation_version = GENERATION_VERSION
+    manifest.updated_at = entry.generated_at
+    manifest.entries[entry.path] = entry
+    const temporaryPath = `${OUTPUT.manifest}.${process.pid}.tmp`
+    await writeFile(
+      temporaryPath,
+      `${JSON.stringify(
+        { ...manifest, entries: Object.fromEntries(Object.entries(manifest.entries).sort()) },
+        null,
+        2,
+      )}\n`,
+      'utf8',
+    )
+    await rename(temporaryPath, OUTPUT.manifest)
+  } finally {
+    await release()
+  }
   return entry
 }
