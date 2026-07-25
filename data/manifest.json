@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T20:26:15.470Z",
+  "updated_at": "2026-07-25T20:33:21.151Z",
   "entries": {
     "app/data/derived/incident_stations.parquet": {
       "step": "02_station_crosswalk",
@@ -288,6 +288,102 @@
         "collection": "mo_vectors",
         "dimensions": 64,
         "layout": "mo64_v1"
+      }
+    },
+    "app/data/routing/corridor_region.json": {
+      "step": "08_routing_matrix_a0a",
+      "path": "app/data/routing/corridor_region.json",
+      "rows": 1,
+      "sha256": "3f87b58e3b0e426d8ca3fefc7852b4a16e5ef941eff58bc3aebcace423d058b6",
+      "bytes": 1095,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:33:21.151Z"
+    },
+    "app/data/routing/coverage_bitsets.bin": {
+      "step": "08_routing_matrix_a0a",
+      "path": "app/data/routing/coverage_bitsets.bin",
+      "rows": 5795,
+      "sha256": "2f11f7d1ef99a2656af5613d1f429c4e39e21d830b0f2c9e305003af0947d9b3",
+      "bytes": 857660,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:33:21.150Z",
+      "notes": {
+        "cells": 1159,
+        "budgets_seconds": [
+          180,
+          300,
+          420,
+          600,
+          900
+        ],
+        "words": 37
+      }
+    },
+    "app/data/routing/duration_matrix.bin": {
+      "step": "08_routing_matrix_a0a",
+      "path": "app/data/routing/duration_matrix.bin",
+      "rows": 1343281,
+      "sha256": "c3605a7e5b5eb59373d959c386cd1986d6a2901bd0555e8d703de193a5323a52",
+      "bytes": 5373124,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:33:21.149Z",
+      "notes": {
+        "cells": 1159,
+        "scalar": "float32_seconds",
+        "conditions": "free_flow"
+      }
+    },
+    "app/data/routing/hex_index.json": {
+      "step": "08_routing_matrix_a0a",
+      "path": "app/data/routing/hex_index.json",
+      "rows": 1159,
+      "sha256": "539a3f3a8862c153df20a77605cd52a5764be197543209009cd0ab48d48e0bfd",
+      "bytes": 243197,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:33:21.146Z"
+    },
+    "app/data/routing/validation.json": {
+      "step": "08_routing_matrix_a0a",
+      "path": "app/data/routing/validation.json",
+      "rows": 100,
+      "sha256": "345a5ed9746d03ff4d8db25c0be445bc890a0986c60a1186f7f9a7abaabda476",
+      "bytes": 37428,
+      "inputs": [
+        {
+          "path": "app/reference/processed/jurisdictions.geojson",
+          "sha256": "e03807aecd89bc261c7fbfe2fac422004aea54a7d76b855bdd3f252ad3b26cca"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:33:21.151Z",
+      "notes": {
+        "status": "PASS",
+        "median_error_percent": 0.000002325158101494361,
+        "max_error_percent": 0.0000047488937021469295
       }
     }
   }
