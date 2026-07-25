@@ -90,10 +90,19 @@ async function alreadyPassed(outputDir: string): Promise<boolean> {
   if (FORCE) return false
   try {
     await access(resolve(outputDir, 'duration_matrix.bin'))
-    const validation = JSON.parse(
-      await readFile(resolve(outputDir, 'validation.json'), 'utf8'),
-    ) as RegionValidation
-    return validation.status === 'PASS' && validation.samples === VALIDATION_PAIRS
+    const [validation, region] = await Promise.all([
+      readFile(resolve(outputDir, 'validation.json'), 'utf8').then(
+        (value) => JSON.parse(value) as RegionValidation,
+      ),
+      readFile(resolve(outputDir, 'region.json'), 'utf8').then(
+        (value) => JSON.parse(value) as { cells: number },
+      ),
+    ])
+    const expectedSamples = Math.min(
+      VALIDATION_PAIRS,
+      region.cells * (region.cells - 1),
+    )
+    return validation.status === 'PASS' && validation.samples === expectedSamples
   } catch {
     return false
   }
@@ -284,7 +293,7 @@ async function main(): Promise<void> {
       `- Local regions: **${local.length}**`,
       `- Superzones: **${superzones.length}**`,
       `- Passed: **${aggregate.regions_passed} / ${aggregate.regions_total}**`,
-      `- 500-pair validation per region: **enabled**`,
+      `- Validation per region: **up to 500 live pairs; exhaustive when fewer exist**`,
       '',
       'The build is resumable; existing 500-sample PASS regions are retained.',
       '',
