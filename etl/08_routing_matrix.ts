@@ -40,16 +40,41 @@ import { recordOutput } from './lib/manifest.js'
 
 const OSRM_URL = process.env.KSPCID_OSRM_URL ?? 'http://localhost:5001'
 const RESOLUTION = 9
-const BUFFER_KM = 2
+const BUFFER_KM = Number(process.env.KSPCID_ROUTING_BUFFER_KM ?? 2)
 const RESPONSE_BUDGETS_SECONDS = [180, 300, 420, 600, 900] as const
 const SOURCE_CHUNK = 64
-const VALIDATION_PAIRS = 100
+const DESTINATION_CHUNK = 512
+const VALIDATION_PAIRS = Number(process.env.KSPCID_ROUTING_VALIDATION_PAIRS ?? 100)
+const REGION_ID = process.env.KSPCID_ROUTING_REGION_ID ?? 'demo_corridor'
+const REGION_NAME =
+  process.env.KSPCID_ROUTING_REGION_NAME ??
+  'Kadugondana Halli → Banaswadi → Ramamurthy Nagar → K.R. Puram'
+const REGION_SCOPE =
+  process.env.KSPCID_ROUTING_SCOPE ?? 'A0a_one_corridor_fixture'
+const REGION_STATION_CODES = new Set(
+  (process.env.KSPCID_ROUTING_STATION_CODES ?? '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean),
+)
+const ROUTING_DIR = resolve(
+  process.env.KSPCID_ROUTING_OUTPUT_DIR ?? OUTPUT.routing,
+)
 
-const HEX_INDEX_PATH = resolve(OUTPUT.routing, 'hex_index.json')
-const MATRIX_PATH = resolve(OUTPUT.routing, 'duration_matrix.bin')
-const BITSETS_PATH = resolve(OUTPUT.routing, 'coverage_bitsets.bin')
-const REGION_PATH = resolve(OUTPUT.routing, 'corridor_region.json')
-const VALIDATION_PATH = resolve(OUTPUT.routing, 'validation.json')
+const HEX_INDEX_PATH = resolve(ROUTING_DIR, 'hex_index.json')
+const MATRIX_PATH = resolve(ROUTING_DIR, 'duration_matrix.bin')
+const BITSETS_PATH = resolve(ROUTING_DIR, 'coverage_bitsets.bin')
+const REGION_PATH = resolve(
+  ROUTING_DIR,
+  process.env.KSPCID_ROUTING_OUTPUT_DIR ? 'region.json' : 'corridor_region.json',
+)
+const VALIDATION_PATH = resolve(ROUTING_DIR, 'validation.json')
+const REPORT_PATH = resolve(
+  OUTPUT.reports,
+  REGION_SCOPE === 'A0a_one_corridor_fixture'
+    ? 'a0a_routing_fixture.md'
+    : `routing_${REGION_ID}.md`,
+)
 
 interface StationProperties {
   readonly station_name: string
@@ -142,8 +167,8 @@ function makeValidationPairs(cells: number): Array<readonly [number, number]> {
   const seen = new Set<string>()
   let probe = 0
   while (pairs.length < Math.min(VALIDATION_PAIRS, cells * (cells - 1))) {
-    const from = stableIndex('routing_validation', 'corridor', `from:${probe}`, cells)
-    const to = stableIndex('routing_validation', 'corridor', `to:${probe}`, cells)
+    const from = stableIndex('routing_validation', REGION_ID, `from:${probe}`, cells)
+    const to = stableIndex('routing_validation', REGION_ID, `to:${probe}`, cells)
     probe++
     if (from === to) continue
     const key = `${from}:${to}`
@@ -161,32 +186,55 @@ async function compileMatrix(entries: readonly HexEntry[]): Promise<{
   const size = entries.length
   const matrix = new Float32Array(size * size)
   let maxSnapDistance = 0
-  const coordinates = entries.map(coordinateText).join(';')
 
   for (let start = 0; start < size; start += SOURCE_CHUNK) {
     const end = Math.min(size, start + SOURCE_CHUNK)
-    const sources = Array.from({ length: end - start }, (_, offset) => start + offset).join(';')
-    const url =
-      `${OSRM_URL}/table/v1/driving/${coordinates}` +
-      `?annotations=duration&sources=${sources}`
-    const response = await fetchJson<TableResponse>(url)
-    if (response.code !== 'Ok') {
-      throw new Error(`OSRM table failed: ${response.code} ${response.message ?? ''}`)
-    }
-    for (const waypoint of [...response.sources, ...response.destinations]) {
-      if (!Number.isFinite(waypoint.distance)) throw new Error('OSRM failed to snap a grid cell')
-      maxSnapDistance = Math.max(maxSnapDistance, waypoint.distance)
-    }
-    for (let local = 0; local < response.durations.length; local++) {
-      const row = response.durations[local]
-      if (!row || row.length !== size) throw new Error('OSRM returned a truncated matrix row')
-      const origin = start + local
-      for (let destination = 0; destination < size; destination++) {
-        const duration = row[destination]
-        if (duration === null || duration === undefined || !Number.isFinite(duration)) {
-          throw new Error(`Disconnected OSRM pair ${origin} → ${destination}`)
+    const sourceEntries = entries.slice(start, end)
+    for (
+      let destinationStart = 0;
+      destinationStart < size;
+      destinationStart += DESTINATION_CHUNK
+    ) {
+      const destinationEnd = Math.min(size, destinationStart + DESTINATION_CHUNK)
+      const destinationEntries = entries.slice(destinationStart, destinationEnd)
+      const coordinates = [...sourceEntries, ...destinationEntries]
+        .map(coordinateText)
+        .join(';')
+      const sources = Array.from(
+        { length: sourceEntries.length },
+        (_, offset) => offset,
+      ).join(';')
+      const destinations = Array.from(
+        { length: destinationEntries.length },
+        (_, offset) => sourceEntries.length + offset,
+      ).join(';')
+      const url =
+        `${OSRM_URL}/table/v1/driving/${coordinates}` +
+        `?annotations=duration&sources=${sources}&destinations=${destinations}`
+      const response = await fetchJson<TableResponse>(url)
+      if (response.code !== 'Ok') {
+        throw new Error(`OSRM table failed: ${response.code} ${response.message ?? ''}`)
+      }
+      for (const waypoint of [...response.sources, ...response.destinations]) {
+        if (!Number.isFinite(waypoint.distance)) {
+          throw new Error('OSRM failed to snap a grid cell')
         }
-        matrix[origin * size + destination] = duration
+        maxSnapDistance = Math.max(maxSnapDistance, waypoint.distance)
+      }
+      for (let local = 0; local < response.durations.length; local++) {
+        const row = response.durations[local]
+        if (!row || row.length !== destinationEntries.length) {
+          throw new Error('OSRM returned a truncated matrix row')
+        }
+        const origin = start + local
+        for (let destinationOffset = 0; destinationOffset < row.length; destinationOffset++) {
+          const duration = row[destinationOffset]
+          const destination = destinationStart + destinationOffset
+          if (duration === null || duration === undefined || !Number.isFinite(duration)) {
+            throw new Error(`Disconnected OSRM pair ${origin} → ${destination}`)
+          }
+          matrix[origin * size + destination] = duration
+        }
       }
     }
     process.stdout.write(`  … matrix origins ${end.toLocaleString()} / ${size.toLocaleString()}\n`)
@@ -285,10 +333,13 @@ async function main(): Promise<void> {
   const collection = JSON.parse(raw) as FeatureCollection
   const names = new Set<string>(DEMO_SPINE.stations)
   const core = collection.features.filter(({ properties }) =>
-    names.has(properties.station_name),
+    REGION_STATION_CODES.size > 0
+      ? REGION_STATION_CODES.has(properties.station_code)
+      : names.has(properties.station_name),
   )
-  if (core.length !== DEMO_SPINE.stations.length) {
-    throw new Error(`Expected ${DEMO_SPINE.stations.length} corridor polygons, found ${core.length}`)
+  const expected = REGION_STATION_CODES.size || DEMO_SPINE.stations.length
+  if (core.length !== expected) {
+    throw new Error(`Expected ${expected} region polygons, found ${core.length}`)
   }
 
   const merged = union(featureCollection(core) as Parameters<typeof union>[0])
@@ -314,14 +365,14 @@ async function main(): Promise<void> {
   })
 
   process.stdout.write(
-    `08 corridor · ${entries.length.toLocaleString()} H3 r${RESOLUTION} cells · ` +
+    `08 ${REGION_ID} · ${entries.length.toLocaleString()} H3 r${RESOLUTION} cells · ` +
       `OSRM ${OSRM_URL}\n`,
   )
   const { matrix, maxSnapDistance } = await compileMatrix(entries)
   const disconnected = [...matrix].filter((duration) => !Number.isFinite(duration)).length
   if (disconnected > 0) throw new Error(`${disconnected} matrix entries are disconnected`)
   const { bitsets, words } = compileBitsets(matrix, entries.length)
-  process.stdout.write(`08 corridor · validating ${VALIDATION_PAIRS} live pairs…\n`)
+  process.stdout.write(`08 ${REGION_ID} · validating ${VALIDATION_PAIRS} live pairs…\n`)
   const validation = await validate(entries, matrix)
   const pass =
     validation.medianErrorPercent < 5 &&
@@ -336,14 +387,14 @@ async function main(): Promise<void> {
     )
   }
 
-  await mkdir(OUTPUT.routing, { recursive: true })
+  await mkdir(ROUTING_DIR, { recursive: true })
   const inputChecksum = await sha256File(INPUT.jurisdictions)
   const region = {
-    id: 'demo_corridor',
-    name: 'Kadugondana Halli → Banaswadi → Ramamurthy Nagar → K.R. Puram',
-    scope: 'A0a_one_corridor_fixture',
+    id: REGION_ID,
+    name: REGION_NAME,
+    scope: REGION_SCOPE,
     station_codes: core.map(({ properties }) => properties.station_code),
-    station_names: DEMO_SPINE.stations,
+    station_names: core.map(({ properties }) => properties.station_name),
     h3_resolution: RESOLUTION,
     cells: entries.length,
     buffer_km: BUFFER_KM,
@@ -414,24 +465,25 @@ async function main(): Promise<void> {
   ])
 
   const inputs = [{ path: INPUT.jurisdictions, sha256: inputChecksum }]
-  await recordOutput('08_routing_matrix_a0a', HEX_INDEX_PATH, entries.length, inputs)
+  const manifestStep = `08_routing_matrix_${REGION_SCOPE.replace(/[^A-Za-z0-9_]+/g, '_')}`
+  await recordOutput(manifestStep, HEX_INDEX_PATH, entries.length, inputs)
   await recordOutput(
-    '08_routing_matrix_a0a',
+    manifestStep,
     MATRIX_PATH,
     entries.length * entries.length,
     inputs,
     { cells: entries.length, scalar: 'float32_seconds', conditions: 'free_flow' },
   )
   await recordOutput(
-    '08_routing_matrix_a0a',
+    manifestStep,
     BITSETS_PATH,
     entries.length * RESPONSE_BUDGETS_SECONDS.length,
     inputs,
     { cells: entries.length, budgets_seconds: RESPONSE_BUDGETS_SECONDS, words },
   )
-  await recordOutput('08_routing_matrix_a0a', REGION_PATH, 1, inputs)
+  await recordOutput(manifestStep, REGION_PATH, 1, inputs)
   await recordOutput(
-    '08_routing_matrix_a0a',
+    manifestStep,
     VALIDATION_PATH,
     validation.pairs.length,
     inputs,
@@ -444,9 +496,9 @@ async function main(): Promise<void> {
 
   await mkdir(OUTPUT.reports, { recursive: true })
   await writeFile(
-    resolve(OUTPUT.reports, 'a0a_routing_fixture.md'),
+    REPORT_PATH,
     [
-      '# A0a — One-corridor routing fixture',
+      `# Routing fixture — ${REGION_NAME}`,
       '',
       '**PASS** — free-flow OSRM matrix and coverage bitsets compiled.',
       '',
@@ -473,7 +525,7 @@ async function main(): Promise<void> {
   )
 
   process.stdout.write(
-    `08 corridor complete in ${((Date.now() - started) / 1000).toFixed(1)}s — ` +
+    `08 ${REGION_ID} complete in ${((Date.now() - started) / 1000).toFixed(1)}s — ` +
       `${entries.length.toLocaleString()} cells · validation PASS\n`,
   )
 }
