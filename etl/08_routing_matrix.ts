@@ -342,7 +342,13 @@ async function main(): Promise<void> {
     throw new Error(`Expected ${expected} region polygons, found ${core.length}`)
   }
 
-  const merged = union(featureCollection(core) as Parameters<typeof union>[0])
+  // Turf's union operation intentionally rejects a collection with fewer than
+  // two geometries. Local A0b regions contain exactly one jurisdiction, so use
+  // that source feature verbatim; multi-station regions still require a union.
+  const merged =
+    core.length === 1
+      ? core[0]!
+      : union(featureCollection(core) as Parameters<typeof union>[0])
   if (!merged) throw new Error('Corridor polygon union is empty')
   const buffered = buffer(merged, BUFFER_KM, { units: 'kilometers' })
   if (!buffered) throw new Error('Corridor buffer is empty')
