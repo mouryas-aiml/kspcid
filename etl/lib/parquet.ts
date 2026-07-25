@@ -79,6 +79,13 @@ export class ParquetWriter {
     const instance = await DuckDBInstance.create(':memory:')
     const connection = await instance.connect()
     try {
+      // DuckDB may encode independent Parquet row groups on different worker
+      // threads. Their completion order is semantically irrelevant but can
+      // change file bytes on multi-million-row outputs, violating §14.6's
+      // bit-identical regeneration requirement. One compiler thread keeps
+      // row-group ordering deterministic across runs.
+      await connection.run(`SET threads = 1`)
+      await connection.run(`SET preserve_insertion_order = true`)
       const ddl = this.columns.map((c) => `"${c.name}" ${c.type}`).join(', ')
       await connection.run(`CREATE TABLE staged (${ddl})`)
       // AUTO_DETECT FALSE is load-bearing: with the sniffer on, DuckDB overrides

@@ -56,6 +56,8 @@ export const METHOD = {
   time_model_v1: 'time_model_v1',
   /** 05 — parsed act/sections and deterministic 64-dimensional MO feature layout. */
   mo_signature_v1: 'mo_signature_v1',
+  /** 06 — 52-week EWMA, seasonal factor, and negative-binomial control limit. */
+  weekly_baseline_v1: 'weekly_baseline_v1',
 } as const
 
 export type MethodId = (typeof METHOD)[keyof typeof METHOD]

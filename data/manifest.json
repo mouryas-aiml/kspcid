@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T20:19:38.651Z",
+  "updated_at": "2026-07-25T20:26:15.470Z",
   "entries": {
     "app/data/derived/incident_stations.parquet": {
       "step": "02_station_crosswalk",
@@ -81,8 +81,8 @@
       "step": "04_time_model",
       "path": "app/data/derived/incidents_time.parquet",
       "rows": 425408,
-      "sha256": "e7bd8d7b9f553ef8deb021cec2b5de8c3768e1b3a363b94fa52468d9d19ee9cc",
-      "bytes": 29811574,
+      "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d",
+      "bytes": 29874176,
       "inputs": [
         {
           "path": "app/data/derived/incidents.parquet",
@@ -98,7 +98,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T20:14:59.921Z",
+      "generated_at": "2026-07-25T20:25:50.593Z",
       "notes": {
         "inferred": 321575,
         "null_cyber": 64599,
@@ -135,12 +135,12 @@
       "step": "05_mo_signature",
       "path": "app/data/derived/mo_signatures.parquet",
       "rows": 425408,
-      "sha256": "79b5bc4cc7c9bdce8680fc215ded9f5c7bc9d171922bba4d29beff1aa9750d00",
-      "bytes": 26929654,
+      "sha256": "316915bf0acd9ee940f3a3a694f6d2e57abe7e047e4a2fb30aa6174ed91a6468",
+      "bytes": 26952222,
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
-          "sha256": "e7bd8d7b9f553ef8deb021cec2b5de8c3768e1b3a363b94fa52468d9d19ee9cc"
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
         },
         {
           "path": "app/data/derived/mo_vocabulary.json",
@@ -148,7 +148,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T20:19:38.544Z",
+      "generated_at": "2026-07-25T20:26:03.095Z",
       "notes": {
         "with_sections": 425249,
         "with_weapon_hints": 129153
@@ -163,11 +163,11 @@
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
-          "sha256": "e7bd8d7b9f553ef8deb021cec2b5de8c3768e1b3a363b94fa52468d9d19ee9cc"
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T20:19:38.532Z",
+      "generated_at": "2026-07-25T20:26:02.974Z",
       "notes": {
         "dimensions": 64,
         "section_vocabulary": 200,
@@ -233,23 +233,49 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T20:14:59.778Z",
+      "generated_at": "2026-07-25T20:25:50.477Z",
       "notes": {
         "prior_strength": 48,
         "weekday_basis": "registered_on",
         "taxonomy_fallback": "other_incident"
       }
     },
+    "app/data/derived/weekly_baselines.parquet": {
+      "step": "06_baselines",
+      "path": "app/data/derived/weekly_baselines.parquet",
+      "rows": 5797660,
+      "sha256": "7d560d83f70fc4fe3a4ce3eb1fafe02d5364e4f07c1bdefed936ab05a24c7224",
+      "bytes": 46139855,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents_time.parquet",
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:26:15.470Z",
+      "notes": {
+        "input_complete_window_rows": 412754,
+        "excluded_partial_2024_rows": 12654,
+        "pairs": 13870,
+        "weeks_per_pair": 418,
+        "alpha": 0.25,
+        "rolling_weeks": 52,
+        "ucl_quantile": 0.99,
+        "ucl_distribution": "negative_binomial_with_poisson_limit",
+        "alert_candidates_raw_count_gte_5": 1061
+      }
+    },
     "app/data/nosql/mo_vectors.jsonl": {
       "step": "05_mo_signature",
       "path": "app/data/nosql/mo_vectors.jsonl",
       "rows": 425408,
-      "sha256": "ddd9ff6518c294f6e54657ecbedb1722514edaf19e32942f1ec9768c9744bc50",
+      "sha256": "ce380cd9f4b9be6f7f8d8ca699547e80c0fb9684914d8f9143f317efd0f3129c",
       "bytes": 210576960,
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
-          "sha256": "e7bd8d7b9f553ef8deb021cec2b5de8c3768e1b3a363b94fa52468d9d19ee9cc"
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
         },
         {
           "path": "app/data/derived/mo_vocabulary.json",
@@ -257,7 +283,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T20:19:38.651Z",
+      "generated_at": "2026-07-25T20:26:03.189Z",
       "notes": {
         "collection": "mo_vectors",
         "dimensions": 64,
