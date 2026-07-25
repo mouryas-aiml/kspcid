@@ -2,6 +2,7 @@ import type {
   Deployment,
   PatrolData,
   PatrolScenario,
+  PrecomputedOptimizerFallback,
   RoutingRegion,
   HexIndex,
 } from './types'
@@ -24,19 +25,21 @@ async function fetchTypedArray<T extends Float32Array | Uint32Array>(
 }
 
 export async function loadPatrolData(): Promise<PatrolData> {
-  const [region, hexIndex, scenario, durations, coverage] = await Promise.all([
+  const [region, hexIndex, scenario, durations, coverage, fallback] = await Promise.all([
     fetchJson<RoutingRegion>(`${DATA_ROOT}/routing/corridor_region.json`),
     fetchJson<HexIndex>(`${DATA_ROOT}/routing/hex_index.json`),
     fetchJson<PatrolScenario>(`${DATA_ROOT}/scenarios/demo_corridor_patrol.json`),
     fetchTypedArray(`${DATA_ROOT}/routing/duration_matrix.bin`, (buffer) => new Float32Array(buffer)),
     fetchTypedArray(`${DATA_ROOT}/routing/coverage_bitsets.bin`, (buffer) => new Uint32Array(buffer)),
+    fetchJson<PrecomputedOptimizerFallback>(`${DATA_ROOT}/scenarios/optimizer_fallback.json`),
   ])
   if (hexIndex.cells.length !== region.cells) throw new Error('Routing index does not match region')
   if (durations.length !== region.cells * region.cells) throw new Error('Duration matrix size mismatch')
   const expectedCoverage =
     region.cells * region.response_budgets_seconds.length * region.words_per_bitset
   if (coverage.length !== expectedCoverage) throw new Error('Coverage bitset size mismatch')
-  return { region, hexIndex, scenario, durations, coverage }
+  if (fallback.scenario_id !== scenario.scenario_id) throw new Error('Optimizer fallback scenario mismatch')
+  return { region, hexIndex, scenario, durations, coverage, fallback }
 }
 
 export function budgetIndex(region: RoutingRegion, targetMinutes: number): number {

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Noto_Sans_Kannada } from 'next/font/google'
 import type { ReactNode } from 'react'
 
+import { OfflineBootstrap } from '@/components/offline/OfflineBootstrap'
 import './globals.css'
 
 const sans = Geist({ subsets: ['latin'], variable: '--f-sans' })
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
   return (
     <html lang="en">
       <body className={`${sans.variable} ${mono.variable} ${kannada.variable}`}>
+        <OfflineBootstrap />
         {children}
       </body>
     </html>

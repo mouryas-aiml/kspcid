@@ -26,7 +26,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Panel } from '@/components/primitives/Panel'
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import { OpsShell } from '@/components/shell/OpsShell'
-import { baselineDeployment, optimizeDeployment } from '@/lib/patrol/optimizer'
+import {
+  baselineDeployment,
+  optimizeDeployment,
+  optimizeDeploymentWithFallback,
+} from '@/lib/patrol/optimizer'
 import { isCovered, loadPatrolData, unionCoverage } from '@/lib/patrol/routing'
 import { scoreDeployment } from '@/lib/patrol/scoring'
 import { simulateUntil } from '@/lib/patrol/simulation'
@@ -87,6 +91,7 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
   const toggleClosure = usePatrolStore((state) => state.toggleClosure)
   const reset = usePatrolStore((state) => state.reset)
   const setOptimized = usePatrolStore((state) => state.setOptimized)
+  const [optimizing, setOptimizing] = useState(false)
 
   const groups = data.scenario.roster.reduce<Record<string, PatrolUnit[]>>((result, unit) => {
     ;(result[unit.unit_type] ??= []).push(unit)
@@ -200,9 +205,15 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
         <button
           type="button"
           className="rounded-[--r-sm] bg-[--gold-500] px-3 py-2 text-xs font-semibold text-[--ink-900]"
-          onClick={() => setOptimized(optimizeDeployment(data, targetMinutes, requiredReserve))}
+          disabled={optimizing}
+          onClick={() => {
+            setOptimizing(true)
+            void optimizeDeploymentWithFallback(data, targetMinutes, requiredReserve)
+              .then(setOptimized)
+              .finally(() => setOptimizing(false))
+          }}
         >
-          Optimize
+          {optimizing ? 'Optimizing…' : 'Optimize'}
         </button>
         <button
           type="button"
@@ -540,7 +551,17 @@ function ScorePanel({
         </div>
       </Panel>
       {optimized ? (
-        <Panel title="Heuristic ready" eyebrow={`${optimized.elapsedMs.toFixed(1)} MS`}>
+        <Panel
+          title="Heuristic ready"
+          eyebrow={
+            optimized.source === 'precomputed_fallback'
+              ? 'STORED FALLBACK'
+              : `${optimized.elapsedMs.toFixed(1)} MS`
+          }
+        >
+          <p className="mb-2 font-mono text-lg font-semibold text-[--txt-hi]">
+            {optimized.source === 'precomputed_fallback' ? 'Stored' : 'Computed'} plan score {optimized.score.total}
+          </p>
           <p className="text-xs leading-5 text-[--txt-2]">
             MCLP-inspired heuristic (greedy + local search). 300 deterministic 1-swaps plus equity repair, following the Church & ReVelle covering formulation.
           </p>

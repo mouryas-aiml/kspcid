@@ -108,6 +108,77 @@ export function optimizeDeployment(
     elapsedMs: performance.now() - started,
     method: 'greedy_local_search_equity_repair',
     iterations: 300,
+    source: 'client_heuristic',
+  }
+}
+
+function storedFallback(
+  data: PatrolData,
+  targetMinutes: number,
+  reserve: number,
+): OptimizationResult {
+  if (
+    data.fallback.target_minutes !== targetMinutes ||
+    data.fallback.reserve_units !== reserve
+  ) {
+    return optimizeDeployment(data, targetMinutes, reserve)
+  }
+  return {
+    deployment: data.fallback.deployment,
+    score: data.fallback.score,
+    elapsedMs: 0,
+    method: data.fallback.method,
+    iterations: data.fallback.iterations,
+    source: 'precomputed_fallback',
+  }
+}
+
+/**
+ * Try the deployment API, then continue with the stored same-schema plan if
+ * the call fails or crosses the declared two-second demo ceiling.
+ */
+export async function optimizeDeploymentWithFallback(
+  data: PatrolData,
+  targetMinutes: number,
+  reserve: number,
+): Promise<OptimizationResult> {
+  if ((process.env.NEXT_PUBLIC_DEMO_MODE ?? 'offline') === 'offline') {
+    return storedFallback(data, targetMinutes, reserve)
+  }
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), data.fallback.timeout_ms)
+  try {
+    const response = await fetch('/api/optimize', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        scenarioId: data.scenario.scenario_id,
+        targetMinutes,
+        reserveUnits: reserve,
+      }),
+      signal: controller.signal,
+    })
+    if (!response.ok) throw new Error(`Optimizer unavailable (${response.status})`)
+    const result = await response.json() as {
+      deployment?: Deployment
+      elapsedMs?: number
+      iterations?: number
+    }
+    if (!result.deployment || Object.keys(result.deployment).length !== data.scenario.roster.length) {
+      throw new Error('Optimizer response contract mismatch')
+    }
+    return {
+      deployment: result.deployment,
+      score: scoreDeployment(data, result.deployment, targetMinutes, reserve),
+      elapsedMs: result.elapsedMs ?? 0,
+      method: 'greedy_local_search_equity_repair',
+      iterations: result.iterations ?? 300,
+      source: 'live_heuristic',
+    }
+  } catch {
+    return storedFallback(data, targetMinutes, reserve)
+  } finally {
+    clearTimeout(timeout)
   }
 }
 

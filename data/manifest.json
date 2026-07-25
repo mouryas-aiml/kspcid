@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T22:01:09.664Z",
+  "updated_at": "2026-07-25T22:08:26.317Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -373,6 +373,65 @@
         "collection": "mo_vectors",
         "dimensions": 64,
         "layout": "mo64_v1"
+      }
+    },
+    "app/data/offline/demo_snapshot.json": {
+      "step": "19b_offline_snapshot",
+      "path": "app/data/offline/demo_snapshot.json",
+      "rows": 11,
+      "sha256": "36df799dc563a7a95600af7a3da443eb7c049198c2018a99de4df807a5ffaf91",
+      "bytes": 3661,
+      "inputs": [
+        {
+          "path": "app/data/scenarios/command_feed.json",
+          "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3"
+        },
+        {
+          "path": "app/data/scenarios/demo_corridor_patrol.json",
+          "sha256": "71e8c6ee8843e6f381aca22918d649d3d7d4ac99505810b1974783f35448ab97"
+        },
+        {
+          "path": "app/data/scenarios/optimizer_fallback.json",
+          "sha256": "0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a"
+        },
+        {
+          "path": "app/data/scenarios/similarity_demo.json",
+          "sha256": "c4bde7060bb25bb7869b633b0a84e9fc9d6c7adc6548cd69f5160778d76de0f2"
+        },
+        {
+          "path": "app/data/derived/graph_snapshot.json",
+          "sha256": "24b489eb815b6d9f7261f23e75387c40184ea8d1fb2bfc0b97231fb7416ac4eb"
+        },
+        {
+          "path": "app/data/routing/corridor_region.json",
+          "sha256": "b94fac9ea34a76552f912b26d927243fef067ae58a6fcdd78f79e4d73ea859a3"
+        },
+        {
+          "path": "app/data/routing/hex_index.json",
+          "sha256": "539a3f3a8862c153df20a77605cd52a5764be197543209009cd0ab48d48e0bfd"
+        },
+        {
+          "path": "app/data/routing/duration_matrix.bin",
+          "sha256": "c3605a7e5b5eb59373d959c386cd1986d6a2901bd0555e8d703de193a5323a52"
+        },
+        {
+          "path": "app/data/routing/coverage_bitsets.bin",
+          "sha256": "2f11f7d1ef99a2656af5613d1f429c4e39e21d830b0f2c9e305003af0947d9b3"
+        },
+        {
+          "path": "app/data/scenarios/justice_pipeline.json",
+          "sha256": "0e39832dd6d6350b6cca374e2f5be4ba03ea34f35e7aa390391ce71f5b0ce71a"
+        },
+        {
+          "path": "app/data/scenarios/cyber_wing.json",
+          "sha256": "d303cafd28497da2dfa93843eaf61f6cee30cef3eccf989033520c9a5ce407d9"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T22:08:26.317Z",
+      "notes": {
+        "routes": 7,
+        "demo_mode": "offline"
       }
     },
     "app/data/routing/corridor_region.json": {
@@ -10783,6 +10842,30 @@
         "stages": 13,
         "stations": 107,
         "modelled_edges": 14
+      }
+    },
+    "app/data/scenarios/optimizer_fallback.json": {
+      "step": "19b_optimizer_fallback",
+      "path": "app/data/scenarios/optimizer_fallback.json",
+      "rows": 16,
+      "sha256": "0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a",
+      "bytes": 1527,
+      "inputs": [
+        {
+          "path": "app/data/scenarios/demo_corridor_patrol.json",
+          "sha256": "71e8c6ee8843e6f381aca22918d649d3d7d4ac99505810b1974783f35448ab97"
+        },
+        {
+          "path": "app/data/routing/coverage_bitsets.bin",
+          "sha256": "2f11f7d1ef99a2656af5613d1f429c4e39e21d830b0f2c9e305003af0947d9b3"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T22:08:26.314Z",
+      "notes": {
+        "target_minutes": 7,
+        "reserve_units": 2,
+        "score": 913
       }
     },
     "app/data/scenarios/similarity_demo.json": {

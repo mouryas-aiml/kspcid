@@ -130,6 +130,7 @@ export interface PatrolData {
   readonly scenario: PatrolScenario
   readonly durations: Float32Array
   readonly coverage: Uint32Array
+  readonly fallback: PrecomputedOptimizerFallback
 }
 
 export type Deployment = Record<string, number | null>
@@ -156,4 +157,18 @@ export interface OptimizationResult {
   readonly elapsedMs: number
   readonly method: 'greedy_local_search_equity_repair'
   readonly iterations: number
+  readonly source?: 'live_heuristic' | 'client_heuristic' | 'precomputed_fallback'
+}
+
+export interface PrecomputedOptimizerFallback {
+  readonly fallback_id: string
+  readonly scenario_id: string
+  readonly target_minutes: number
+  readonly reserve_units: number
+  readonly timeout_ms: number
+  readonly deployment: Deployment
+  readonly score: ScoreBreakdown
+  readonly method: 'greedy_local_search_equity_repair'
+  readonly iterations: number
+  readonly source: 'precomputed_fallback'
 }
