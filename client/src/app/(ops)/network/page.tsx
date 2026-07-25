@@ -1,5 +1,5 @@
-import { CaseSimilarity } from '@/components/similarity/CaseSimilarity'
+import { CaseConstellation } from '@/components/graph/CaseConstellation'
 
 export default function NetworkPage() {
-  return <CaseSimilarity />
+  return <CaseConstellation />
 }

@@ -10,6 +10,7 @@ import {
   Search,
   SlidersHorizontal,
 } from 'lucide-react'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Panel } from '@/components/primitives/Panel'
@@ -130,9 +131,9 @@ function SimilarityContext({
         <button type="button" className="rounded-[--r-sm] border border-[--cyan-400] bg-[color-mix(in_srgb,var(--cyan-400)_8%,transparent)] px-3 py-2 text-xs text-[--cyan-400]">
           Similarity
         </button>
-        <button type="button" disabled className="rounded-[--r-sm] border border-[--ink-600] px-3 py-2 text-xs text-[--txt-3]">
-          Constellation · A14
-        </button>
+        <Link href="/network/" className="rounded-[--r-sm] border border-[--ink-600] px-3 py-2 text-center text-xs text-[--txt-2]">
+          Constellation
+        </Link>
       </div>
       <label className="block">
         <span className="type-micro text-[--txt-3]">Fixture cases</span>
