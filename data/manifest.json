@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T21:41:01.368Z",
+  "updated_at": "2026-07-25T21:50:38.320Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -10688,6 +10688,30 @@
         "status": "PASS",
         "median_error_percent": 0.0000018531443298782782,
         "max_error_percent": 0.0000047163261900390935
+      }
+    },
+    "app/data/scenarios/command_feed.json": {
+      "step": "16_command_feed",
+      "path": "app/data/scenarios/command_feed.json",
+      "rows": 30,
+      "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3",
+      "bytes": 35453,
+      "inputs": [
+        {
+          "path": "app/data/derived/weekly_baselines.parquet",
+          "sha256": "7d560d83f70fc4fe3a4ce3eb1fafe02d5364e4f07c1bdefed936ab05a24c7224"
+        },
+        {
+          "path": "app/data/derived/incidents_time.parquet",
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T21:50:38.320Z",
+      "notes": {
+        "detector_candidates": 84,
+        "mappable_alerts": 26,
+        "replay_duration_ms": 60000
       }
     },
     "app/data/scenarios/demo_corridor_patrol.json": {
