@@ -380,11 +380,12 @@ async function main(): Promise<void> {
   const { bitsets, words } = compileBitsets(matrix, entries.length)
   process.stdout.write(`08 ${REGION_ID} · validating ${VALIDATION_PAIRS} live pairs…\n`)
   const validation = await validate(entries, matrix)
+  const requiresCrossBoundary = core.length > 1
   const pass =
     validation.medianErrorPercent < 5 &&
     validation.maxErrorPercent < 20 &&
     validation.oneWayAsymmetryPairs > 0 &&
-    validation.crossBoundaryPairs > 0
+    (!requiresCrossBoundary || validation.crossBoundaryPairs > 0)
   if (!pass) {
     throw new Error(
       `Routing validation failed: median=${validation.medianErrorPercent}, ` +
@@ -451,6 +452,7 @@ async function main(): Promise<void> {
     max_table_snap_distance_m: maxSnapDistance,
     one_way_asymmetry_pairs: validation.oneWayAsymmetryPairs,
     cross_boundary_pairs: validation.crossBoundaryPairs,
+    cross_boundary_required: requiresCrossBoundary,
     pairs: validation.pairs,
     source_authority: 'open_reference',
     transformation: 'derived',
