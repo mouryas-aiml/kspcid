@@ -4,16 +4,16 @@
 - Units in stored deployment: **16**
 - Live optimizer timeout: **2000 ms**
 - Offline routes: **7**
-- Offline artifact contracts: **11**
+- Offline artifact contracts: **12**
 - Fallback SHA-256: `0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a`
-- Snapshot SHA-256: `36df799dc563a7a95600af7a3da443eb7c049198c2018a99de4df807a5ffaf91`
+- Snapshot SHA-256: `b31bb0acde6a3d4856612b314896f986d993d8e8f73b0cdb4d9cda504a8c9501`
 
 The bundle is a same-schema static fallback. It contains no Catalyst credentials and makes no deployment claim.
 
 ## Acceptance
 
 - `verify:offline` re-runs the deterministic optimizer and confirms the stored 16-unit deployment and score 913 exactly.
-- Every offline artifact is byte-counted and checksummed; all seven demo routes and required data assets are present in the service-worker contract.
+- Every offline artifact is byte-counted and checksummed; all seven demo routes and 12 required data assets—including the Command Map—are present in the service-worker contract.
 - With Chrome networking forcibly disabled, `/patrol/` reloaded, hydrated, loaded all routing binaries, and returned `Stored fallback` / `Stored plan score 913` with no console or page errors.
 - Online mode has a 2,000 ms ceiling. Failure, invalid response, or timeout returns the stored same-shape plan.
 - `NEXT_PUBLIC_DEMO_MODE=offline` bypasses the live call entirely; static exports default to this safe mode.

@@ -84,6 +84,7 @@ async function main(): Promise<void> {
 
   const artifactDefinitions = [
     ['feed', resolve(OUTPUT.scenarios, 'command_feed.json'), '/data/scenarios/command_feed.json'],
+    ['command_map', resolve(OUTPUT.scenarios, 'command_map.json'), '/data/scenarios/command_map.json'],
     ['patrol_scenario', scenarioPath, '/data/scenarios/demo_corridor_patrol.json'],
     ['optimizer_fallback', FALLBACK_PATH, '/data/scenarios/optimizer_fallback.json'],
     ['similarity', resolve(OUTPUT.scenarios, 'similarity_demo.json'), '/data/scenarios/similarity_demo.json'],

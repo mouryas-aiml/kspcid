@@ -16,6 +16,7 @@ const files = [
   ['data/scenarios/cyber_wing.json', 'public/data/scenarios/cyber_wing.json'],
   ['data/scenarios/optimizer_fallback.json', 'public/data/scenarios/optimizer_fallback.json'],
   ['data/offline/demo_snapshot.json', 'public/data/offline/demo_snapshot.json'],
+  ['data/scenarios/command_map.json', 'public/data/scenarios/command_map.json'],
   ['data/derived/graph_snapshot.json', 'public/data/graph/graph_snapshot.json'],
 ]
 

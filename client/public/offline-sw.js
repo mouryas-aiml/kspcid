@@ -18,6 +18,7 @@ const PRECACHE = [
   '/cyber/index.txt',
   '/data/offline/demo_snapshot.json',
   '/data/scenarios/command_feed.json',
+  '/data/scenarios/command_map.json',
   '/data/scenarios/demo_corridor_patrol.json',
   '/data/scenarios/optimizer_fallback.json',
   '/data/scenarios/similarity_demo.json',

@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T22:08:26.317Z",
+  "updated_at": "2026-07-25T22:22:24.241Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -378,13 +378,17 @@
     "app/data/offline/demo_snapshot.json": {
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
-      "rows": 11,
-      "sha256": "36df799dc563a7a95600af7a3da443eb7c049198c2018a99de4df807a5ffaf91",
-      "bytes": 3661,
+      "rows": 12,
+      "sha256": "b31bb0acde6a3d4856612b314896f986d993d8e8f73b0cdb4d9cda504a8c9501",
+      "bytes": 3880,
       "inputs": [
         {
           "path": "app/data/scenarios/command_feed.json",
           "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3"
+        },
+        {
+          "path": "app/data/scenarios/command_map.json",
+          "sha256": "c921554b2ee7995415df9cfeb8a23d47df9278006350c209998ae043d2e36756"
         },
         {
           "path": "app/data/scenarios/demo_corridor_patrol.json",
@@ -428,7 +432,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T22:08:26.317Z",
+      "generated_at": "2026-07-25T22:22:24.241Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10773,6 +10777,30 @@
         "replay_duration_ms": 60000
       }
     },
+    "app/data/scenarios/command_map.json": {
+      "step": "11_command_map_fixture",
+      "path": "app/data/scenarios/command_map.json",
+      "rows": 500,
+      "sha256": "c921554b2ee7995415df9cfeb8a23d47df9278006350c209998ae043d2e36756",
+      "bytes": 433269,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents_time.parquet",
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
+        },
+        {
+          "path": "app/data/scenarios/command_feed.json",
+          "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T22:19:02.431Z",
+      "notes": {
+        "reported_points": 500,
+        "explanations": 24,
+        "alerts": 6
+      }
+    },
     "app/data/scenarios/cyber_wing.json": {
       "step": "17b_cyber_fixture",
       "path": "app/data/scenarios/cyber_wing.json",
@@ -10861,7 +10889,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T22:08:26.314Z",
+      "generated_at": "2026-07-25T22:22:24.239Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,
