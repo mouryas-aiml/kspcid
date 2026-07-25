@@ -13,6 +13,7 @@ const files = [
   ['data/scenarios/similarity_demo.json', 'public/data/scenarios/similarity_demo.json'],
   ['data/scenarios/justice_pipeline.json', 'public/data/scenarios/justice_pipeline.json'],
   ['data/scenarios/command_feed.json', 'public/data/scenarios/command_feed.json'],
+  ['data/scenarios/cyber_wing.json', 'public/data/scenarios/cyber_wing.json'],
   ['data/derived/graph_snapshot.json', 'public/data/graph/graph_snapshot.json'],
 ]
 

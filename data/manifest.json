@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T21:50:38.320Z",
+  "updated_at": "2026-07-25T21:56:15.328Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -10712,6 +10712,27 @@
         "detector_candidates": 84,
         "mappable_alerts": 26,
         "replay_duration_ms": 60000
+      }
+    },
+    "app/data/scenarios/cyber_wing.json": {
+      "step": "17b_cyber_fixture",
+      "path": "app/data/scenarios/cyber_wing.json",
+      "rows": 64599,
+      "sha256": "d303cafd28497da2dfa93843eaf61f6cee30cef3eccf989033520c9a5ce407d9",
+      "bytes": 21025,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents_time.parquet",
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T21:56:15.328Z",
+      "notes": {
+        "caseload_share_pct": 15.19,
+        "mappable_coordinates": 8823,
+        "mappable_share_pct": 13.66,
+        "zero_geographic_dependency": true
       }
     },
     "app/data/scenarios/demo_corridor_patrol.json": {
