@@ -11,6 +11,7 @@ const files = [
   ['data/routing/coverage_bitsets.bin', 'public/data/routing/coverage_bitsets.bin'],
   ['data/scenarios/demo_corridor_patrol.json', 'public/data/scenarios/demo_corridor_patrol.json'],
   ['data/scenarios/similarity_demo.json', 'public/data/scenarios/similarity_demo.json'],
+  ['data/scenarios/justice_pipeline.json', 'public/data/scenarios/justice_pipeline.json'],
   ['data/derived/graph_snapshot.json', 'public/data/graph/graph_snapshot.json'],
 ]
 
@@ -21,4 +22,4 @@ for (const [source, destination] of files) {
   await copyFile(sourcePath, destinationPath)
 }
 
-process.stdout.write(`Synced ${files.length} deterministic Patrol Lab artifacts.\n`)
+process.stdout.write(`Synced ${files.length} deterministic application artifacts.\n`)

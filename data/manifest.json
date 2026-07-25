@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T21:30:21.718Z",
+  "updated_at": "2026-07-25T21:41:01.368Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -10718,6 +10718,26 @@
           22,
           23
         ]
+      }
+    },
+    "app/data/scenarios/justice_pipeline.json": {
+      "step": "15_justice_fixture",
+      "path": "app/data/scenarios/justice_pipeline.json",
+      "rows": 425408,
+      "sha256": "0e39832dd6d6350b6cca374e2f5be4ba03ea34f35e7aa390391ce71f5b0ce71a",
+      "bytes": 91017,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents_time.parquet",
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T21:41:01.368Z",
+      "notes": {
+        "stages": 13,
+        "stations": 107,
+        "modelled_edges": 14
       }
     },
     "app/data/scenarios/similarity_demo.json": {
