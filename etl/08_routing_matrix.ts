@@ -134,6 +134,10 @@ function coordinateText(entry: HexEntry): string {
   return `${entry.longitude.toFixed(6)},${entry.latitude.toFixed(6)}`
 }
 
+function coordinatePairText(coordinate: readonly [number, number]): string {
+  return `${coordinate[0].toFixed(6)},${coordinate[1].toFixed(6)}`
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url)
   if (!response.ok) throw new Error(`OSRM HTTP ${response.status}: ${await response.text()}`)
@@ -182,10 +186,14 @@ function makeValidationPairs(cells: number): Array<readonly [number, number]> {
 async function compileMatrix(entries: readonly HexEntry[]): Promise<{
   matrix: Float32Array
   maxSnapDistance: number
+  snappedCoordinates: Array<readonly [number, number]>
 }> {
   const size = entries.length
   const matrix = new Float32Array(size * size)
   let maxSnapDistance = 0
+  const snappedCoordinates: Array<readonly [number, number]> = entries.map(
+    (entry) => [entry.longitude, entry.latitude] as const,
+  )
 
   for (let start = 0; start < size; start += SOURCE_CHUNK) {
     const end = Math.min(size, start + SOURCE_CHUNK)
@@ -221,6 +229,12 @@ async function compileMatrix(entries: readonly HexEntry[]): Promise<{
         }
         maxSnapDistance = Math.max(maxSnapDistance, waypoint.distance)
       }
+      response.sources.forEach((waypoint, index) => {
+        snappedCoordinates[start + index] = waypoint.location
+      })
+      response.destinations.forEach((waypoint, index) => {
+        snappedCoordinates[destinationStart + index] = waypoint.location
+      })
       for (let local = 0; local < response.durations.length; local++) {
         const row = response.durations[local]
         if (!row || row.length !== destinationEntries.length) {
@@ -239,7 +253,7 @@ async function compileMatrix(entries: readonly HexEntry[]): Promise<{
     }
     process.stdout.write(`  … matrix origins ${end.toLocaleString()} / ${size.toLocaleString()}\n`)
   }
-  return { matrix, maxSnapDistance }
+  return { matrix, maxSnapDistance, snappedCoordinates }
 }
 
 function compileBitsets(matrix: Float32Array, cells: number): {
@@ -265,6 +279,7 @@ function compileBitsets(matrix: Float32Array, cells: number): {
 async function validate(
   entries: readonly HexEntry[],
   matrix: Float32Array,
+  snappedCoordinates: ReadonlyArray<readonly [number, number]>,
 ): Promise<{
   readonly pairs: ValidationPair[]
   readonly medianErrorPercent: number
@@ -279,7 +294,8 @@ async function validate(
     const fromEntry = entries[from]!
     const toEntry = entries[to]!
     const url =
-      `${OSRM_URL}/route/v1/driving/${coordinateText(fromEntry)};${coordinateText(toEntry)}` +
+      `${OSRM_URL}/route/v1/driving/${coordinatePairText(snappedCoordinates[from]!)};` +
+      `${coordinatePairText(snappedCoordinates[to]!)}` +
       '?overview=false&steps=false&alternatives=false'
     const response = await fetchJson<RouteResponse>(url)
     if (response.code !== 'Ok' || !response.routes[0]) {
@@ -352,11 +368,15 @@ async function main(): Promise<void> {
   if (!merged) throw new Error('Corridor polygon union is empty')
   const buffered = buffer(merged, BUFFER_KM, { units: 'kilometers' })
   if (!buffered) throw new Error('Corridor buffer is empty')
-  const cells = polygonToCells(
-    buffered.geometry.coordinates as number[][] | number[][][],
-    RESOLUTION,
-    true,
-  ).sort()
+  const cells = [
+    ...new Set(
+      buffered.geometry.type === 'Polygon'
+        ? polygonToCells(buffered.geometry.coordinates, RESOLUTION, true)
+        : buffered.geometry.coordinates.flatMap((polygon) =>
+            polygonToCells(polygon, RESOLUTION, true),
+          ),
+    ),
+  ].sort()
   const entries: HexEntry[] = cells.map((h3, index) => {
     const [latitude, longitude] = cellToLatLng(h3)
     const station = coreStation(longitude, latitude, core)
@@ -374,12 +394,12 @@ async function main(): Promise<void> {
     `08 ${REGION_ID} · ${entries.length.toLocaleString()} H3 r${RESOLUTION} cells · ` +
       `OSRM ${OSRM_URL}\n`,
   )
-  const { matrix, maxSnapDistance } = await compileMatrix(entries)
+  const { matrix, maxSnapDistance, snappedCoordinates } = await compileMatrix(entries)
   const disconnected = [...matrix].filter((duration) => !Number.isFinite(duration)).length
   if (disconnected > 0) throw new Error(`${disconnected} matrix entries are disconnected`)
   const { bitsets, words } = compileBitsets(matrix, entries.length)
   process.stdout.write(`08 ${REGION_ID} · validating ${VALIDATION_PAIRS} live pairs…\n`)
-  const validation = await validate(entries, matrix)
+  const validation = await validate(entries, matrix, snappedCoordinates)
   const requiresCrossBoundary = core.length > 1
   const pass =
     validation.medianErrorPercent < 5 &&
