@@ -26,6 +26,6 @@
     "noEmit": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["etl/**/*.ts", "functions/shared/**/*.ts", "scripts/lib.mjs"],
+  "include": ["etl/**/*.ts", "functions/**/*.ts", "scripts/lib.mjs"],
   "exclude": ["node_modules", "etl/__fixtures__"]
 }
