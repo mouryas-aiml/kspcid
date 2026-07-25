@@ -17,6 +17,8 @@ interface OpsShellProps {
   readonly inspector: ReactNode
   readonly children: ReactNode
   readonly timeline?: ReactNode
+  readonly inspectorTitle?: string
+  readonly inspectorEyebrow?: string
 }
 
 export function OpsShell({
@@ -26,6 +28,8 @@ export function OpsShell({
   inspector,
   children,
   timeline,
+  inspectorTitle = 'Banaswadi corridor',
+  inspectorEyebrow = 'SELECTED AREA',
 }: OpsShellProps) {
   const [contextOpen, setContextOpen] = useState(true)
   const [inspectorOpen, setInspectorOpen] = useState(true)
@@ -82,8 +86,8 @@ export function OpsShell({
       <main className="ops-canvas">{children}</main>
       <Inspector
         open={inspectorOpen}
-        title="Banaswadi corridor"
-        eyebrow="SELECTED AREA"
+        title={inspectorTitle}
+        eyebrow={inspectorEyebrow}
         onClose={() => setInspectorOpen(false)}
       >
         {inspector}

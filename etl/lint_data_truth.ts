@@ -113,7 +113,17 @@ const RULES: readonly Rule[] = [
 ]
 
 const SCAN_DIRS = ['etl', 'functions', 'client'] as const
-const SKIP_DIRS = new Set(['node_modules', 'data', 'reports', '.staging', '.next', 'dist', 'build', '__fixtures__'])
+const SKIP_DIRS = new Set([
+  'node_modules',
+  'data',
+  'reports',
+  '.staging',
+  '.next',
+  'out',
+  'dist',
+  'build',
+  '__fixtures__',
+])
 const TEXT_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json', '.md', '.css', '.html'])
 
 interface Violation {
