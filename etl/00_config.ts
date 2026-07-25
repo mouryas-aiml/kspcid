@@ -49,6 +49,7 @@ export const INPUT = {
 
 export const OUTPUT = {
   derived: resolve(APP_ROOT, 'data/derived'),
+  nosql: resolve(APP_ROOT, 'data/nosql'),
   routing: resolve(APP_ROOT, 'data/routing'),
   scenarios: resolve(APP_ROOT, 'data/scenarios'),
   manifest: resolve(APP_ROOT, 'data/manifest.json'),

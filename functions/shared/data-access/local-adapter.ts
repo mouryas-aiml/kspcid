@@ -89,8 +89,23 @@ export class LocalAdapter implements DataAdapter {
     try {
       return JSON.parse(await readFile(path, 'utf8')) as T
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
-      throw error
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+      const jsonlPath = this.#path(`${key.collection}.jsonl`)
+      try {
+        const connection = await this.#database()
+        const keyField = quoteIdentifier(key.keyField ?? 'id')
+        const safePath = jsonlPath.replaceAll("'", "''")
+        const safeId = key.id.replaceAll("'", "''")
+        const reader = await connection.runAndReadAll(
+          `SELECT * FROM read_json_auto('${safePath}', format='newline_delimited') ` +
+            `WHERE ${keyField} = '${safeId}' LIMIT 1`,
+        )
+        return (reader.getRowObjectsJS()[0] as T | undefined) ?? null
+      } catch (jsonlError) {
+        if ((jsonlError as NodeJS.ErrnoException).code === 'ENOENT') return null
+        if (String(jsonlError).includes('No files found')) return null
+        throw jsonlError
+      }
     }
   }
 

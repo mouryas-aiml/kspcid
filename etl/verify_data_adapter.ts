@@ -10,6 +10,16 @@ interface AdjacencyDocument {
   readonly adjacency?: Record<string, readonly string[]>
 }
 
+interface SignatureRow {
+  readonly vector_document_id: string
+}
+
+interface VectorDocument {
+  readonly id: string
+  readonly dimensions: number | bigint
+  readonly vector: readonly number[]
+}
+
 async function main(): Promise<void> {
   const adapter = createDataAdapter({ mode: 'local' })
   try {
@@ -31,8 +41,23 @@ async function main(): Promise<void> {
     })
     assert.ok(adjacency, 'station_adjacency.json must be readable in local mode')
 
+    const signatures = await adapter.queryTable<SignatureRow>({
+      table: 'MoSignatures',
+      columns: ['vector_document_id'],
+      limit: 1,
+    })
+    const documentId = signatures[0]?.vector_document_id
+    assert.ok(documentId, 'MO signature must reference a vector document')
+    const vector = await adapter.getDocument<VectorDocument>({
+      collection: 'nosql/mo_vectors',
+      id: documentId,
+    })
+    assert.ok(vector, 'NoSQL JSONL vector document must be readable in local mode')
+    assert.equal(Number(vector.dimensions), 64)
+    assert.equal(vector.vector.length, 64)
+
     process.stdout.write(
-      'Data adapter verified: DuckDB Parquet tables and disk JSON are functional.\n',
+      'Data adapter verified: DuckDB Parquet, disk JSON, and NoSQL JSONL are functional.\n',
     )
   } finally {
     await adapter.close()

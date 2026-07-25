@@ -54,6 +54,8 @@ export const METHOD = {
   case_ref_v1: 'case_ref_v1',
   /** 04 — hour-of-day sampled from the fitted crime-head × premise × weekday distribution. */
   time_model_v1: 'time_model_v1',
+  /** 05 — parsed act/sections and deterministic 64-dimensional MO feature layout. */
+  mo_signature_v1: 'mo_signature_v1',
 } as const
 
 export type MethodId = (typeof METHOD)[keyof typeof METHOD]

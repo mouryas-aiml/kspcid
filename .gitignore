@@ -21,6 +21,7 @@ Data_Docs.zip
 # Regenerable from checksummed inputs by `npm run etl:all`. data/manifest.json
 # IS versioned — it is the contract that proves a rebuild is bit-identical.
 data/derived/
+data/nosql/
 data/routing/
 data/scenarios/
 .staging/
