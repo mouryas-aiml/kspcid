@@ -43,6 +43,7 @@ client/out/
 .DS_Store
 *.log
 *.pid
+*.tsbuildinfo
 .env
 .env.local
 *.md
