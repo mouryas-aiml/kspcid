@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T19:39:42.339Z",
+  "updated_at": "2026-07-25T20:14:59.921Z",
   "entries": {
     "app/data/derived/incident_stations.parquet": {
       "step": "02_station_crosswalk",
@@ -77,6 +77,60 @@
         "rejects": 0
       }
     },
+    "app/data/derived/incidents_time.parquet": {
+      "step": "04_time_model",
+      "path": "app/data/derived/incidents_time.parquet",
+      "rows": 425408,
+      "sha256": "e7bd8d7b9f553ef8deb021cec2b5de8c3768e1b3a363b94fa52468d9d19ee9cc",
+      "bytes": 29811574,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents.parquet",
+          "sha256": "0a1370f82e1ce5c1f25fccb27fb50f122c93e5e43f178b6f6a5c23b715849ba1"
+        },
+        {
+          "path": "app/output/bengaluru_synthetic_crime_2020_2024.parquet",
+          "sha256": "d9190572cd65b8c7ad3a31330a9419bf5923ce77b58ea0e0748831400a7d46cb"
+        },
+        {
+          "path": "app/data/derived/time_model_profiles.json",
+          "sha256": "bb823aa77f9a07a04fe83675ff004f499e453046e2ca705537cec8883bd68595"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:14:59.921Z",
+      "notes": {
+        "inferred": 321575,
+        "null_cyber": 64599,
+        "null_missing_person": 39234,
+        "hour_counts": [
+          12606,
+          9713,
+          8409,
+          6769,
+          5941,
+          5399,
+          7259,
+          9589,
+          12500,
+          12728,
+          14261,
+          14375,
+          18827,
+          14404,
+          16608,
+          16967,
+          17089,
+          18474,
+          18051,
+          17092,
+          17523,
+          16530,
+          16372,
+          14089
+        ]
+      }
+    },
     "app/data/derived/statewide_rollup.parquet": {
       "step": "01_ingest_fir",
       "path": "app/data/derived/statewide_rollup.parquet",
@@ -117,6 +171,30 @@
         "unresolved": 0,
         "polygons_claimed": 106,
         "polygons_total": 106
+      }
+    },
+    "app/data/derived/time_model_profiles.json": {
+      "step": "04_time_model",
+      "path": "app/data/derived/time_model_profiles.json",
+      "rows": 21560,
+      "sha256": "bb823aa77f9a07a04fe83675ff004f499e453046e2ca705537cec8883bd68595",
+      "bytes": 19571604,
+      "inputs": [
+        {
+          "path": "app/data/derived/incidents.parquet",
+          "sha256": "0a1370f82e1ce5c1f25fccb27fb50f122c93e5e43f178b6f6a5c23b715849ba1"
+        },
+        {
+          "path": "app/output/bengaluru_synthetic_crime_2020_2024.parquet",
+          "sha256": "d9190572cd65b8c7ad3a31330a9419bf5923ce77b58ea0e0748831400a7d46cb"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-25T20:14:59.778Z",
+      "notes": {
+        "prior_strength": 48,
+        "weekday_basis": "registered_on",
+        "taxonomy_fallback": "other_incident"
       }
     }
   }

@@ -10,6 +10,7 @@
     "etl:01": "node --import tsx etl/01_ingest_fir.ts",
     "etl:02": "node --import tsx etl/02_station_crosswalk.ts",
     "etl:03": "node --import tsx etl/03_geo_resolve.ts",
+    "etl:04": "node --import tsx etl/04_time_model.ts",
     "etl:spine": "node --import tsx etl/audit_demo_spine.ts",
     "verify:adapter": "node --import tsx etl/verify_data_adapter.ts",
     "typecheck": "tsc --noEmit",
