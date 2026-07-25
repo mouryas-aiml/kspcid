@@ -54,7 +54,9 @@ export function scoreDeployment(
   }
   const coverageRatio = totalDemand > 0 ? hit / totalDemand : 0
   const active = Object.values(deployment).filter((hex): hex is number => hex !== null)
-  const conditionFactor = (rain ? 1.35 : 1) * (roadClosure ? 1.12 : 1)
+  const conditionFactor =
+    (rain ? data.scenario.conditions.rain_multiplier : 1) *
+    (roadClosure ? data.scenario.conditions.road_closure_multiplier : 1)
   const responseMinutes = data.scenario.replay_events.map((event) => {
     const fastest = Math.min(...active.map((origin) => travelSeconds(data, origin, event.hex_index)))
     return Number.isFinite(fastest) ? (fastest * conditionFactor) / 60 : targetMinutes * 3

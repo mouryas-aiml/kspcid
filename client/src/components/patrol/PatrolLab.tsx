@@ -716,6 +716,7 @@ export function PatrolLab() {
   const [injectionOpen, setInjectionOpen] = useState(false)
   const [injectionSeconds, setInjectionSeconds] = useState(10)
   const injectionShown = useRef(false)
+  const injection = data?.scenario.injections[0]
 
   useEffect(() => {
     void loadPatrolData().then(setData).catch((cause: unknown) => {
@@ -737,21 +738,21 @@ export function PatrolLab() {
   }, [data, minute, playing, setMinute, setPlaying, speed])
 
   useEffect(() => {
-    if (minute >= 180 && !injectionShown.current && playing) {
+    if (injection && minute >= injection.simulation_minute && !injectionShown.current && playing) {
       injectionShown.current = true
       setPlaying(false)
       setInjectionOpen(true)
     }
-  }, [minute, playing, setPlaying])
+  }, [injection, minute, playing, setPlaying])
 
   useEffect(() => {
     if (!injectionOpen) return
-    setInjectionSeconds(10)
+    setInjectionSeconds(injection?.decision_seconds ?? 10)
     const timer = window.setInterval(() => {
       setInjectionSeconds((seconds) => Math.max(0, seconds - 1))
     }, 1000)
     return () => window.clearInterval(timer)
-  }, [injectionOpen])
+  }, [injection?.decision_seconds, injectionOpen])
 
   useEffect(() => {
     if (!injectionOpen || injectionSeconds > 0) return
@@ -820,14 +821,14 @@ export function PatrolLab() {
             <motion.div className="injection-card" initial={{ scale: 0.96 }} animate={{ scale: 1 }}>
               <span className="injection-icon"><TrafficCone /></span>
               <div className="flex items-center justify-between">
-                <p className="type-micro text-[--warn]">SCRIPTED INJECTION · 23:00</p>
+                <p className="type-micro text-[--warn]">SCRIPTED INJECTION · {injection?.local_time ?? '23:00'}</p>
                 <span className="rounded-full border border-[--warn] px-2 py-1 font-mono text-xs text-[--warn]">
                   {injectionSeconds}s
                 </span>
               </div>
-              <h2 className="mt-2 text-xl font-semibold">Old Madras Road closure</h2>
+              <h2 className="mt-2 text-xl font-semibold">{injection?.title ?? 'Old Madras Road closure'}</h2>
               <p className="mt-3 text-sm leading-6 text-[--txt-2]">
-                A scripted carriageway closure increases matrix travel penalties for this demonstration. Rebalance posts now or accept the constraint.
+                A scripted carriageway closure at {injection?.location ?? 'Old Madras Road / ORR approach'} applies the declared ×{data.scenario.conditions.road_closure_multiplier} duration multiplier. Rebalance posts now or accept the constraint.
               </p>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button

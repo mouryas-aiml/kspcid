@@ -85,6 +85,33 @@ export interface PatrolScenario {
     readonly weather: string
     readonly road_closure: null
   }
+  readonly integrated_scenario: {
+    readonly corridor: string
+    readonly narrative_stations: readonly string[]
+    readonly crosses_division_boundary: boolean
+    readonly phase: string
+  }
+  readonly conditions: {
+    readonly free_flow_multiplier: number
+    readonly rain_multiplier: number
+    readonly road_closure_multiplier: number
+    readonly geometry_changes_at_runtime: boolean
+  }
+  readonly injections: readonly {
+    readonly injection_id: string
+    readonly type: string
+    readonly title: string
+    readonly simulation_minute: number
+    readonly local_time: string
+    readonly decision_seconds: number
+    readonly location: string
+    readonly options: readonly string[]
+    readonly generated: true
+    readonly scenario_id: string
+    readonly source_authority: string
+    readonly transformation: string
+    readonly generation_version: string
+  }[]
   readonly roster: readonly PatrolUnit[]
   readonly replay_events: readonly ReplayEvent[]
   readonly provenance: {

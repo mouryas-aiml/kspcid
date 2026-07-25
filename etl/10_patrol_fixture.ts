@@ -18,6 +18,7 @@ const INCIDENTS_PATH = resolve(OUTPUT.derived, 'incidents_time.parquet')
 const HEX_INDEX_PATH = resolve(OUTPUT.routing, 'hex_index.json')
 const OUTPUT_PATH = resolve(OUTPUT.scenarios, 'demo_corridor_patrol.json')
 const REPORT_PATH = resolve(OUTPUT.reports, 'a9_patrol_fixture.md')
+const A18_REPORT_PATH = resolve(OUTPUT.reports, 'a18_integrated_scenario.md')
 const WINDOW_START = '2021-01-01'
 const SHIFT_HOURS = [20, 21, 22, 23] as const
 
@@ -230,6 +231,40 @@ async function main(): Promise<void> {
       weather: 'dry',
       road_closure: null,
     },
+    integrated_scenario: {
+      corridor: 'ORR / Old Madras Road',
+      narrative_stations: [
+        'Kadugondana Halli',
+        'Banaswadi',
+        'Ramamurthy Nagar',
+        'K.R. Puram',
+      ],
+      crosses_division_boundary: true,
+      phase: 'A18',
+    },
+    conditions: {
+      free_flow_multiplier: 1,
+      rain_multiplier: 1.35,
+      road_closure_multiplier: 1.12,
+      geometry_changes_at_runtime: false,
+    },
+    injections: [
+      {
+        injection_id: 'old-madras-road-closure',
+        type: 'road_closure',
+        title: 'Old Madras Road closure',
+        simulation_minute: 180,
+        local_time: '23:00',
+        decision_seconds: 10,
+        location: 'Old Madras Road / ORR approach',
+        options: ['apply_closure', 'pause_and_redeploy'],
+        generated: true,
+        scenario_id: 'demo-corridor-patrol-2021-2023-night',
+        source_authority: 'generated_demo',
+        transformation: 'generated',
+        generation_version: GENERATION_VERSION,
+      },
+    ],
     roster,
     replay_events,
     interpretation: {
@@ -278,6 +313,18 @@ async function main(): Promise<void> {
       `- Replay events: ${replay_events.length}\n` +
       `- Generated demonstration units: ${roster.length}\n\n` +
       `Beat labels are source fields used only as equity groups. No beat boundary is drawn or inferred.\n`,
+    'utf8',
+  )
+  await writeFile(
+    A18_REPORT_PATH,
+    `# A18 Integrated ORR / Old Madras Road Scenario\n\n` +
+      `- Scenario: \`${scenario.scenario_id}\`\n` +
+      `- Narrative corridor: **${scenario.integrated_scenario.corridor}**\n` +
+      `- Stations: ${scenario.integrated_scenario.narrative_stations.join(' → ')}\n` +
+      `- Scripted injection: **${scenario.injections[0]!.title}** at simulation minute **${scenario.injections[0]!.simulation_minute}**\n` +
+      `- Runtime closure multiplier: **×${scenario.conditions.road_closure_multiplier}** over validated free-flow durations\n` +
+      `- Geometry changed at runtime: **no**\n\n` +
+      `Observed demand and replay events remain derived from complete-window FIR rows. The roster and closure are explicitly generated demonstration inputs.\n`,
     'utf8',
   )
   process.stdout.write(

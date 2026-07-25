@@ -49,6 +49,26 @@ async function main(): Promise<void> {
   assert(scenario.roster.every((unit) => unit.generated), 'Roster provenance must be generated')
   assert(scenario.replay_events.length === 120, 'Expected deterministic 120-event replay')
   assert(
+    scenario.integrated_scenario?.corridor === 'ORR / Old Madras Road' &&
+      scenario.integrated_scenario?.narrative_stations?.length === 4 &&
+      scenario.integrated_scenario?.crosses_division_boundary,
+    'A18 integrated corridor contract failed',
+  )
+  assert(
+    scenario.injections?.length === 1 &&
+      scenario.injections[0]?.injection_id === 'old-madras-road-closure' &&
+      scenario.injections[0]?.simulation_minute === 180 &&
+      scenario.injections[0]?.source_authority === 'generated_demo' &&
+      scenario.injections[0]?.transformation === 'generated',
+    'A18 road-closure injection contract failed',
+  )
+  assert(
+    scenario.conditions?.road_closure_multiplier === 1.12 &&
+      scenario.conditions?.rain_multiplier === 1.35 &&
+      scenario.conditions?.geometry_changes_at_runtime === false,
+    'Runtime condition contract failed',
+  )
+  assert(
     scenario.replay_events.every((event) =>
       ['reported', 'reported_corrected', 'inferred'].includes(event.geo_origin),
     ),
@@ -105,7 +125,8 @@ async function main(): Promise<void> {
       `  score recompute     ${averageScoreMs.toFixed(3)} ms average (${scoreRuns} runs)\n` +
       `  client heuristic    ${optimized.elapsedMs.toFixed(1)} ms · ${optimized.score.total}\n` +
       `  kv-optimize         ${live.elapsedMs.toFixed(1)} ms · ${(live.coverageRatio * 100).toFixed(1)}% coverage\n` +
-      `  cross-boundary      yes\n`,
+      `  cross-boundary      yes\n` +
+      `  A18 injection       Old Madras Road @ minute 180\n`,
   )
 }
 

@@ -22,7 +22,9 @@ export function simulateUntil(
   rain: boolean,
   roadClosure: boolean,
 ): SimulationSnapshot {
-  const conditionFactor = (rain ? 1.35 : 1) * (roadClosure ? 1.12 : 1)
+  const conditionFactor =
+    (rain ? data.scenario.conditions.rain_multiplier : 1) *
+    (roadClosure ? data.scenario.conditions.road_closure_multiplier : 1)
   const availableAt = new Map<string, number>()
   const dispatches: SimulatedDispatch[] = []
   const events = data.scenario.replay_events.filter((event) => event.simulation_minute <= minute)
