@@ -286,6 +286,11 @@ function PatrolMap({
   const recentDispatches = snapshot.dispatches.filter(
     (dispatch) => minute - dispatch.event.simulation_minute < 22,
   )
+  const committedUnits = new Set(
+    snapshot.dispatches
+      .filter((dispatch) => ['enroute', 'on_scene', 'returning'].includes(dispatch.result))
+      .flatMap((dispatch) => dispatch.unitId ?? []),
+  )
 
   return (
     <div className="relative h-full overflow-hidden bg-[--ink-900]">
@@ -371,6 +376,7 @@ function PatrolMap({
             if (!cell) return null
             const [x, y] = projection.point(cell)
             const colour = unitColour[unit.unit_type] ?? '#F8FAFC'
+            const committed = committedUnits.has(unit.unit_id)
             return (
               <motion.g
                 key={unit.unit_id}
@@ -382,7 +388,10 @@ function PatrolMap({
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') selectUnit(unit.unit_id)
                 }}
-                animate={{ scale: selectedUnit === unit.unit_id ? 1.18 : 1 }}
+                animate={{
+                  scale: selectedUnit === unit.unit_id ? 1.18 : 1,
+                  opacity: committed ? 0.55 : 1,
+                }}
                 className="cursor-grab"
               >
                 <path
@@ -394,6 +403,7 @@ function PatrolMap({
                 <text x="0" y="3.5" textAnchor="middle" fill={colour} fontSize="8" fontWeight="700">
                   {unit.unit_id.slice(-2)}
                 </text>
+                {committed ? <circle cx="9" cy="-9" r="3.5" fill="#FFC53D" /> : null}
               </motion.g>
             )
           })}
@@ -494,6 +504,41 @@ function ScorePanel({
         provenance={provenance}
         derivation="Observed FIR-mirror records are aggregated to H3 r9 and recency weighted with a 365.25-day half-life. Coverage and response use validated OSRM road-network durations; roster identities are generated demonstration inputs."
       />
+      <Panel title="Dispatch feed" eyebrow={`${snapshot.active} ACTIVE`}>
+        <div className="space-y-2">
+          {snapshot.dispatches.slice(-6).reverse().map((dispatch) => (
+            <div
+              key={dispatch.event.incident_id}
+              className="grid grid-cols-[42px_1fr_auto] items-center gap-2 border-b border-[--ink-600] pb-2 text-[10px] last:border-0 last:pb-0"
+            >
+              <span className="font-mono text-[--txt-3]">
+                {formatClock(dispatch.event.simulation_minute)}
+              </span>
+              <span className="truncate text-[--txt-2]">
+                {dispatch.event.case_ref} · {dispatch.unitId ?? 'No available unit'}
+              </span>
+              <span
+                className={
+                  dispatch.result === 'missed'
+                    ? 'text-[--critical]'
+                    : dispatch.result === 'complete'
+                      ? 'text-[--ok]'
+                      : 'text-[--gold-400]'
+                }
+              >
+                {dispatch.result === 'missed'
+                  ? 'MISSED'
+                  : dispatch.responseMinutes === null
+                    ? dispatch.result
+                    : `${dispatch.responseMinutes.toFixed(1)}m`}
+              </span>
+            </div>
+          ))}
+          {snapshot.dispatches.length === 0 ? (
+            <p className="text-xs text-[--txt-3]">Replay has not started.</p>
+          ) : null}
+        </div>
+      </Panel>
       {optimized ? (
         <Panel title="Heuristic ready" eyebrow={`${optimized.elapsedMs.toFixed(1)} MS`}>
           <p className="text-xs leading-5 text-[--txt-2]">
@@ -669,6 +714,7 @@ export function PatrolLab() {
   const [error, setError] = useState<string | null>(null)
   const [compareOpen, setCompareOpen] = useState(false)
   const [injectionOpen, setInjectionOpen] = useState(false)
+  const [injectionSeconds, setInjectionSeconds] = useState(10)
   const injectionShown = useRef(false)
 
   useEffect(() => {
@@ -697,6 +743,22 @@ export function PatrolLab() {
       setInjectionOpen(true)
     }
   }, [minute, playing, setPlaying])
+
+  useEffect(() => {
+    if (!injectionOpen) return
+    setInjectionSeconds(10)
+    const timer = window.setInterval(() => {
+      setInjectionSeconds((seconds) => Math.max(0, seconds - 1))
+    }, 1000)
+    return () => window.clearInterval(timer)
+  }, [injectionOpen])
+
+  useEffect(() => {
+    if (!injectionOpen || injectionSeconds > 0) return
+    if (!usePatrolStore.getState().roadClosure) usePatrolStore.getState().toggleClosure()
+    setInjectionOpen(false)
+    setPlaying(true)
+  }, [injectionOpen, injectionSeconds, setPlaying])
 
   const score = useMemo(
     () =>
@@ -757,7 +819,12 @@ export function PatrolLab() {
           <motion.div className="injection-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div className="injection-card" initial={{ scale: 0.96 }} animate={{ scale: 1 }}>
               <span className="injection-icon"><TrafficCone /></span>
-              <p className="type-micro text-[--warn]">SCRIPTED INJECTION · 23:00</p>
+              <div className="flex items-center justify-between">
+                <p className="type-micro text-[--warn]">SCRIPTED INJECTION · 23:00</p>
+                <span className="rounded-full border border-[--warn] px-2 py-1 font-mono text-xs text-[--warn]">
+                  {injectionSeconds}s
+                </span>
+              </div>
               <h2 className="mt-2 text-xl font-semibold">Old Madras Road closure</h2>
               <p className="mt-3 text-sm leading-6 text-[--txt-2]">
                 A scripted carriageway closure increases matrix travel penalties for this demonstration. Rebalance posts now or accept the constraint.
