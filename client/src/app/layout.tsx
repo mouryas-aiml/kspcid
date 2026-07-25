@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Noto_Sans_Kannada } from 'next/font/google'
 import type { ReactNode } from 'react'
 
+import { CommandPalette } from '@/components/command/CommandPalette'
 import { OfflineBootstrap } from '@/components/offline/OfflineBootstrap'
 import './globals.css'
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
     <html lang="en">
       <body className={`${sans.variable} ${mono.variable} ${kannada.variable}`}>
         <OfflineBootstrap />
+        <CommandPalette />
         {children}
       </body>
     </html>
