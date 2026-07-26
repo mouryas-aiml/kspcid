@@ -112,5 +112,15 @@
       "ttl_seconds": 604800,
       "reason": "Temporary Catalyst bulk-write input; delete immediately after verified publication"
     }
+  ],
+  "control_objects": [
+    {
+      "object_key": "publication/current.json",
+      "content_type": "application/json",
+      "bytes": 126,
+      "sha256": "83c9f49be67ef15a62174caa512b6d9f0801c5319fa424fe5a21daa7f5638520",
+      "writer": "publish-marker",
+      "reason": "Deterministic active-dataset pointer written only after all Circuit verification states pass"
+    }
   ]
 }

@@ -6,12 +6,14 @@ Cloud mutation performed in this work: **none**
 
 ## Outcome
 
-The repository side of A4 is ready: the shared adapter now supports ZCQL and
+The repository side of A4 is ready: the shared adapter supports ZCQL and
 Catalyst Search, deterministic Data Store CSVs and upsert configs are compiled,
 the 0.2 cloud allowlist is checksummed, NoSQL and Cache loaders are dry-run safe,
-`kv-graph` supplies the missing AIO snapshot path, and the client can select
-Catalyst/Stratus through build-time environment variables while retaining the
-offline path.
+and all 14 Node 22 Catalyst packages build from source without DuckDB or other
+local ETL runtime dependencies. This includes the missing `kv-graph` AIO path,
+the Cache Cron, and seven Basic I/O functions implementing the cloud-publication
+Circuit states. Six authenticated API Gateway rules are also recorded as an
+owner-reconcilable template.
 
 Actual provisioning remains owner-gated. No `catalyst.json`, project ID, data
 center, schema, bucket, table, function, route, domain, or deployment has been
@@ -23,8 +25,8 @@ created or claimed here.
 | 1 — project initialization | BLOCKED — owner | `catalyst project:list`, `init`, `apig:enable`, certificate request not run |
 | 2 — Data Store | READY locally / NOT IMPORTED | Schema, five configs, CSV compiler, committed manifest, cloud verifier |
 | 3 — Stratus / NoSQL / Cache | READY locally / NOT UPLOADED | Six runtime objects, three NoSQL tables, 148 Cache keys |
-| 4 — functions / client / gateway | SOURCE READY / NOT SCAFFOLDED | Owner-generated Catalyst wrappers and API Gateway IDs are absent |
-| 5 — Circuits | STOP gate | Project data center unknown; Circuits is unavailable in multiple DCs including IN |
+| 4 — functions / client / gateway | PACKAGES READY / NOT DEPLOYED | 14 packages build; project IDs, remote function IDs, gateway deployment, and Slate remain owner-gated |
+| 5 — Circuits | IMPLEMENTED LOCALLY / STOP gate | Seven real state functions and failure/idempotency tests pass; project DC and console Code View IDs remain unknown |
 
 ## What ships
 
@@ -86,6 +88,7 @@ Official references: [Data Store columns](https://docs.catalyst.zoho.com/en/clou
 [Stratus ranges](https://docs.catalyst.zoho.com/en/sdk/web/v4/cloud-scale/stratus/download-object/),
 [Basic I/O](https://docs.catalyst.zoho.com/en/serverless/help/functions/basic-io/),
 [Advanced I/O](https://docs.catalyst.zoho.com/en/serverless/help/functions/advanced-io/),
+[API Gateway](https://docs.catalyst.zoho.com/en/cloud-scale/help/api-gateway/key-concepts/),
 [Cache implementation](https://docs.catalyst.zoho.com/en/cloud-scale/help/cache/implementation/),
 [Cache concepts](https://docs.catalyst.zoho.com/en/cloud-scale/help/cache/key-concepts/), and
 [pricing](https://catalyst.zoho.com/pricing.html).
@@ -189,17 +192,35 @@ Stratus URL is a separate browser acceptance step.
 NoSQL reruns fetch by `id`, insert only missing documents, and stop on
 same-key/different-content drift. The Cache Cron runs every 24 hours.
 
-### 4. Scaffold and deploy functions, gateway, and Slate
+### 4. Build and deploy functions, gateway, and Slate
 
-The required types/routes/environment are in `etl/cloud/functions.json`.
-Generate wrappers only after `catalyst init`, preserving the handler modules.
-Deploy the five Basic I/O functions, the two Advanced I/O functions
-(`kv-optimize`, `kv-graph`), and the Cache Cron. Set
-`KSPCID_DATA_ADAPTER=catalyst` in every runtime function.
+Build and validate the deployment tree before touching the generated project
+configuration:
 
-Configure API Gateway routes from the checked plan, bind authentication and
-CORS to the production Slate domain, and load-test `/optimize` at one request
-per second with a burst of three. The client build requires:
+```bash
+npm run verify:catalyst-functions
+```
+
+This creates `.staging/catalyst/functions` with 14 standalone packages: four
+runtime Basic I/O functions, two runtime Advanced I/O functions, one Cache Cron,
+and seven Circuit-only Basic I/O functions. After owner initialization, set
+`functions.source` in the generated `catalyst.json` to
+`.staging/catalyst/functions`; do not overwrite the maintained `functions/`
+source tree. Set `KSPCID_DATA_ADAPTER=catalyst`,
+`KSPCID_STRATUS_BUCKET=<bucket>`, and `KSPCID_CACHE_SEGMENT=<segment_id>` for
+the deployed functions.
+
+After the functions have remote identities, pull the project API Gateway rules
+and reconcile the six entries from `etl/cloud/api-gateway.template.json` into
+`catalyst-user-rules.json`. The template requires Catalyst User Management on
+every route and deliberately leaves throttling unconfigured until production
+capacity is measured. Deploy the reconciled rules, bind CORS to the production
+Slate domain, and load-test `/optimize` at one request per second with a burst
+of three before setting a limit. Catalyst documents sliding-window rate limits
+and HTTP 429 responses, but not a generic “burst” JSON field that can safely be
+invented before the remote rule is pulled.
+
+The client build requires:
 
 ```bash
 NEXT_PUBLIC_DEMO_MODE=cloud \
@@ -222,9 +243,11 @@ and [key concepts](https://docs.catalyst.zoho.com/en/serverless/help/circuits/ke
 If the selected project is in any unavailable data center, **STOP A4b**. Do not
 substitute an external orchestrator. The audited, idempotent Stage 2 workflow is
 recorded in `etl/cloud/circuit-publication.contract.json`; it explicitly
-excludes DuckDB, OSRM, and Neo4j/GDS. It becomes Catalyst Code View JSON only
-after the owner confirms a supported data center and creates the referenced
-Basic I/O function scaffolds/IDs.
+excludes DuckDB, OSRM, and Neo4j/GDS. Its seven Basic I/O functions are
+implemented and included in the 14-package build. It becomes Catalyst Code View
+JSON only after the owner confirms a supported data center, deploys the
+functions, and supplies the remote function IDs available to the Circuit
+console.
 
 For a supported DC, upload the four checksummed temporary inputs first:
 
@@ -235,9 +258,12 @@ node --import tsx etl/upload_stratus.ts --include-publication-inputs --apply
 
 The Circuit sequence is: validate manifest → validation branch → start upsert
 jobs → wait/poll branch → verify Stratus → warm Cache → smoke checks → smoke
-branch → publish marker. Failure writes no marker, so the prior dataset remains
-active. Delete the four temporary objects immediately after successful
-publication even though they carry a seven-day TTL.
+branch → publish marker. The four imports start in parallel, job IDs are cached
+under the immutable dataset hash for safe retries, completed row counts are
+reconciled, and `publication/current.json` is written and read back only after
+smoke checks. Failure writes no marker, so the prior dataset remains active.
+Delete the four temporary objects immediately after successful publication even
+though they carry a seven-day TTL.
 
 ## Verification status
 
@@ -246,7 +272,16 @@ publication even though they carry a seven-day TTL.
 - PASS locally: baseline reduction and zero Command Feed mismatch.
 - PASS locally: six runtime Stratus object checksums and four publication-input checksums.
 - PASS locally: NoSQL counts/key contract and Cache size/value limits.
+- PASS locally: 148 Cache keys include 20 station aggregates, one
+  bitset-consuming scenario split into 96 chunks, and 30 Command Feed cards.
 - PASS locally: `kv-graph` expands to 5,112 nodes / 10,074 edges.
+- PASS locally: 14 deployable Node 22 Catalyst packages; package scanning
+  proves no local adapter, DuckDB query, or local ETL data dependency is bundled.
+- PASS locally: six API Gateway route definitions reconcile exactly to every
+  public runtime function; authentication and unset-throttling contracts are checked.
+- PASS locally: Circuit validation failure, four parallel imports, retry job
+  reuse, wait/poll, row reconciliation, Stratus range, Cache warm, smoke checks,
+  and deterministic publication marker/read-back.
 - PASS locally: `npm run check`.
 - PASS locally: Next static production build.
 - PASS locally: offline mode remains the default and offline verifier passes.

@@ -23,7 +23,15 @@
     { "name": "kv-graph", "type": "aio", "route": "/graph", "methods": ["GET"], "timeout_seconds": 30 },
     { "name": "kv-cache-warm", "type": "cron", "schedule": "every 24 hours" }
   ],
-  "publication_functions": [],
+  "publication_functions": [
+    { "name": "publish-validate-manifest", "type": "bio", "circuit_only": true },
+    { "name": "publish-start-imports", "type": "bio", "circuit_only": true },
+    { "name": "publish-poll-imports", "type": "bio", "circuit_only": true },
+    { "name": "publish-verify-stratus", "type": "bio", "circuit_only": true },
+    { "name": "publish-warm-cache", "type": "bio", "circuit_only": true },
+    { "name": "publish-smoke-checks", "type": "bio", "circuit_only": true },
+    { "name": "publish-marker", "type": "bio", "circuit_only": true }
+  ],
   "build": {
     "command": "npm run cloud:functions:build",
     "output": ".staging/catalyst/functions",

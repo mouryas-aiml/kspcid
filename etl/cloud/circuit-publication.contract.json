@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "name": "kspcid-cloud-publication",
-  "status": "blocked_pending_owner_dc_confirmation_and_basic_io_scaffolds",
+  "status": "blocked_pending_owner_dc_confirmation_and_remote_function_ids",
   "scope": "BUILD_SPEC §6.4 Stage 2 cloud publication only",
   "excluded_local_stage": ["DuckDB", "OSRM", "Neo4j/GDS", "CSV shaping"],
   "service_gate": {
@@ -46,5 +46,5 @@
     "retry": "A retry may re-run any state without duplicating rows or changing a previously published dataset"
   },
   "console_compilation_required": true,
-  "note": "This is the audited workflow contract, not claimed to be Catalyst Code View JSON. Function IDs and exact Code View fields only exist after owner project initialization."
+  "note": "All seven Basic I/O function packages are built locally. This remains an audited workflow contract, not claimed to be Catalyst Code View JSON: remote Function IDs and the console-compiled Code View representation only exist after owner project initialization."
 }
