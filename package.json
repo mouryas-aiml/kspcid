@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "KSPCID \u2014 Karnataka Police State Crime Intelligence Dashboard. Build-time ETL compiler (BUILD_SPEC \u00a72.2, \u00a76.4). Nothing here is deployed.",
+  "description": "KSPCID — Karnataka Police State Crime Intelligence Dashboard. Build-time ETL compiler (BUILD_SPEC §2.2, §6.4). Nothing here is deployed.",
   "scripts": {
     "etl:audit": "node --import tsx etl/00_audit_data_truth.ts",
     "lint:truth": "node --import tsx etl/lint_data_truth.ts",
@@ -33,6 +33,7 @@
     "verify:datastore": "node --import tsx etl/verify_datastore.ts",
     "verify:stratus": "node --import tsx etl/verify_stratus.ts",
     "verify:cloud-plan": "node --import tsx etl/verify_cloud_plan.ts",
+    "verify:catalyst-functions": "npm run cloud:functions:build && node --import tsx etl/verify_catalyst_functions.ts",
     "verify:a7": "node --import tsx etl/verify_a7.ts",
     "verify:routing": "node --import tsx etl/verify_routing.ts",
     "verify:patrol": "node --import tsx etl/verify_patrol.ts",
@@ -49,10 +50,11 @@
     "verify": "node --import tsx etl/verify_reconciliation.ts",
     "etl:a7": "npm run etl:04 && npm run etl:05 && npm run etl:06",
     "etl:all": "npm run etl:01 && npm run etl:02 && npm run etl:03 && npm run etl:spine && npm run etl:a7",
-    "check": "npm run typecheck && npm run lint:truth && npm run verify && npm run verify:adapter && npm run verify:datastore && npm run verify:cloud-plan && npm run verify:a7 && npm run verify:routing && npm run verify:full-routing && npm run verify:patrol && npm run verify:similarity && npm run verify:graph && npm run verify:graph:function && npm run verify:justice && npm run verify:feed && npm run verify:cyber && npm run verify:offline && npm run verify:map && npm run check --prefix client",
+    "check": "npm run typecheck && npm run lint:truth && npm run verify && npm run verify:adapter && npm run verify:datastore && npm run verify:cloud-plan && npm run verify:catalyst-functions && npm run verify:a7 && npm run verify:routing && npm run verify:full-routing && npm run verify:patrol && npm run verify:similarity && npm run verify:graph && npm run verify:graph:function && npm run verify:justice && npm run verify:feed && npm run verify:cyber && npm run verify:offline && npm run verify:map && npm run check --prefix client",
     "cloud:stratus:validate": "node --import tsx etl/upload_stratus.ts",
     "cloud:nosql:validate": "node --import tsx etl/load_nosql.ts",
     "cloud:cache:validate": "node --import tsx etl/warm_cache.ts",
+    "cloud:functions:build": "node --import tsx etl/build_catalyst_functions.ts",
     "donor:refs": "node scripts/prepare-references.mjs",
     "donor:generate": "node scripts/generate-dataset.mjs",
     "donor:validate": "node scripts/validate-dataset.mjs",
@@ -76,6 +78,7 @@
   },
   "devDependencies": {
     "@types/node": "22.10.2",
+    "esbuild": "^0.28.1",
     "tsx": "^4.23.1",
     "typescript": "5.7.2",
     "zcatalyst-cli": "^1.27.0"

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "KSPCID incidents",
+    "source_endpoint": "/incidents",
+    "target": "basicio",
+    "target_id": "kv-incidents",
+    "method": "GET",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
+  },
+  {
+    "name": "KSPCID hotspots",
+    "source_endpoint": "/hotspots",
+    "target": "basicio",
+    "target_id": "kv-hotspots",
+    "method": "GET",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
+  },
+  {
+    "name": "KSPCID explain",
+    "source_endpoint": "/explain",
+    "target": "basicio",
+    "target_id": "kv-explain",
+    "method": "POST",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
+  },
+  {
+    "name": "KSPCID similar",
+    "source_endpoint": "/similar",
+    "target": "basicio",
+    "target_id": "kv-similar",
+    "method": "POST",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
+  },
+  {
+    "name": "KSPCID optimize",
+    "source_endpoint": "/optimize",
+    "target": "advancedio",
+    "target_endpoint": "/server/kv-optimize/execute",
+    "method": "POST",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
+  },
+  {
+    "name": "KSPCID graph",
+    "source_endpoint": "/graph",
+    "target": "advancedio",
+    "target_endpoint": "/server/kv-graph/execute",
+    "method": "GET",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
+  }
+]

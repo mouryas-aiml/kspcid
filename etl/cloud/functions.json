@@ -23,6 +23,17 @@
     { "name": "kv-graph", "type": "aio", "route": "/graph", "methods": ["GET"], "timeout_seconds": 30 },
     { "name": "kv-cache-warm", "type": "cron", "schedule": "every 24 hours" }
   ],
+  "publication_functions": [],
+  "build": {
+    "command": "npm run cloud:functions:build",
+    "output": ".staging/catalyst/functions",
+    "catalyst_json_source_after_owner_init": ".staging/catalyst/functions"
+  },
+  "api_gateway": {
+    "template": "etl/cloud/api-gateway.template.json",
+    "owner_reconciliation": "After function deployment, pull the project rules and reconcile this template into catalyst-user-rules.json before deploying API Gateway.",
+    "default_throttling": "Not configured locally; measure /optimize and set production console limits only after the project capacity is known."
+  },
   "api_gateway_acceptance": {
     "authentication": "Catalyst application user",
     "cors_origin": "mapped production Slate domain",
