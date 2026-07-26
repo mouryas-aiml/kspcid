@@ -50,8 +50,8 @@
     {
       "id": "graph",
       "url": "/data/graph/graph_snapshot.json",
-      "sha256": "250f30d515c400701249ab5cda9c61393848064671912a5f54526b7392756eca",
-      "bytes": 11804691,
+      "sha256": "aaf8bd393d21062120340eeb3cc4a9afe76c070b062677d32a15ee3ba7a03c2d",
+      "bytes": 11925630,
       "required": true
     },
     {

@@ -48,18 +48,36 @@ const MO_GRAPH_NAME = 'assoc_mo'
 
 /**
  * kNN is computed at §6.6's topK 10 over all 4,320 incidents — 43,200 edges.
- * Emitting every one of them wires each incident to ten neighbours, which
- * produces a uniform hairball: it defeats §7.3's purpose ("prove that fragmented
- * FIRs across stations describe the same activity") because nothing stands out,
- * and it pushes the client payload past §9's budgets.
+ * Exporting all of them wires every incident to ten neighbours: a uniform
+ * hairball that defeats §7.3's purpose (nothing stands out) and pushes the
+ * payload past §9's budgets — measured 40 MB against 11 MB.
  *
- * So the full result is computed and reported, and the exported set is cut at a
- * stated confidence threshold. Both the snapshot and the NoSQL JSONL carry the
- * same set (§2.6: "Both return the same response shape"), and the snapshot
- * records `gds_similar_to_computed`, `gds_similar_to_shipped` and this
- * threshold so the selection is visible rather than silent.
+ * What gets exported is NOT a graded-similarity cut. The measured score
+ * distribution over all 43,200 computed edges has an empty band immediately
+ * below 1.0:
+ *
+ *   = 1.0            1,722
+ *   [0.99, 1.0)          0
+ *   [0.98, 0.99)         0
+ *   [0.97, 0.98)       178
+ *   [0.76, 0.97)    41,300   (continuous, no clean break)
+ *
+ * So every edge at the top is cosine *exactly* 1.0 — bit-identical 64-dimension
+ * MO signatures — and any cut in (0.98, 1.0] selects the same set. Selecting on
+ * identity rather than on a threshold is therefore both the honest description
+ * and the stronger claim: "these FIRs carry an identical MO signature across
+ * different stations" is defensible in a way "similarity 0.98" is not.
+ *
+ * Graded similarity is not dropped — it is A12's job (`kv-similar`, weighted
+ * cosine over the same vectors, published component weights), which is the
+ * right place for a score the user can interrogate.
+ *
+ * Both the snapshot and the NoSQL JSONL carry the same set (§2.6: "Both return
+ * the same response shape"), and the snapshot records the computed total, the
+ * shipped total and this selection rule so it is visible rather than silent.
  */
-const KNN_SHIP_THRESHOLD = 0.98
+const KNN_SELECTION = 'exact_mo_signature_match'
+const KNN_EXACT_MATCH_SCORE = 1.0
 
 interface RawNode {
   readonly id: string
@@ -328,7 +346,10 @@ async function main(): Promise<void> {
         // Kept terse deliberately: this string is repeated across every kNN
         // edge, and at topK 10 over 4,320 incidents the prose alone dominated
         // the shipped snapshot. Method and score are both still stated.
-        explanation: `GDS kNN · MO signature COSINE ${score.toFixed(3)} · modelled, not source-recorded.`,
+        explanation:
+          `Identical 64-dimension MO signature (Neo4j GDS kNN, COSINE ${score.toFixed(3)}). ` +
+          `An exact signature match, not a graded similarity score — graded similarity is A12's ` +
+          `weighted cosine. Modelled, not a source-recorded relationship.`,
         provenance: knnProvenance,
       })
     }
@@ -353,7 +374,7 @@ async function main(): Promise<void> {
   const seenPairs = new Set(raw.edges.map(pairKey))
   const strongestByPair = new Map<string, RawEdge>()
   for (const edge of knnEdges) {
-    if (edge.weight < KNN_SHIP_THRESHOLD) continue
+    if (edge.weight < KNN_EXACT_MATCH_SCORE) continue
     const key = pairKey(edge)
     if (seenPairs.has(key)) continue
     const existing = strongestByPair.get(key)
@@ -476,7 +497,8 @@ async function main(): Promise<void> {
     seeded_edges: raw.edges.length,
     gds_similar_to_computed: knnComputed,
     gds_similar_to_shipped: knnAdded,
-    gds_similar_to_ship_threshold: KNN_SHIP_THRESHOLD,
+    gds_similar_to_selection: KNN_SELECTION,
+    gds_similar_to_ship_threshold: KNN_EXACT_MATCH_SCORE,
     nodes: labelledNodes,
     edges: compiledEdges,
     scenarios: raw.scenarios,
@@ -529,8 +551,9 @@ async function main(): Promise<void> {
       `- Nodes: **${labelledNodes.length.toLocaleString()}**\n` +
       `- Edges exported: **${compiledEdges.length.toLocaleString()}** ` +
       `(${raw.edges.length.toLocaleString()} seeded + **${knnAdded.toLocaleString()}** from \`gds.knn\`)\n` +
-      `- \`gds.knn\` computed **${knnComputed.toLocaleString()}** similarity edges at §6.6's topK 10; ` +
-      `**${knnAdded.toLocaleString()}** scored >= ${KNN_SHIP_THRESHOLD} and are exported (see gap 5)\n` +
+      `- \`gds.knn\` computed **${knnComputed.toLocaleString()}** similarity edges at §6.6's topK 10; the ` +
+      `**${knnAdded.toLocaleString()}** exported are cosine *exactly* 1.0 — identical MO signatures, not a ` +
+      `graded cut (see gap 5)\n` +
       `- \`gds.louvain\` communities: **${louvainCommunities}**\n` +
       `- Modularity: **${round(modularity)}**\n` +
       `- \`gds.betweenness\` → \`bridge_score\`, min-max normalised to [0,1]\n` +
@@ -559,14 +582,27 @@ async function main(): Promise<void> {
       `   spec's own projection as literally written. A second Incident-only projection\n` +
       `   (\`assoc_mo\`) carries the property. This is also the only coherent reading: an MO-signature\n` +
       `   similarity between a Phone and a Vehicle is meaningless.\n` +
-      `5. **Not every computed kNN edge is exported.** topK 10 over 4,320 incidents is 43,200 edges;\n` +
-      `   exporting all of them wires every incident to ten neighbours, which defeats §7.3's purpose\n` +
-      `   (nothing stands out in a uniform hairball) and pushes the payload past §9's budgets — the\n` +
-      `   uncut snapshot measured 40 MB against 11 MB before. The full result is computed and\n` +
-      `   reported; edges scoring **>= ${KNN_SHIP_THRESHOLD}** are exported. Snapshot and NoSQL JSONL carry the same\n` +
-      `   set (§2.6: "Both return the same response shape"), and \`gds_similar_to_computed\`,\n` +
-      `   \`gds_similar_to_shipped\` and \`gds_similar_to_ship_threshold\` are recorded in the snapshot\n` +
-      `   so the selection is visible rather than silent.\n` +
+      `5. **The exported SIMILAR_TO edges are exact MO-signature matches, not a similarity cut.**\n` +
+      `   topK 10 over 4,320 incidents computes 43,200 edges; exporting all of them wires every\n` +
+      `   incident to ten neighbours, which defeats §7.3's purpose (nothing stands out in a uniform\n` +
+      `   hairball) and pushes the payload past §9's budgets — the uncut snapshot measured 40 MB\n` +
+      `   against 11 MB. Measuring the distribution showed the cut is not a graded one:\n\n` +
+      `   | band | edges |\n   |---|---:|\n` +
+      `   | = 1.0 | 1,722 |\n   | [0.99, 1.0) | 0 |\n   | [0.98, 0.99) | 0 |\n` +
+      `   | [0.97, 0.98) | 178 |\n   | [0.76, 0.97) | 41,300 |\n\n` +
+      `   The band immediately below 1.0 is **empty**, so every top edge is cosine *exactly* 1.0 —\n` +
+      `   bit-identical 64-dimension MO signatures — and any cut in (0.98, 1.0] selects the same set.\n` +
+      `   The export therefore selects on **identity**, not on a threshold. That is both the honest\n` +
+      `   description and the stronger claim: "these FIRs carry an identical MO signature across\n` +
+      `   different stations" is defensible where "similarity 0.98" is not. Below 0.97 the mass is\n` +
+      `   continuous with no natural break, so no lower cut would be defensible either.\n` +
+      `   **${knnAdded.toLocaleString()}** unordered exact-match pairs are exported, touching **875** incidents\n` +
+      `   (20% of 4,320 — \`topK 10\` is the binding cap, so a lower cut widens rather than deepens),\n` +
+      `   of which **738** directed matches join *different* stations. Graded similarity is not lost:\n` +
+      `   it is A12's \`kv-similar\` weighted cosine over the same vectors, the right home for an\n` +
+      `   interrogable score. Snapshot and NoSQL JSONL carry the same set (§2.6), and\n` +
+      `   \`gds_similar_to_computed\`, \`gds_similar_to_shipped\` and \`gds_similar_to_selection\`\n` +
+      `   are recorded in the snapshot so the selection is visible rather than silent.\n` +
       `6. **ForceAtlas2 is not a GDS algorithm.** GDS has no force-directed layout and §9 requires\n` +
       `   a precomputed settled layout, so x,y remain Graphology output. Communities, bridge scores\n` +
       `   and similarity — the things §2.2 names — are all Neo4j GDS.\n\n` +

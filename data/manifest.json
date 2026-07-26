@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-26T04:05:40.659Z",
+  "updated_at": "2026-07-26T04:40:23.792Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -26,8 +26,8 @@
       "step": "09_compile_graph",
       "path": "app/data/derived/graph_snapshot.json",
       "rows": 5112,
-      "sha256": "250f30d515c400701249ab5cda9c61393848064671912a5f54526b7392756eca",
-      "bytes": 11804691,
+      "sha256": "aaf8bd393d21062120340eeb3cc4a9afe76c070b062677d32a15ee3ba7a03c2d",
+      "bytes": 11925630,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
@@ -35,7 +35,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:05:40.419Z",
+      "generated_at": "2026-07-26T04:40:23.567Z",
       "notes": {
         "edges": 10074,
         "communities": 67,
@@ -48,8 +48,8 @@
       "step": "09_compile_graph",
       "path": "app/data/derived/graph_snapshot.json.br",
       "rows": 5112,
-      "sha256": "209b8fb1b6422f03d219714851151b4ecf690b7301964d4b753f2f9fd515fec4",
-      "bytes": 462225,
+      "sha256": "2f7f98f106971bff1204a5e49f20d5cd2037ead5645f3992a9499224d1322b55",
+      "bytes": 462459,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
@@ -57,7 +57,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:05:40.426Z"
+      "generated_at": "2026-07-26T04:40:23.571Z"
     },
     "app/data/derived/incident_stations.parquet": {
       "step": "02_station_crosswalk",
@@ -327,8 +327,8 @@
       "step": "09_compile_graph",
       "path": "app/data/nosql/graph_edges.jsonl",
       "rows": 10074,
-      "sha256": "d9266f73833bb374e955799a8642f5ea8effb8cdd644d1d6ec44355eb0c468ec",
-      "bytes": 7679934,
+      "sha256": "a8acd510d44daa16d7dbcf8a54af289769197bf8eb8d7c856046733f4f96adb5",
+      "bytes": 7800822,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
@@ -336,7 +336,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:05:40.441Z"
+      "generated_at": "2026-07-26T04:40:23.580Z"
     },
     "app/data/nosql/graph_nodes.jsonl": {
       "step": "09_compile_graph",
@@ -351,7 +351,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:05:40.431Z"
+      "generated_at": "2026-07-26T04:40:23.575Z"
     },
     "app/data/nosql/mo_vectors.jsonl": {
       "step": "05_mo_signature",
@@ -381,7 +381,7 @@
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
       "rows": 12,
-      "sha256": "c2eb38e8b61c40aa6ba3f026bb2ecbf6adb99ba8db99d744db82c3b07a6a35d2",
+      "sha256": "dbe66539e8f04b5f175f6463b1d80d20954e17d3492b506b0ff438c11c56c4a0",
       "bytes": 3880,
       "inputs": [
         {
@@ -406,7 +406,7 @@
         },
         {
           "path": "app/data/derived/graph_snapshot.json",
-          "sha256": "250f30d515c400701249ab5cda9c61393848064671912a5f54526b7392756eca"
+          "sha256": "aaf8bd393d21062120340eeb3cc4a9afe76c070b062677d32a15ee3ba7a03c2d"
         },
         {
           "path": "app/data/routing/corridor_region.json",
@@ -434,7 +434,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:05:40.659Z",
+      "generated_at": "2026-07-26T04:40:23.792Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10891,7 +10891,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:05:40.656Z",
+      "generated_at": "2026-07-26T04:40:23.789Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,
