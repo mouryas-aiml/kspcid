@@ -1,13 +1,13 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-25T22:22:24.241Z",
+  "updated_at": "2026-07-26T04:05:40.659Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
       "path": "app/data/derived/entity_graph_raw.json",
-      "rows": 5076,
-      "sha256": "186215090aa7bd4c28f7d7d817469571e60ce72c0ba1c6d9303a5cad1d8ebe89",
-      "bytes": 12618294,
+      "rows": 5112,
+      "sha256": "acc37245299ee4f056a9c03b519418215233b4258d76f913dc37a9f7fa397e61",
+      "bytes": 16341815,
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
@@ -15,47 +15,49 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T21:24:41.492Z",
+      "generated_at": "2026-07-26T03:46:08.040Z",
       "notes": {
-        "nodes": 5076,
-        "edges": 9174,
+        "nodes": 5112,
+        "edges": 9246,
         "scenarios": 6
       }
     },
     "app/data/derived/graph_snapshot.json": {
       "step": "09_compile_graph",
       "path": "app/data/derived/graph_snapshot.json",
-      "rows": 5076,
-      "sha256": "24b489eb815b6d9f7261f23e75387c40184ea8d1fb2bfc0b97231fb7416ac4eb",
-      "bytes": 11252455,
+      "rows": 5112,
+      "sha256": "250f30d515c400701249ab5cda9c61393848064671912a5f54526b7392756eca",
+      "bytes": 11804691,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
-          "sha256": "186215090aa7bd4c28f7d7d817469571e60ce72c0ba1c6d9303a5cad1d8ebe89"
+          "sha256": "acc37245299ee4f056a9c03b519418215233b4258d76f913dc37a9f7fa397e61"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T21:24:43.416Z",
+      "generated_at": "2026-07-26T04:05:40.419Z",
       "notes": {
-        "edges": 9174,
-        "communities": 105,
-        "modularity": 0.98115
+        "edges": 10074,
+        "communities": 67,
+        "modularity": 0.971756,
+        "gds_version": "2.13.11",
+        "gds_similar_to_added": 828
       }
     },
     "app/data/derived/graph_snapshot.json.br": {
       "step": "09_compile_graph",
       "path": "app/data/derived/graph_snapshot.json.br",
-      "rows": 5076,
-      "sha256": "029991767a1edf3e9e56fd1afefd6af097a5c7e4529e08648b5c8d4375af373e",
-      "bytes": 447522,
+      "rows": 5112,
+      "sha256": "209b8fb1b6422f03d219714851151b4ecf690b7301964d4b753f2f9fd515fec4",
+      "bytes": 462225,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
-          "sha256": "186215090aa7bd4c28f7d7d817469571e60ce72c0ba1c6d9303a5cad1d8ebe89"
+          "sha256": "acc37245299ee4f056a9c03b519418215233b4258d76f913dc37a9f7fa397e61"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T21:24:43.421Z"
+      "generated_at": "2026-07-26T04:05:40.426Z"
     },
     "app/data/derived/incident_stations.parquet": {
       "step": "02_station_crosswalk",
@@ -324,32 +326,32 @@
     "app/data/nosql/graph_edges.jsonl": {
       "step": "09_compile_graph",
       "path": "app/data/nosql/graph_edges.jsonl",
-      "rows": 9174,
-      "sha256": "e4853aa6a45d843cdf2d14b3e6f1739ac8f21859a8f7979fd9745a895435c192",
-      "bytes": 7136417,
+      "rows": 10074,
+      "sha256": "d9266f73833bb374e955799a8642f5ea8effb8cdd644d1d6ec44355eb0c468ec",
+      "bytes": 7679934,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
-          "sha256": "186215090aa7bd4c28f7d7d817469571e60ce72c0ba1c6d9303a5cad1d8ebe89"
+          "sha256": "acc37245299ee4f056a9c03b519418215233b4258d76f913dc37a9f7fa397e61"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T21:24:43.441Z"
+      "generated_at": "2026-07-26T04:05:40.441Z"
     },
     "app/data/nosql/graph_nodes.jsonl": {
       "step": "09_compile_graph",
       "path": "app/data/nosql/graph_nodes.jsonl",
-      "rows": 5076,
-      "sha256": "2e7c3f5ccec14a167afe027c559d9394e41510d4bacd0390c7f65a42c685f811",
-      "bytes": 4114780,
+      "rows": 5112,
+      "sha256": "cdff37761a6b7f88d2d02bfe195a3bea7722339578a41fe6fb8b2a7bfaa5419c",
+      "bytes": 4123221,
       "inputs": [
         {
           "path": "app/data/derived/entity_graph_raw.json",
-          "sha256": "186215090aa7bd4c28f7d7d817469571e60ce72c0ba1c6d9303a5cad1d8ebe89"
+          "sha256": "acc37245299ee4f056a9c03b519418215233b4258d76f913dc37a9f7fa397e61"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T21:24:43.428Z"
+      "generated_at": "2026-07-26T04:05:40.431Z"
     },
     "app/data/nosql/mo_vectors.jsonl": {
       "step": "05_mo_signature",
@@ -379,7 +381,7 @@
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
       "rows": 12,
-      "sha256": "b31bb0acde6a3d4856612b314896f986d993d8e8f73b0cdb4d9cda504a8c9501",
+      "sha256": "c2eb38e8b61c40aa6ba3f026bb2ecbf6adb99ba8db99d744db82c3b07a6a35d2",
       "bytes": 3880,
       "inputs": [
         {
@@ -404,7 +406,7 @@
         },
         {
           "path": "app/data/derived/graph_snapshot.json",
-          "sha256": "24b489eb815b6d9f7261f23e75387c40184ea8d1fb2bfc0b97231fb7416ac4eb"
+          "sha256": "250f30d515c400701249ab5cda9c61393848064671912a5f54526b7392756eca"
         },
         {
           "path": "app/data/routing/corridor_region.json",
@@ -432,7 +434,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T22:22:24.241Z",
+      "generated_at": "2026-07-26T04:05:40.659Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10889,7 +10891,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T22:22:24.239Z",
+      "generated_at": "2026-07-26T04:05:40.656Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,

@@ -4,8 +4,28 @@
  * Incident nodes retain source-derived attributes. Entity identities and every
  * relationship are generated demonstration structure and remain visibly
  * labelled with a scenario id and the two-axis provenance contract.
+ *
+ * Node types and relation names follow the §6.6 schema so that step 09's
+ * Neo4j + GDS compile can run §6.6's Cypher verbatim:
+ *
+ *   (:Person)-[:ACCUSED_IN]->(:Incident)
+ *   (:Person)-[:USED_VEHICLE]->(:Vehicle)
+ *   (:Person)-[:USED_PHONE]->(:Phone)
+ *   (:Person)-[:CONTROLS]->(:Account)
+ *   (:Person)-[:CO_ACCUSED_WITH]->(:Person)
+ *   (:Incident)-[:SIMILAR_TO]->(:Incident)
+ *
+ * `type` stays lower-case — it is the client contract
+ * (client/src/lib/graph/types.ts, CaseConstellation checks `node.type ===
+ * 'incident'`). Step 09 maps it to the capitalised Neo4j label.
+ *
+ * Incident nodes also carry `mo_vector`, joined from data/nosql/mo_vectors.jsonl,
+ * so `gds.knn` has a node property to run COSINE over (§6.6). The vector is
+ * build-time only — step 09 strips it before writing the shipped snapshot.
  */
+import { createReadStream } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
+import { createInterface } from 'node:readline'
 import { resolve } from 'node:path'
 
 import { OUTPUT } from './00_config.js'
@@ -14,12 +34,29 @@ import { recordOutput } from './lib/manifest.js'
 import { query } from './lib/parquet.js'
 
 const INCIDENTS_PATH = resolve(OUTPUT.derived, 'incidents_time.parquet')
+const MO_VECTORS_PATH = resolve(OUTPUT.nosql, 'mo_vectors.jsonl')
 const OUTPUT_PATH = resolve(OUTPUT.derived, 'entity_graph_raw.json')
 const REPORT_PATH = resolve(OUTPUT.reports, 'a13_entity_graph.md')
 const INCIDENTS_PER_SCENARIO = 720
 const CLUSTER_SIZE = 20
 
 type EntityType = 'person' | 'vehicle' | 'phone' | 'account'
+
+/** §6.6 relationship types. */
+type Relation =
+  | 'ACCUSED_IN'
+  | 'USED_VEHICLE'
+  | 'USED_PHONE'
+  | 'CONTROLS'
+  | 'CO_ACCUSED_WITH'
+  | 'SIMILAR_TO'
+
+/** Which §6.6 relation carries a Person to each entity type. */
+const PERSON_RELATION: Readonly<Record<Exclude<EntityType, 'person'>, Relation>> = {
+  vehicle: 'USED_VEHICLE',
+  phone: 'USED_PHONE',
+  account: 'CONTROLS',
+}
 
 interface ScenarioDefinition {
   readonly id: string
@@ -36,10 +73,13 @@ const SCENARIOS: readonly ScenarioDefinition[] = [
     entities: { person: 1, vehicle: 2, phone: 1, account: 0 },
   },
   {
+    // person raised 0 → 1 so the §6.6 GDS projection (which is anchored on
+    // Person via ACCUSED_IN / CO_ACCUSED_WITH) is non-empty for this scenario.
+    // A mule network with no accused holder was never coherent anyway.
     id: 'cyber_mule_network',
     label: 'Generated cyber mule-account network',
     where: `crime_group = 'CYBER CRIME'`,
-    entities: { person: 0, vehicle: 0, phone: 1, account: 4 },
+    entities: { person: 1, vehicle: 0, phone: 1, account: 4 },
   },
   {
     id: 'repeat_burglary_group',
@@ -102,7 +142,7 @@ interface GraphEdge {
   readonly id: string
   readonly source: string
   readonly target: string
-  readonly relation: string
+  readonly relation: Relation
   readonly support_type: 'generated_scenario' | 'model_similarity'
   readonly weight: number
   readonly scenario_id: string
@@ -134,17 +174,62 @@ async function loadIncidents(definition: ScenarioDefinition): Promise<IncidentRo
   )) as unknown as IncidentRow[]
 }
 
+/**
+ * Stream the 425k-row MO vector file and keep only the vectors for incidents
+ * that actually enter the graph. Reading it whole would pull ~210 MB of JSON
+ * into memory for ~1% of the rows.
+ */
+async function loadMoVectors(wanted: ReadonlySet<string>): Promise<Map<string, number[]>> {
+  const vectors = new Map<string, number[]>()
+  const reader = createInterface({
+    input: createReadStream(MO_VECTORS_PATH, { encoding: 'utf8' }),
+    crlfDelay: Number.POSITIVE_INFINITY,
+  })
+  for await (const line of reader) {
+    if (line.length === 0) continue
+    // Cheap pre-filter — JSON.parse on every one of 425k rows is the slow path.
+    const marker = line.indexOf('"incident_id":"')
+    if (marker === -1) continue
+    const start = marker + 15
+    const incidentId = line.slice(start, line.indexOf('"', start))
+    if (!wanted.has(incidentId) || vectors.has(incidentId)) continue
+    const row = JSON.parse(line) as { incident_id: string; vector: number[]; dimensions: number }
+    if (row.vector.length !== row.dimensions) {
+      throw new Error(`mo_vector for ${incidentId} declares ${row.dimensions} but carries ${row.vector.length}`)
+    }
+    vectors.set(incidentId, row.vector)
+  }
+  if (vectors.size !== wanted.size) {
+    throw new Error(`mo_vector join covered ${vectors.size} of ${wanted.size} graph incidents`)
+  }
+  return vectors
+}
+
 async function main(): Promise<void> {
   const sourceChecksum = await sha256File(INCIDENTS_PATH)
   const nodes: GraphNode[] = []
   const edges: GraphEdge[] = []
   const scenarioSummary: Array<Record<string, unknown>> = []
 
+  // Resolve every scenario's incidents first so the MO vector file is streamed
+  // exactly once for the whole graph.
+  const incidentsByScenario = new Map<string, IncidentRow[]>()
   for (const definition of SCENARIOS) {
     const incidents = await loadIncidents(definition)
     if (incidents.length !== INCIDENTS_PER_SCENARIO) {
       throw new Error(`${definition.id} has ${incidents.length}, expected ${INCIDENTS_PER_SCENARIO}`)
     }
+    incidentsByScenario.set(definition.id, incidents)
+  }
+  const wantedIncidentIds = new Set<string>()
+  for (const incidents of incidentsByScenario.values()) {
+    for (const incident of incidents) wantedIncidentIds.add(incident.incident_id)
+  }
+  process.stdout.write(`07 · joining mo_vector for ${wantedIncidentIds.size.toLocaleString()} incidents…\n`)
+  const moVectors = await loadMoVectors(wantedIncidentIds)
+
+  for (const definition of SCENARIOS) {
+    const incidents = incidentsByScenario.get(definition.id)!
     const entityIdsByCluster = new Map<number, Record<EntityType, string[]>>()
     const clusters = Math.ceil(incidents.length / CLUSTER_SIZE)
     for (let cluster = 0; cluster < clusters; cluster += 1) {
@@ -170,40 +255,43 @@ async function main(): Promise<void> {
         }
       }
       entityIdsByCluster.set(cluster, ids)
-      const clusterEntities = (Object.values(ids) as string[][]).flat()
-      for (let index = 1; index < clusterEntities.length; index += 1) {
-        const source = clusterEntities[index - 1]!
-        const target = clusterEntities[index]!
-        edges.push({
-          id: `edge:${definition.id}:${cluster}:entity:${index}`,
-          source,
-          target,
-          relation: 'generated_association',
-          support_type: 'generated_scenario',
-          weight: 0.8,
-          scenario_id: definition.id,
-          explanation: `Generated scenario association inside ${definition.label}; not a source-recorded relationship.`,
-          provenance: {
-            source_authority: 'generated_demo',
-            transformation: 'generated',
-            method: 'seeded_entity_graph_v1',
-            source_checksum: sourceChecksum,
-            generation_version: GENERATION_VERSION,
-          },
-        })
+
+      // §6.6: a Person holds the vehicles, phones and accounts in their cluster.
+      for (const type of ['vehicle', 'phone', 'account'] as const) {
+        for (const [ordinal, entityId] of ids[type].entries()) {
+          for (const [personOrdinal, personId] of ids.person.entries()) {
+            edges.push({
+              id: `edge:${definition.id}:${cluster}:${type}:${personOrdinal}:${ordinal}`,
+              source: personId,
+              target: entityId,
+              relation: PERSON_RELATION[type],
+              support_type: 'generated_scenario',
+              weight: 0.8,
+              scenario_id: definition.id,
+              explanation: `Generated scenario association inside ${definition.label}; not a source-recorded relationship.`,
+              provenance: {
+                source_authority: 'generated_demo',
+                transformation: 'generated',
+                method: 'seeded_entity_graph_v1',
+                source_checksum: sourceChecksum,
+                generation_version: GENERATION_VERSION,
+              },
+            })
+          }
+        }
       }
+
+      // §6.6 CO_ACCUSED_WITH bridges consecutive clusters — this is what gives
+      // gds.betweenness a spine to find bridge entities along.
       if (cluster > 0) {
-        const previousEntities = entityIdsByCluster.get(cluster - 1)
-        const previousBridge = previousEntities
-          ? (Object.values(previousEntities) as string[][]).flat()[0]
-          : undefined
-        const currentBridge = clusterEntities[0]
-        if (previousBridge && currentBridge) {
+        const previousPerson = entityIdsByCluster.get(cluster - 1)?.person[0]
+        const currentPerson = ids.person[0]
+        if (previousPerson && currentPerson) {
           edges.push({
             id: `edge:${definition.id}:${cluster}:bridge`,
-            source: previousBridge,
-            target: currentBridge,
-            relation: 'generated_cluster_bridge',
+            source: previousPerson,
+            target: currentPerson,
+            relation: 'CO_ACCUSED_WITH',
             support_type: 'generated_scenario',
             weight: 0.7,
             scenario_id: definition.id,
@@ -240,6 +328,9 @@ async function main(): Promise<void> {
           estimated_occurrence_hour: incident.estimated_occurrence_hour,
           time_origin: incident.time_origin,
           geo_origin: incident.geo_origin,
+          // Build-time only — the gds.knn COSINE property (§6.6). Step 09
+          // strips it before writing the shipped snapshot.
+          mo_vector: moVectors.get(incident.incident_id)!,
         },
         provenance: {
           source_authority: 'third_party_mirror',
@@ -248,17 +339,19 @@ async function main(): Promise<void> {
           generation_version: GENERATION_VERSION,
         },
       })
-      const entityGroups = entityIdsByCluster.get(cluster)!
-      const allEntities = (Object.values(entityGroups) as string[][]).flat()
-      const primary =
-        allEntities[
-          stableIndex('entity_graph_primary', incident.incident_id, definition.id, allEntities.length)
+      // §6.6: (:Person)-[:ACCUSED_IN]->(:Incident). Direction matters — the
+      // GDS projection orients it UNDIRECTED, but the stored edge must read
+      // the way the schema states it.
+      const clusterPersons = entityIdsByCluster.get(cluster)!.person
+      const accused =
+        clusterPersons[
+          stableIndex('entity_graph_primary', incident.incident_id, definition.id, clusterPersons.length)
         ]!
       edges.push({
         id: `edge:${definition.id}:incident:${incident.incident_id}:primary`,
-        source: `incident:${incident.incident_id}`,
-        target: primary,
-        relation: 'generated_scenario_link',
+        source: accused,
+        target: `incident:${incident.incident_id}`,
+        relation: 'ACCUSED_IN',
         support_type: 'generated_scenario',
         weight: 1,
         scenario_id: definition.id,
@@ -277,7 +370,7 @@ async function main(): Promise<void> {
           id: `edge:${definition.id}:similarity:${previous.incident_id}:${incident.incident_id}`,
           source: `incident:${previous.incident_id}`,
           target: `incident:${incident.incident_id}`,
-          relation: 'model_similarity',
+          relation: 'SIMILAR_TO',
           support_type: 'model_similarity',
           weight: 0.65,
           scenario_id: definition.id,

@@ -1,4 +1,8 @@
-const CACHE_NAME = 'kspcid-offline-v2'
+// Bump on every change to a precached asset. `/data/` is served cache-first,
+// so a stale name silently serves the previous compile — the Neo4j + GDS
+// recompile (T2) surfaced exactly that: the Constellation kept reporting the
+// old Graphology 105 communities / 0.98115 modularity until this was raised.
+const CACHE_NAME = 'kspcid-offline-v3'
 const PRECACHE = [
   '/',
   '/icon.svg',

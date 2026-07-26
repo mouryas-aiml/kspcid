@@ -65,6 +65,10 @@ function GraphStage({
     }
     for (const edge of edges) {
       if (!next.hasNode(edge.source) || !next.hasNode(edge.target)) continue
+      // The snapshot is undirected and 09 deduplicates by unordered pair, so a
+      // second edge here means a data regression. Skip rather than throw —
+      // addEdgeWithKey raising takes the whole Constellation down.
+      if (next.hasEdge(edge.source, edge.target)) continue
       next.addEdgeWithKey(edge.id, edge.source, edge.target, {
         size: edge.style.width,
         color:

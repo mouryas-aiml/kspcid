@@ -1,0 +1,46 @@
+# Local build-time graph compiler — BUILD_SPEC §2.2, §6.6.
+#
+# This is the COMPILER, not a runtime service. Louvain communities, betweenness
+# bridge scores and kNN case similarity are computed here and baked into
+# data/derived/graph_snapshot.json. §2.2: "Neo4j + GDS in the local compiler is
+# required, not optional" and the compiler stage "must never be cut".
+#
+# The §2.6 AppSail runtime container is a separate, gated concern and is not
+# started here.
+#
+#   docker compose up -d neo4j
+#   npm run etl:a13
+#   docker compose down
+services:
+  neo4j:
+    image: neo4j:5.26
+    container_name: kspcid-neo4j
+    ports:
+      - '7474:7474' # HTTP / Browser
+      - '7687:7687' # Bolt
+    environment:
+      NEO4J_AUTH: neo4j/kspcid-local-compile
+      NEO4J_PLUGINS: '["graph-data-science","apoc"]'
+      # §6.6 GDS runs offline over a ~5k node / ~9k edge projection — modest.
+      NEO4J_server_memory_heap_initial__size: 1G
+      NEO4J_server_memory_heap_max__size: 2G
+      NEO4J_server_memory_pagecache_size: 512M
+      NEO4J_dbms_security_procedures_unrestricted: 'gds.*,apoc.*'
+      NEO4J_dbms_security_procedures_allowlist: 'gds.*,apoc.*'
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'cypher-shell -u neo4j -p kspcid-local-compile "RETURN 1" || exit 1',
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+    volumes:
+      - kspcid-neo4j-data:/data
+      - kspcid-neo4j-plugins:/plugins
+
+volumes:
+  kspcid-neo4j-data:
+  kspcid-neo4j-plugins:

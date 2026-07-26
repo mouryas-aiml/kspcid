@@ -28,7 +28,11 @@ async function main(): Promise<void> {
       settled_layout: boolean
       layout_method: string
       community_method: string
+      bridge_method: string
       communities: number
+      gds_similar_to_computed: number
+      gds_similar_to_shipped: number
+      gds_similar_to_ship_threshold: number
       nodes: Array<{
         id: string
         type: string
@@ -38,7 +42,13 @@ async function main(): Promise<void> {
         bridge_score: number
         provenance: Record<string, unknown>
       }>
-      edges: Array<{ id: string; source: string; target: string; explanation: string }>
+      edges: Array<{
+        id: string
+        source: string
+        target: string
+        explanation: string
+        scenario_id: string
+      }>
     }>,
     readFile(resolve(OUTPUT.nosql, 'graph_nodes.jsonl'), 'utf8'),
     readFile(resolve(OUTPUT.nosql, 'graph_edges.jsonl'), 'utf8'),
@@ -80,8 +90,34 @@ async function main(): Promise<void> {
   )
   assert(snapshot.settled_layout, 'Snapshot must ship settled coordinates')
   assert(snapshot.nodes.length === raw.nodes.length, 'Snapshot node conservation failed')
-  assert(snapshot.edges.length === raw.edges.length, 'Snapshot edge conservation failed')
+
+  // The snapshot carries step 07's seeded edges plus the SIMILAR_TO edges that
+  // Neo4j GDS kNN discovered and that cleared the export threshold. Asserting
+  // strict equality with the raw edge set would force 09 to suppress genuine
+  // GDS output, so the delta is checked explicitly instead.
+  const shippedKnn = snapshot.gds_similar_to_shipped ?? 0
+  assert(
+    snapshot.edges.length === raw.edges.length + shippedKnn,
+    `Snapshot edge conservation failed: ${snapshot.edges.length} != ` +
+      `${raw.edges.length} seeded + ${shippedKnn} GDS kNN`,
+  )
+  assert(
+    snapshot.gds_similar_to_computed >= shippedKnn,
+    'GDS kNN shipped more edges than it computed',
+  )
+  assert(
+    snapshot.edges.filter((edge) => edge.scenario_id === 'gds_knn').length === shippedKnn,
+    'GDS kNN edge count does not match the declared shipped total',
+  )
+  assert(
+    /neo4j_gds_/.test(snapshot.community_method) && /neo4j_gds_/.test(snapshot.bridge_method),
+    'Communities and bridge scores must come from Neo4j GDS (§2.2)',
+  )
   assert(snapshot.communities > 6, 'Community analysis did not partition the graph')
+  assert(
+    snapshot.nodes.every((node) => node.bridge_score >= 0 && node.bridge_score <= 1),
+    'gds.betweenness must be normalised into [0,1]',
+  )
   assert(
     snapshot.nodes.every(
       (node) =>
@@ -104,7 +140,7 @@ async function main(): Promise<void> {
     'NoSQL node JSONL row count mismatch',
   )
   assert(
-    edgeLines.trimEnd().split('\n').length === raw.edges.length,
+    edgeLines.trimEnd().split('\n').length === snapshot.edges.length,
     'NoSQL edge JSONL row count mismatch',
   )
   const [rawChecksum, snapshotChecksum, compressedChecksum] = await Promise.all([
@@ -114,8 +150,11 @@ async function main(): Promise<void> {
   ])
   process.stdout.write(
     `verify:graph — PASS\n` +
-      `  nodes / edges       ${raw.nodes.length} / ${raw.edges.length}\n` +
+      `  nodes / edges       ${raw.nodes.length} / ${snapshot.edges.length}\n` +
+      `  seeded + GDS kNN    ${raw.edges.length} + ${shippedKnn} ` +
+      `(of ${snapshot.gds_similar_to_computed} computed, >= ${snapshot.gds_similar_to_ship_threshold})\n` +
       `  incident/generated  ${incidentNodes.length} / ${generatedNodes.length}\n` +
+      `  compiler            ${snapshot.community_method}\n` +
       `  communities         ${snapshot.communities}\n` +
       `  raw sha256          ${rawChecksum}\n` +
       `  snapshot sha256     ${snapshotChecksum}\n` +
