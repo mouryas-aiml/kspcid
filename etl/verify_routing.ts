@@ -3,6 +3,7 @@ import { readFile, stat } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 import { OUTPUT } from './00_config.js'
+import { OSRM_FREE_FLOW_KMH, hourProfile } from '../client/src/lib/patrol/congestion.js'
 
 interface Region {
   readonly cells: number
@@ -69,8 +70,37 @@ async function main(): Promise<void> {
     }
   }
 
+  // T6 — the published congestion profile must still match the module the
+  // scoring engine actually imports. The artifact is generated from that module
+  // (etl/20_travel_time_profiles.ts), so a mismatch means it was not
+  // regenerated after an edit and the documented multipliers are a fiction.
+  const profile = JSON.parse(
+    await readFile(resolve(OUTPUT.routing, 'travel_time_profiles.json'), 'utf8'),
+  ) as {
+    congestion_baked_in: boolean
+    reference: { osrm_free_flow_kmh_median: number }
+    hours: readonly { hour: number; multiplier: number; assumed_speed_kmh: number }[]
+  }
+  assert.equal(profile.congestion_baked_in, false)
+  assert.equal(profile.reference.osrm_free_flow_kmh_median, OSRM_FREE_FLOW_KMH)
+  assert.deepEqual(
+    profile.hours.map(({ hour, multiplier, assumed_speed_kmh }) => ({
+      hour,
+      multiplier,
+      assumed_speed_kmh,
+    })),
+    hourProfile().map(({ hour, multiplier, assumed_speed_kmh }) => ({
+      hour,
+      multiplier,
+      assumed_speed_kmh,
+    })),
+    'travel_time_profiles.json is stale — re-run npm run etl:20:congestion',
+  )
+
   process.stdout.write(
-    `Routing verified: ${region.cells.toLocaleString()} cells, free-flow matrix, bitsets, and validation PASS.\n`,
+    `Routing verified: ${region.cells.toLocaleString()} cells, free-flow matrix, bitsets, and validation PASS.\n` +
+      `  congestion profile  24 hours, off-peak x${hourProfile()[0]!.multiplier}, ` +
+      `runtime multiplier only\n`,
   )
 }
 

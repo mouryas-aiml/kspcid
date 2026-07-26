@@ -36,8 +36,8 @@
     {
       "id": "optimizer_fallback",
       "url": "/data/scenarios/optimizer_fallback.json",
-      "sha256": "0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a",
-      "bytes": 1527,
+      "sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c",
+      "bytes": 1517,
       "required": true
     },
     {
@@ -85,8 +85,8 @@
     {
       "id": "dispatch_routes",
       "url": "/data/routing/dispatch_routes.json",
-      "sha256": "d6a86efaf1fafcb7f1abc614f40cb5e26ace12578628010c933680e443870561",
-      "bytes": 2085218,
+      "sha256": "d38675db4e4b154de30b52dbc56ea14197539e0b1c026d94811103d0adb42c82",
+      "bytes": 1458848,
       "required": true
     },
     {
@@ -121,7 +121,7 @@
   "optimizer_contract": {
     "live_timeout_ms": 2000,
     "fallback_url": "/data/scenarios/optimizer_fallback.json",
-    "fallback_sha256": "0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a"
+    "fallback_sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c"
   },
   "provenance": {
     "source_authority": "generated_demo",

@@ -1,5 +1,6 @@
 import { budgetIndex, isCovered, travelSeconds, unionCoverage } from './routing'
 import type { Deployment, PatrolData, ScoreBreakdown } from './types'
+import { congestionMultiplier, hourForSimulationMinute } from './congestion'
 
 function clamp(value: number): number {
   return Math.max(0, Math.min(1, value))
@@ -59,7 +60,17 @@ export function scoreDeployment(
     (roadClosure ? data.scenario.conditions.road_closure_multiplier : 1)
   const responseMinutes = data.scenario.replay_events.map((event) => {
     const fastest = Math.min(...active.map((origin) => travelSeconds(data, origin, event.hex_index)))
-    return Number.isFinite(fastest) ? (fastest * conditionFactor) / 60 : targetMinutes * 3
+    // §8.4 — congestion is a runtime multiplier on the stored free-flow
+    // duration, resolved per event so each response uses its own clock hour.
+    const congestion = congestionMultiplier(
+      hourForSimulationMinute(
+        data.scenario.time_window.selected_hours_local,
+        event.simulation_minute,
+      ),
+    )
+    return Number.isFinite(fastest)
+      ? (fastest * conditionFactor * congestion) / 60
+      : targetMinutes * 3
   })
   const p50Minutes = percentile(responseMinutes, 0.5)
   const p90Minutes = percentile(responseMinutes, 0.9)

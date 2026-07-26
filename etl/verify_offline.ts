@@ -105,7 +105,14 @@ async function main(): Promise<void> {
     JSON.stringify(fresh.deployment) === JSON.stringify(fallback.deployment),
     'Stored deployment does not match deterministic optimizer',
   )
-  assert(fresh.score.total === fallback.score.total && fallback.score.total === 913, 'Stored optimizer score drift')
+  // 814, not the pre-calibration 913: T6 applies TomTom's hour-of-day
+  // congestion at the runtime conditionFactor seam, which costs the response
+  // term ~82 of its 250 points. Coverage is unchanged because the bitsets are
+  // still free-flow — see reports/a8_congestion_calibration.md.
+  assert(
+    fresh.score.total === fallback.score.total && fallback.score.total === 814,
+    'Stored optimizer score drift',
+  )
   assert((await sha256File(fallbackPath)) === snapshot.optimizer_contract.fallback_sha256, 'Fallback checksum contract drift')
   process.stdout.write(
     `verify:offline — PASS\n` +

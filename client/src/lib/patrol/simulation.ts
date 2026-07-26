@@ -1,5 +1,6 @@
 import { travelSeconds } from './routing'
 import type { Deployment, PatrolData, ReplayEvent } from './types'
+import { congestionMultiplier, hourForSimulationMinute } from './congestion'
 
 export interface SimulatedDispatch {
   readonly event: ReplayEvent
@@ -30,6 +31,14 @@ export function simulateUntil(
   const events = data.scenario.replay_events.filter((event) => event.simulation_minute <= minute)
 
   for (const event of events) {
+    // §8.4 — congestion multiplies the stored free-flow duration at runtime,
+    // resolved from the event's own clock hour. Geometry is never changed.
+    const congestion = congestionMultiplier(
+      hourForSimulationMinute(
+        data.scenario.time_window.selected_hours_local,
+        event.simulation_minute,
+      ),
+    )
     const candidates = data.scenario.roster
       .filter((unit) => {
         const post = deployment[unit.unit_id]
@@ -39,7 +48,8 @@ export function simulateUntil(
         const post = deployment[unit.unit_id]!
         return {
           unit,
-          response: (travelSeconds(data, post, event.hex_index) * conditionFactor) / 60,
+          response:
+            (travelSeconds(data, post, event.hex_index) * conditionFactor * congestion) / 60,
         }
       })
       .sort(

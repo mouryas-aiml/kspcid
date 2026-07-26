@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "KSPCID — Karnataka Police State Crime Intelligence Dashboard. Build-time ETL compiler (BUILD_SPEC §2.2, §6.4). Nothing here is deployed.",
+  "description": "KSPCID \u2014 Karnataka Police State Crime Intelligence Dashboard. Build-time ETL compiler (BUILD_SPEC \u00a72.2, \u00a76.4). Nothing here is deployed.",
   "scripts": {
     "etl:audit": "node --import tsx etl/00_audit_data_truth.ts",
     "lint:truth": "node --import tsx etl/lint_data_truth.ts",
@@ -48,7 +48,8 @@
     "donor:refs": "node scripts/prepare-references.mjs",
     "donor:generate": "node scripts/generate-dataset.mjs",
     "donor:validate": "node scripts/validate-dataset.mjs",
-    "donor:build": "npm run donor:refs && npm run donor:generate && npm run donor:validate"
+    "donor:build": "npm run donor:refs && npm run donor:generate && npm run donor:validate",
+    "etl:20:congestion": "node --import tsx etl/20_travel_time_profiles.ts"
   },
   "dependencies": {
     "@duckdb/node-api": "1.4.0-r.1",

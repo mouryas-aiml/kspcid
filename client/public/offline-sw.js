@@ -2,7 +2,7 @@
 // so a stale name silently serves the previous compile — the Neo4j + GDS
 // recompile (T2) surfaced exactly that: the Constellation kept reporting the
 // old Graphology 105 communities / 0.98115 modularity until this was raised.
-const CACHE_NAME = 'kspcid-offline-v8'
+const CACHE_NAME = 'kspcid-offline-v9'
 
 // The 37 MB PMTiles basemap lives in its own cache, keyed separately from
 // CACHE_NAME: a data-only bump must not force a 37 MB re-download over venue

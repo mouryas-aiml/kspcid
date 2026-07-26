@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-26T07:28:20.076Z",
+  "updated_at": "2026-07-26T08:25:16.706Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -381,7 +381,7 @@
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
       "rows": 13,
-      "sha256": "4467fd5a0e0509b8160af323c21fc4f7df60bb360dec6c8cf7267bef65014123",
+      "sha256": "3adab5df9d57c960dd3b44e3232e044e5b526a51e026e5ba321bd38d92614f0a",
       "bytes": 4106,
       "inputs": [
         {
@@ -398,7 +398,7 @@
         },
         {
           "path": "app/data/scenarios/optimizer_fallback.json",
-          "sha256": "0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a"
+          "sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c"
         },
         {
           "path": "app/data/scenarios/similarity_demo.json",
@@ -426,7 +426,7 @@
         },
         {
           "path": "app/data/routing/dispatch_routes.json",
-          "sha256": "d6a86efaf1fafcb7f1abc614f40cb5e26ace12578628010c933680e443870561"
+          "sha256": "d38675db4e4b154de30b52dbc56ea14197539e0b1c026d94811103d0adb42c82"
         },
         {
           "path": "app/data/scenarios/justice_pipeline.json",
@@ -438,7 +438,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T07:28:20.076Z",
+      "generated_at": "2026-07-26T08:25:16.706Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10739,6 +10739,21 @@
       "generation_version": "kspcid-etl-1.0.0",
       "generated_at": "2026-07-25T20:41:23.515Z"
     },
+    "app/data/routing/travel_time_profiles.json": {
+      "step": "20_travel_time_profiles",
+      "path": "app/data/routing/travel_time_profiles.json",
+      "rows": 24,
+      "sha256": "273a51e821c9ecf482f211f132dff79d878835e83d69b3e3abc7399853f665d2",
+      "bytes": 4579,
+      "inputs": [
+        {
+          "path": "app/data/routing/validation.json",
+          "sha256": "702096aa51e8622706f473af0a4e46a9d6b6fd6cdb69f3759bd84e3e402532ca"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-07-26T08:21:41.119Z"
+    },
     "app/data/routing/validation.json": {
       "step": "08_routing_matrix_A0a_one_corridor_fixture",
       "path": "app/data/routing/validation.json",
@@ -10882,8 +10897,8 @@
       "step": "19b_optimizer_fallback",
       "path": "app/data/scenarios/optimizer_fallback.json",
       "rows": 16,
-      "sha256": "0de3d49c4543c420eacfd9802d1e64971d05da9d2aab113776ebbaadcee9ef7a",
-      "bytes": 1527,
+      "sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c",
+      "bytes": 1517,
       "inputs": [
         {
           "path": "app/data/scenarios/demo_corridor_patrol.json",
@@ -10895,11 +10910,11 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T07:28:20.072Z",
+      "generated_at": "2026-07-26T08:25:16.701Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,
-        "score": 913
+        "score": 814
       }
     },
     "app/data/scenarios/similarity_demo.json": {
