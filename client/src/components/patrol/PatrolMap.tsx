@@ -20,9 +20,9 @@ import { PathStyleExtension } from '@deck.gl/extensions'
 import type { Layer, PickingInfo } from '@deck.gl/core'
 import { Map as MapLibreMap } from 'maplibre-gl'
 import { cellsToMultiPolygon } from 'h3-js'
-import { interpolateMagma } from 'd3-scale-chromatic'
 import { useReducedMotion } from 'motion/react'
 
+import { magma } from '@/lib/geo'
 import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
 import { dispatchRoute, isCovered, unionCoverage } from '@/lib/patrol/routing'
 import { simulateUntil } from '@/lib/patrol/simulation'
@@ -38,14 +38,6 @@ const unitColour: Record<string, [number, number, number]> = {
   'Foot patrol': [45, 212, 191],
   'Pink Hoysala': [244, 114, 182],
   Traffic: [247, 144, 9],
-}
-
-/** §5.2 — interpolateMagma domain-clipped to [0.12, 0.94]. Never hand-rolled. */
-function magma(intensity: number): [number, number, number] {
-  const clipped = 0.12 + Math.max(0, Math.min(1, intensity)) * (0.94 - 0.12)
-  const parsed = interpolateMagma(clipped).match(/\d+/g)
-  if (!parsed || parsed.length < 3) return [0, 0, 0]
-  return [Number(parsed[0]), Number(parsed[1]), Number(parsed[2])]
 }
 
 /** Incident shockwave — radius 0→40px, alpha 0.9→0 over 700ms (§8.9). */

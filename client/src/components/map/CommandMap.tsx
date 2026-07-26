@@ -1,6 +1,18 @@
 'use client'
 
-import { cellToBoundary } from 'h3-js'
+/**
+ * Command Map — BUILD_SPEC §7.1.
+ *
+ * MapLibre GL over the self-hosted PMTiles basemap (§3.4) with the §7.1 layer
+ * stack attached as an interleaved deck.gl overlay, replacing a linear-stretch
+ * SVG projection into a 1000×700 box and a ±0.25 CSS-transform pseudo-zoom that
+ * could not pan at all.
+ */
+import { MapboxOverlay } from '@deck.gl/mapbox'
+import { H3HexagonLayer } from '@deck.gl/geo-layers'
+import { GeoJsonLayer, ScatterplotLayer } from '@deck.gl/layers'
+import type { Layer, PickingInfo } from '@deck.gl/core'
+import { Map as MapLibreMap } from 'maplibre-gl'
 import {
   AlertTriangle,
   ChevronDown,
@@ -13,12 +25,16 @@ import {
   Search,
   Sparkles,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Panel } from '@/components/primitives/Panel'
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import { OpsShell } from '@/components/shell/OpsShell'
+import { BLR_CENTER, INITIAL_VIEW_STATE, magma, magmaCss } from '@/lib/geo'
+import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
+import { dur } from '@/lib/motion'
 import type { Provenance } from '@/lib/provenance'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 interface Cell {
   readonly h3_r9: string
@@ -83,15 +99,17 @@ interface CommandMapFixture {
   readonly provenance: Provenance
 }
 
-const BBOX = { minLon: 77.35, maxLon: 77.85, minLat: 12.7, maxLat: 13.2 }
-const MAGMA = ['#160C2F', '#3C176B', '#792582', '#B73779', '#E65D5F', '#FDB65D']
+/** §7.1 — the alert pulse cap. Ranked by z-score; anything past six is noise. */
+const MAX_PULSES = 6
+/** §7.1 — pulse period. */
+const PULSE_MS = 1800
+/** 106 official station polygons, copied to `public/data/` by `sync-demo-data.mjs`. */
+const JURISDICTIONS_URL = '/data/reference/jurisdictions.geojson'
 
-function x(lon: number): number {
-  return ((lon - BBOX.minLon) / (BBOX.maxLon - BBOX.minLon)) * 1000
-}
-
-function y(lat: number): number {
-  return ((BBOX.maxLat - lat) / (BBOX.maxLat - BBOX.minLat)) * 700
+interface JurisdictionProperties {
+  readonly station_code: string
+  readonly station_name: string
+  readonly police_division: string | null
 }
 
 function format(value: number): string {
@@ -146,11 +164,14 @@ function Context({
           <ChevronDown className="pointer-events-none absolute right-2 top-2.5" size={14} />
         </span>
       </label>
+      {/* Kept in step with the layers MapCanvas actually creates. */}
       <Panel title="Visible layer rules" eyebrow="TRUTH CONTRACT">
         <ul className="space-y-2 text-xs leading-5 text-[--txt-2]">
+          <li><span className="text-[--cyan-400]">▢</span> Jurisdictions: 106 official polygons</li>
           <li><span className="text-[--cyan-400]">◆</span> H3 aggregates: reported + inferred</li>
           <li><span className="text-[--gold-400]">●</span> Point marks: eligible reported only</li>
           <li><span className="text-[--critical]">◎</span> Pulses: top six ranked alerts</li>
+          <li className="text-[--txt-3]">No corridor layer — the source carries station codes and a buffer radius, no polyline.</li>
         </ul>
       </Panel>
       <div className="rounded-[--r-md] border border-[--ink-600] p-4">
@@ -178,7 +199,9 @@ function PulseRing({ fixture }: { readonly fixture: CommandMapFixture }) {
         const startY = 140 + Math.sin(radians) * (radius - length / 2)
         const endX = 140 + Math.cos(radians) * (radius + length / 2)
         const endY = 140 + Math.sin(radians) * (radius + length / 2)
-        return <line key={`${row.crime_head}-${row.estimated_occurrence_hour}`} stroke={MAGMA[ring + 1]} strokeLinecap="round" strokeWidth="5" x1={startX} x2={endX} y1={startY} y2={endY} />
+        // Sequential ramp on categorical rings is a §5.2 miss inherited from the
+        // SVG map; kept visually identical here and left to T1.5's chart pass.
+        return <line key={`${row.crime_head}-${row.estimated_occurrence_hour}`} stroke={magmaCss((ring + 1) / 5)} strokeLinecap="round" strokeWidth="5" x1={startX} x2={endX} y1={startY} y2={endY} />
       })}
       {fixture.pulse_ring.generated_roster_strength.map((strength, hour) => {
         const angle = hour * 15 - 90
@@ -240,6 +263,22 @@ function InspectorContent({
   )
 }
 
+/** rAF clock for the alert pulse. Stopped under `prefers-reduced-motion`. */
+function usePulseClock(active: boolean): number {
+  const [now, setNow] = useState(0)
+  useEffect(() => {
+    if (!active) return
+    let frame = 0
+    const tick = () => {
+      setNow(performance.now())
+      frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [active])
+  return now
+}
+
 function MapCanvas({
   fixture,
   cells,
@@ -251,54 +290,304 @@ function MapCanvas({
   readonly selected: Cell
   readonly onSelect: (cell: Cell) => void
 }) {
-  const [zoom, setZoom] = useState(1)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const mapRef = useRef<MapLibreMap | null>(null)
+  const overlayRef = useRef<MapboxOverlay | null>(null)
+  const [ready, setReady] = useState(false)
+  const [jurisdictions, setJurisdictions] = useState<GeoJSON.FeatureCollection | null>(null)
+  const [reduce, setReduce] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduce(query.matches)
+    const onChange = () => setReduce(query.matches)
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+
+  // Jurisdiction polygons are 2.5 MB and only ever a background wash, so they
+  // load after the map rather than blocking it. Absent, the layer is skipped.
+  useEffect(() => {
+    let live = true
+    fetch(JURISDICTIONS_URL)
+      .then((response) => (response.ok ? (response.json() as Promise<GeoJSON.FeatureCollection>) : null))
+      .then((data) => {
+        if (live && data) setJurisdictions(data)
+      })
+      .catch(() => undefined)
+    return () => {
+      live = false
+    }
+  }, [])
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    registerPmtilesProtocol()
+    const map = new MapLibreMap({
+      container,
+      style: buildBasemapStyle(),
+      center: BLR_CENTER,
+      zoom: INITIAL_VIEW_STATE.zoom,
+      attributionControl: { compact: true },
+    })
+    mapRef.current = map
+    const overlay = new MapboxOverlay({ interleaved: true, layers: [] })
+    map.addControl(overlay)
+    overlayRef.current = overlay
+    setReady(true)
+    // MapLibre measures the container before the grid has settled; resize on the
+    // first frame and on every subsequent layout change.
+    const observer = new ResizeObserver(() => map.resize())
+    observer.observe(container)
+    requestAnimationFrame(() => map.resize())
+    return () => {
+      observer.disconnect()
+      overlayRef.current = null
+      mapRef.current = null
+      map.remove()
+    }
+  }, [])
+
+  // §7.1 — station select flies the camera. `essential` so it still runs under
+  // prefers-reduced-motion at the OS level; the duration is zeroed instead.
+  //
+  // The first selection is skipped deliberately: a cell is chosen on load (from
+  // the URL, or the top cell), and flying to it on mount would open the Command
+  // Map already zoomed into one neighbourhood. The city picture is the frame
+  // this screen exists to give.
+  const flownOnce = useRef(false)
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    if (!flownOnce.current) {
+      flownOnce.current = true
+      return
+    }
+    map.flyTo({
+      center: [selected.longitude, selected.latitude],
+      zoom: Math.max(map.getZoom(), 12.5),
+      duration: reduce ? 0 : dur.fly * 1000,
+      essential: true,
+    })
+  }, [selected.h3_r9, selected.longitude, selected.latitude, reduce])
+
+  const clock = usePulseClock(!reduce)
   const maximum = Math.max(1, ...cells.map((cell) => cell.count))
-  const visibleIds = new Set(cells.map((cell) => cell.h3_r9))
+  const minimum = Math.min(...cells.map((cell) => cell.count), maximum)
+
+  // §7.1 caps simultaneous pulses at six, ranked by z-score. The fixture ships
+  // six; the slice is here so a larger alert set cannot flood the map.
+  const pulses = useMemo(
+    () =>
+      [...fixture.alerts]
+        .sort((a, b) => b.observed_count - a.observed_count)
+        .slice(0, MAX_PULSES),
+    [fixture.alerts],
+  )
+
+  const layers = useMemo<Layer[]>(() => {
+    const built: Layer[] = []
+
+    // Jurisdictions — bottom of the stack, a wash rather than a subject.
+    if (jurisdictions) {
+      built.push(
+        new GeoJsonLayer({
+          id: 'jurisdictions',
+          data: jurisdictions,
+          filled: true,
+          stroked: true,
+          getFillColor: (feature: GeoJSON.Feature): [number, number, number, number] =>
+            (feature.properties as JurisdictionProperties | null)?.station_code ===
+            selected.top_station_code
+              ? [56, 189, 248, Math.round(0.1 * 255)]
+              : [56, 189, 248, Math.round(0.04 * 255)],
+          getLineColor: (feature: GeoJSON.Feature): [number, number, number, number] =>
+            (feature.properties as JurisdictionProperties | null)?.station_code ===
+            selected.top_station_code
+              ? [255, 197, 61, 255]
+              : [43, 56, 73, 255],
+          getLineWidth: (feature: GeoJSON.Feature): number =>
+            (feature.properties as JurisdictionProperties | null)?.station_code ===
+            selected.top_station_code
+              ? 2
+              : 1,
+          lineWidthUnits: 'pixels',
+          updateTriggers: {
+            getFillColor: [selected.top_station_code],
+            getLineColor: [selected.top_station_code],
+            getLineWidth: [selected.top_station_code],
+          },
+        }),
+      )
+    }
+
+    // Density — H3 aggregates. Both reported and inferred rows land here; this
+    // is the only layer inferred coordinates are ever allowed to reach.
+    built.push(
+      new H3HexagonLayer<Cell>({
+        id: 'density',
+        data: cells as Cell[],
+        extruded: false,
+        filled: true,
+        stroked: true,
+        coverage: 0.92,
+        opacity: 0.72,
+        getHexagon: (cell) => cell.h3_r9,
+        // Log-scaled, and the scale is named in the layer-rules panel.
+        //
+        // Record counts here run 7 → 499 with 97.6% of cells below a tenth of
+        // the maximum, so a linear ramp puts almost the whole city at magma's
+        // black end and the surface reads as empty. Log keeps the mapping
+        // monotone in magnitude while making the distribution legible. A ramp
+        // whose scale is not stated on screen is a misleading chart, so it is.
+        getFillColor: (cell): [number, number, number, number] => {
+          const [r, g, b] = magma(Math.log(Math.max(1, cell.count)) / Math.log(maximum))
+          return [r, g, b, 255]
+        },
+        getLineColor: (cell): [number, number, number, number] =>
+          cell.h3_r9 === selected.h3_r9 ? [255, 197, 61, 255] : [0, 0, 0, 0],
+        getLineWidth: (cell) => (cell.h3_r9 === selected.h3_r9 ? 2 : 0),
+        lineWidthUnits: 'pixels',
+        pickable: true,
+        onClick: (info: PickingInfo) => {
+          const cell = info.object as Cell | undefined
+          if (cell) onSelect(cell)
+          return true
+        },
+        updateTriggers: {
+          getFillColor: [maximum],
+          getLineColor: [selected.h3_r9],
+          getLineWidth: [selected.h3_r9],
+        },
+      }),
+    )
+
+    // Incidents — CRITICAL #4. `fixture.reported_points` is the only source
+    // carrying map_pin_eligible=true; `cells` and `explanations` never are.
+    // Do not widen this to any other array.
+    built.push(
+      new ScatterplotLayer<CommandMapFixture['reported_points'][number]>({
+        id: 'incidents',
+        data: fixture.reported_points as CommandMapFixture['reported_points'][number][],
+        getPosition: (point) => [point.longitude, point.latitude],
+        getRadius: 40,
+        radiusUnits: 'meters',
+        radiusMinPixels: 2,
+        radiusMaxPixels: 8,
+        getFillColor: [255, 197, 61, 174],
+        // Not pickable on purpose: point marks sit above the density layer, and
+        // a pickable 2–8px dot swallows the click on the hex underneath it.
+        // Selection in §7.1 is by cell, not by incident.
+        pickable: false,
+      }),
+    )
+
+    // Alerts — r = base·(1 + 0.55·sin t), alpha inverse to radius, 1.8s period.
+    const phase = reduce ? 0 : Math.sin(((clock % PULSE_MS) / PULSE_MS) * Math.PI * 2)
+    const swell = 1 + 0.55 * phase
+    built.push(
+      new ScatterplotLayer<(typeof pulses)[number]>({
+        id: 'alert-pulses',
+        data: pulses,
+        getPosition: (alert) => [alert.geography.longitude, alert.geography.latitude],
+        getRadius: 13 * swell,
+        radiusUnits: 'pixels',
+        filled: false,
+        stroked: true,
+        getLineColor: [240, 68, 56, Math.round(255 * (0.85 - 0.35 * phase))],
+        getLineWidth: 2,
+        lineWidthUnits: 'pixels',
+        updateTriggers: { getRadius: [clock], getLineColor: [clock] },
+      }),
+      new ScatterplotLayer<(typeof pulses)[number]>({
+        id: 'alert-cores',
+        data: pulses,
+        getPosition: (alert) => [alert.geography.longitude, alert.geography.latitude],
+        getRadius: 4,
+        radiusUnits: 'pixels',
+        getFillColor: [240, 68, 56, 255],
+      }),
+    )
+
+    return built
+  }, [cells, clock, fixture.reported_points, jurisdictions, maximum, onSelect, pulses, reduce, selected])
+
+  const rampLabel = `magma, log-scaled · ${format(minimum)} → ${format(maximum)} records`
+
+  useEffect(() => {
+    if (!ready) return
+    overlayRef.current?.setProps({
+      layers,
+      getTooltip: ({ object }: PickingInfo) => {
+        const cell = object as Cell | null
+        if (!cell?.h3_r9) return null
+        return {
+          text: `${cell.top_station_name ?? cell.h3_r9}\n${format(cell.count)} records · ${cell.top_crime_head ?? 'no dominant head'}`,
+        }
+      },
+    })
+  }, [layers, ready])
+
+  const zoomBy = (delta: number) => {
+    const map = mapRef.current
+    if (!map) return
+    map.easeTo({ zoom: map.getZoom() + delta, duration: reduce ? 0 : dur.base * 1000 })
+  }
+
   return (
     <div className="relative h-full overflow-hidden bg-[--ink-900]">
-      <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(rgb(56_189_248_/_0.06)_1px,transparent_1px),linear-gradient(90deg,rgb(56_189_248_/_0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
-      <svg aria-label="Interactive H3 command map" className="absolute inset-0 h-full w-full" role="img" viewBox="0 0 1000 700">
-        <g style={{ transform: `scale(${zoom})`, transformOrigin: `${x(selected.longitude)}px ${y(selected.latitude)}px`, transition: 'transform 180ms ease' }}>
-          {cells.map((cell) => {
-            const boundary = cellToBoundary(cell.h3_r9)
-            const points = boundary.map(([lat, lon]) => `${x(lon)},${y(lat)}`).join(' ')
-            const colour = MAGMA[Math.min(MAGMA.length - 1, Math.floor((cell.count / maximum) * MAGMA.length))]
-            return (
-              <polygon
-                aria-label={`${cell.top_station_name ?? 'Cell'}: ${cell.count} records`}
-                fill={colour}
-                fillOpacity={cell.h3_r9 === selected.h3_r9 ? 0.98 : 0.72}
-                key={cell.h3_r9}
-                onClick={() => onSelect(cell)}
-                points={points}
-                stroke={cell.h3_r9 === selected.h3_r9 ? '#FFC53D' : '#17263A'}
-                strokeWidth={cell.h3_r9 === selected.h3_r9 ? 2.4 : 0.7}
-                style={{ cursor: 'pointer' }}
-              />
-            )
-          })}
-          {fixture.reported_points.filter((point) => point.longitude && point.latitude).map((point) => (
-            <circle cx={x(point.longitude)} cy={y(point.latitude)} fill="#FFC53D" key={point.incident_id} opacity=".68" r="1.8" />
-          ))}
-          {fixture.alerts.filter((alert) => {
-            const nearest = cells.find((cell) => cell.top_station_name === alert.station_name)
-            return !nearest || visibleIds.has(nearest.h3_r9)
-          }).map((alert) => (
-            <g key={alert.id} transform={`translate(${x(alert.geography.longitude)} ${y(alert.geography.latitude)})`}>
-              <circle className="command-pulse" fill="none" r="12" stroke="#F04438" strokeWidth="2" />
-              <circle fill="#F04438" r="4" />
-            </g>
-          ))}
-        </g>
-      </svg>
-      <div className="absolute left-5 top-5 flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] text-[--txt-2]">
-        <Layers3 size={14} className="text-[--cyan-400]" /> {cells.length} H3 cells · {fixture.reported_points.length} eligible point marks
+      {/* maplibre-gl.css forces position:relative on its container, which
+          overrides `absolute inset-0` and collapses height to 0. */}
+      <div className="h-full w-full" ref={containerRef} />
+      <div className="pointer-events-none absolute left-5 top-5 flex flex-col gap-2">
+        <span className="flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] text-[--txt-2]">
+          <Layers3 size={14} className="text-[--cyan-400]" /> {cells.length} H3 cells · {fixture.reported_points.length} eligible point marks
+        </span>
+        {/* §5.7 — a density ramp with an unnamed scale is a misleading chart. */}
+        <span className="flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] tabular-nums text-[--txt-2]">
+          <span className="flex h-2.5 w-16 overflow-hidden rounded-[--r-full]">
+            {[0, 0.25, 0.5, 0.75, 1].map((stop) => (
+              <span className="flex-1" key={stop} style={{ background: magmaCss(stop) }} />
+            ))}
+          </span>
+          {rampLabel}
+        </span>
       </div>
       <div className="absolute right-5 top-5 flex flex-col gap-2">
-        <button aria-label="Zoom in" className="icon-button bg-[--ink-800]" onClick={() => setZoom((value) => Math.min(2.5, value + 0.25))} type="button"><Plus size={15} /></button>
-        <button aria-label="Zoom out" className="icon-button bg-[--ink-800]" onClick={() => setZoom((value) => Math.max(1, value - 0.25))} type="button"><Minus size={15} /></button>
-        <button aria-label="Reset map" className="icon-button bg-[--ink-800]" onClick={() => setZoom(1)} type="button"><Crosshair size={15} /></button>
+        <button aria-label="Zoom in" className="icon-button bg-[--ink-800]" onClick={() => zoomBy(1)} type="button"><Plus size={15} /></button>
+        <button aria-label="Zoom out" className="icon-button bg-[--ink-800]" onClick={() => zoomBy(-1)} type="button"><Minus size={15} /></button>
+        <button
+          aria-label="Reset map"
+          className="icon-button bg-[--ink-800]"
+          onClick={() =>
+            mapRef.current?.flyTo({
+              center: BLR_CENTER,
+              zoom: INITIAL_VIEW_STATE.zoom,
+              duration: reduce ? 0 : dur.fly * 1000,
+              essential: true,
+            })
+          }
+          type="button"
+        >
+          <Crosshair size={15} />
+        </button>
       </div>
+      {/*
+        A WebGL canvas gives no keyboard path to the cells the SVG polygons had.
+        This parallel list is that path: focusable, ordered by record count, and
+        selecting a row flies the camera and opens the inspector exactly as a
+        click does.
+      */}
+      <ul className="sr-only">
+        {cells.map((cell) => (
+          <li key={cell.h3_r9}>
+            <button onClick={() => onSelect(cell)} type="button">
+              {cell.top_station_name ?? cell.h3_r9}: {format(cell.count)} records
+            </button>
+          </li>
+        ))}
+      </ul>
       <div className="absolute bottom-5 left-5 max-w-sm rounded-[--r-md] border border-[--ink-500] bg-[rgb(10_15_22_/_0.95)] p-4">
         <p className="type-micro text-[--gold-400]">Selected H3 cell</p>
         <p className="mt-2 text-base font-semibold">{selected.top_station_name ?? selected.h3_r9}</p>

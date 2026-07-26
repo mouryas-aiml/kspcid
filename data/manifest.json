@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-26T06:52:50.675Z",
+  "updated_at": "2026-07-26T07:28:20.076Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -438,7 +438,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T06:52:50.675Z",
+      "generated_at": "2026-07-26T07:28:20.076Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10895,7 +10895,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T06:52:50.671Z",
+      "generated_at": "2026-07-26T07:28:20.072Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,

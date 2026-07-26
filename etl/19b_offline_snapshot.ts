@@ -173,7 +173,14 @@ async function main(): Promise<void> {
       `- Offline artifact contracts: **${artifacts.length}**\n` +
       `- Fallback SHA-256: \`${fallbackChecksum}\`\n` +
       `- Snapshot SHA-256: \`${snapshotChecksum}\`\n\n` +
-      `The bundle is a same-schema static fallback. It contains no Catalyst credentials and makes no deployment claim.\n`,
+      `The bundle is a same-schema static fallback. It contains no Catalyst credentials and makes no deployment claim.\n\n` +
+      // Part of the generated template, not a hand-added footnote: an earlier
+      // version of this section was written by hand and silently erased the
+      // next time this step ran.
+      `## Acceptance\n\n` +
+      `- \`verify:offline\` re-runs the deterministic optimizer and confirms the stored ${Object.keys(fallback.deployment).length}-unit deployment and score ${fallback.score.total} exactly.\n` +
+      `- Every offline artifact is byte-counted and checksummed; all ${snapshot.routes.length} demo routes and ${artifacts.length} required data assets — including the Command Map and the dispatch route geometry — are present in the service-worker contract.\n` +
+      `- The service worker is asserted to write to a cache in exactly one guarded place, so a 206 range response can never reach \`cache.put\` and silently drop the basemap.\n`,
     'utf8',
   )
   process.stdout.write(

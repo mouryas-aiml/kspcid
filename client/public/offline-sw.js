@@ -2,7 +2,7 @@
 // so a stale name silently serves the previous compile — the Neo4j + GDS
 // recompile (T2) surfaced exactly that: the Constellation kept reporting the
 // old Graphology 105 communities / 0.98115 modularity until this was raised.
-const CACHE_NAME = 'kspcid-offline-v7'
+const CACHE_NAME = 'kspcid-offline-v8'
 
 // The 37 MB PMTiles basemap lives in its own cache, keyed separately from
 // CACHE_NAME: a data-only bump must not force a 37 MB re-download over venue
@@ -41,6 +41,7 @@ const PRECACHE = [
   '/data/routing/duration_matrix.bin',
   '/data/routing/coverage_bitsets.bin',
   '/data/routing/dispatch_routes.json',
+  '/data/reference/jurisdictions.geojson',
   // Basemap glyphs and sprites (§3.4, self-hosted). Without these the archive
   // draws geometry but every street name and shield disappears offline, which
   // fails T1 acceptance just as surely as a missing tile.

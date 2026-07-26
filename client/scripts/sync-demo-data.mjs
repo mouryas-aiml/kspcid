@@ -19,6 +19,10 @@ const files = [
   ['data/offline/demo_snapshot.json', 'public/data/offline/demo_snapshot.json'],
   ['data/scenarios/command_map.json', 'public/data/scenarios/command_map.json'],
   ['data/derived/graph_snapshot.json', 'public/data/graph/graph_snapshot.json'],
+  // 106 official station polygons — the §7.1 jurisdiction layer. Copied
+  // verbatim: they are `official_polygon` provenance and simplifying them would
+  // move a boundary the source actually asserts.
+  ['reference/processed/jurisdictions.geojson', 'public/data/reference/jurisdictions.geojson'],
 ]
 
 for (const [source, destination] of files) {
