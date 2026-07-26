@@ -1027,8 +1027,8 @@ city-crime/
 ### Windows PowerShell
 
 ```powershell
-git clone https://github.com/MRTVCK/City-Crime-Safety-Dashboard.git
-cd City-Crime-Safety-Dashboard
+git clone https://github.com/mouryas-aiml/CipherWatch-KSP.git
+cd CipherWatch-KSP
 
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -1042,8 +1042,8 @@ streamlit run .\dashboard\app.py
 ### macOS or Linux
 
 ```bash
-git clone https://github.com/MRTVCK/City-Crime-Safety-Dashboard.git
-cd City-Crime-Safety-Dashboard
+git clone https://github.com/mouryas-aiml/CipherWatch-KSP.git
+cd CipherWatch-KSP
 
 python3 -m venv .venv
 source .venv/bin/activate
