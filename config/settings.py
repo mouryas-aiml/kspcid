@@ -1,0 +1,31 @@
+"""Configuration settings for the Crime Dashboard."""
+
+# Map settings
+MAX_MAP_POINTS = 100_000
+DEFAULT_ZOOM = 11
+MAP_TILES = "cartodbpositron"
+
+# ML Model parameters
+DBSCAN_EPS = 0.03
+DBSCAN_MIN_SAMPLES = 10
+
+RANDOM_FOREST_ESTIMATORS = 100
+RANDOM_FOREST_MAX_DEPTH = 5
+
+GRADIENT_BOOST_ESTIMATORS = 100
+GRADIENT_BOOST_LEARNING_RATE = 0.1
+GRADIENT_BOOST_MAX_DEPTH = 4
+
+# Data thresholds
+MIN_CLUSTERING_POINTS = 50
+MIN_NEIGHBORHOOD_PREDICTION_POINTS = 100
+MIN_RISK_ASSESSMENT_POINTS = 200
+MIN_PREDICTION_DATA = 50
+
+# UI settings
+DEFAULT_YEAR = 2024
+ACCENT_COLOR = "#00d4ff"
+
+# File paths - CHECK THE PROCESSED FOLDER
+DATA_FOLDER = "processed"  # Your data is in data/processed/
+DATA_FILES = ["cleaned_crime.csv", "sample_la_crime_2024.csv"]
