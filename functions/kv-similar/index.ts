@@ -113,9 +113,11 @@ export async function similarWithAdapter(
   request: SimilarityRequest,
   adapter: DataAdapter,
 ) {
-  const fixture = JSON.parse(
-    new TextDecoder().decode(await adapter.getObject('scenarios/similarity_demo.json')),
-  ) as SimilarityFixture
+  const fixture = await adapter.getDocument<SimilarityFixture>({
+    collection: 'scenarios',
+    id: 'similarity_demo',
+  })
+  if (!fixture) throw new Error('Similarity scenario is missing from NoSQL')
   const selected = fixture.cases.find(({ target }) => target.incident_id === request.incidentId)
   if (!selected) throw new Error(`Similarity target is not in the offline fixture: ${request.incidentId}`)
   const weights = normalizeWeights(fixture.weights, request.weights)

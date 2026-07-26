@@ -1,0 +1,116 @@
+{
+  "allowlist_version": "0.2",
+  "bucket": "kspcid-data",
+  "publication_dataset_sha256": "b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878",
+  "objects": [
+    {
+      "source": "client/public/tiles/bengaluru.pmtiles",
+      "object_key": "tiles/bengaluru.pmtiles",
+      "content_type": "application/vnd.pmtiles",
+      "bytes": 39135099,
+      "sha256": "5d3be5f4f164011909ef4f3fff6bdd3ad515a676e11ce8a6b81876d6231469ad",
+      "purpose": "Offline Bengaluru basemap"
+    },
+    {
+      "source": "data/derived/graph_snapshot.json.br",
+      "object_key": "graph/graph_snapshot.json.br",
+      "content_type": "application/json",
+      "content_encoding": "br",
+      "bytes": 462459,
+      "sha256": "2f7f98f106971bff1204a5e49f20d5cd2037ead5645f3992a9499224d1322b55",
+      "purpose": "Case Constellation settled snapshot"
+    },
+    {
+      "source": "data/routing/corridor_region.json",
+      "object_key": "routing/corridor_region.json",
+      "content_type": "application/json",
+      "bytes": 1095,
+      "sha256": "b94fac9ea34a76552f912b26d927243fef067ae58a6fcdd78f79e4d73ea859a3",
+      "purpose": "Patrol Lab corridor metadata"
+    },
+    {
+      "source": "data/routing/duration_matrix.bin",
+      "object_key": "routing/duration_matrix.bin",
+      "content_type": "application/octet-stream",
+      "bytes": 5373124,
+      "sha256": "c3605a7e5b5eb59373d959c386cd1986d6a2901bd0555e8d703de193a5323a52",
+      "purpose": "Patrol Lab corridor duration matrix"
+    },
+    {
+      "source": "data/routing/coverage_bitsets.bin",
+      "object_key": "routing/coverage_bitsets.bin",
+      "content_type": "application/octet-stream",
+      "bytes": 857660,
+      "sha256": "2f11f7d1ef99a2656af5613d1f429c4e39e21d830b0f2c9e305003af0947d9b3",
+      "purpose": "Patrol Lab corridor coverage bitsets"
+    },
+    {
+      "source": "data/routing/hex_index.json",
+      "object_key": "routing/hex_index.json",
+      "content_type": "application/json",
+      "bytes": 243197,
+      "sha256": "539a3f3a8862c153df20a77605cd52a5764be197543209009cd0ab48d48e0bfd",
+      "purpose": "Patrol Lab corridor H3 index"
+    }
+  ],
+  "explicitly_local": [
+    {
+      "source": "data/nosql/mo_vectors.jsonl",
+      "reason": "ETL compiler input only; similarity candidates are precomputed"
+    },
+    {
+      "source_glob": "data/routing/full/**/duration_matrix.bin",
+      "reason": "Only the audited corridor is on the demo runtime path"
+    }
+  ],
+  "ephemeral_publication_inputs": [
+    {
+      "source": ".staging/dsimport/stations.csv",
+      "object_key": "publication/b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878/stations.csv",
+      "table": "Stations",
+      "operation": "upsert",
+      "find_by": "station_code",
+      "rows": 178,
+      "bytes": 11883,
+      "sha256": "85dcc29f61ce057787732db83c5775f38bccbbdf3b2fea7ed8529bc9b112721c",
+      "ttl_seconds": 604800,
+      "reason": "Temporary Catalyst bulk-write input; delete immediately after verified publication"
+    },
+    {
+      "source": ".staging/dsimport/justice.csv",
+      "object_key": "publication/b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878/justice.csv",
+      "table": "JusticeFlow",
+      "operation": "upsert",
+      "find_by": "flow_id",
+      "rows": 2150,
+      "bytes": 480422,
+      "sha256": "8bfdcc4dc3e71b819a598d441a07c531a781fc38695570a57959fade43f85639",
+      "ttl_seconds": 604800,
+      "reason": "Temporary Catalyst bulk-write input; delete immediately after verified publication"
+    },
+    {
+      "source": ".staging/dsimport/baselines.csv",
+      "object_key": "publication/b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878/baselines.csv",
+      "table": "WeeklyBaselines",
+      "operation": "upsert",
+      "find_by": "baseline_id",
+      "rows": 286330,
+      "bytes": 100126737,
+      "sha256": "71c1b1160629aecf8203378a355702f9b7d77d3d0312ed628f5b7c5396c14815",
+      "ttl_seconds": 604800,
+      "reason": "Temporary Catalyst bulk-write input; delete immediately after verified publication"
+    },
+    {
+      "source": ".staging/dsimport/incidents.csv",
+      "object_key": "publication/b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878/incidents.csv",
+      "table": "Incidents",
+      "operation": "upsert",
+      "find_by": "incident_id",
+      "rows": 425408,
+      "bytes": 352661735,
+      "sha256": "6571eefde18d283c9d6b6f6686d33c3d787528822d539bfa33017b051fef66ad",
+      "ttl_seconds": 604800,
+      "reason": "Temporary Catalyst bulk-write input; delete immediately after verified publication"
+    }
+  ]
+}

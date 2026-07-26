@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "tables": [
+    {
+      "logical_name": "graph_nodes",
+      "table_name": "GraphNodes",
+      "partition_key": { "name": "id", "type": "String" },
+      "sources": ["data/nosql/graph_nodes.jsonl"],
+      "expected_items": 5112
+    },
+    {
+      "logical_name": "graph_edges",
+      "table_name": "GraphEdges",
+      "partition_key": { "name": "id", "type": "String" },
+      "sources": ["data/nosql/graph_edges.jsonl"],
+      "expected_items": 10074
+    },
+    {
+      "logical_name": "scenarios",
+      "table_name": "Scenarios",
+      "partition_key": { "name": "id", "type": "String" },
+      "source_glob": "data/scenarios/*.json",
+      "id": "file basename without .json",
+      "expected_items": 7
+    }
+  ],
+  "excluded": [
+    {
+      "source": "data/nosql/mo_vectors.jsonl",
+      "reason": "Build-toolchain only; similarity candidates are already precomputed"
+    }
+  ]
+}

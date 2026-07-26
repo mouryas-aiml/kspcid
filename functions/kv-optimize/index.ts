@@ -145,13 +145,16 @@ export async function optimizeWithAdapter(
   adapter: DataAdapter,
 ): Promise<OptimizeResponse> {
   const started = performance.now()
-  const [regionBytes, scenarioBytes, coverageBytes] = await Promise.all([
+  const [regionBytes, scenario, coverageBytes] = await Promise.all([
     adapter.getObject('routing/corridor_region.json'),
-    adapter.getObject('scenarios/demo_corridor_patrol.json'),
+    adapter.getDocument<Scenario>({
+      collection: 'scenarios',
+      id: 'demo_corridor_patrol',
+    }),
     adapter.getObject('routing/coverage_bitsets.bin'),
   ])
   const region = decodeJson<Region>(regionBytes)
-  const scenario = decodeJson<Scenario>(scenarioBytes)
+  if (!scenario) throw new Error('Patrol scenario is missing from NoSQL')
   if (scenario.scenario_id !== request.scenarioId) {
     throw new Error(`Scenario artifact mismatch: ${request.scenarioId}`)
   }

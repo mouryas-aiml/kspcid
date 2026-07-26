@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "segment_env": "KSPCID_CACHE_SEGMENT",
+  "segment_name": "kspcid-hot",
+  "ttl_seconds": 172800,
+  "cron": {
+    "function": "kv-cache-warm",
+    "schedule": "every 24 hours",
+    "function_type": "cron",
+    "stack": "node22"
+  },
+  "families": {
+    "station": "Top 20 station aggregates, one key per station",
+    "bitsets": "Corridor coverage_bitsets.bin encoded as 12,000-character base64 chunks plus an index key",
+    "command-feed": "One index key plus one key per alert card"
+  },
+  "constraints": {
+    "max_value_characters": 16000,
+    "max_ttl_seconds": 172800,
+    "development_segment_size_bytes": 5242880
+  }
+}

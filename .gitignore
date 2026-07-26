@@ -25,6 +25,7 @@ data/nosql/
 data/routing/
 data/scenarios/
 .staging/
+data/.cache/
 
 # ── LA donor artifacts ───────────────────────────────────────────────────────
 # Distribution donor only (BUILD_SPEC §6.2); never a KPSCID surface.
