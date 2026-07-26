@@ -22,7 +22,8 @@ async function main(): Promise<void> {
   process.stdout.write(
     `${APPLY ? 'Warmed' : 'Validated'} ${result.keys} Cache keys: ` +
       `${result.station_aggregates} station aggregates, ` +
-      `${result.bitset_chunks} bitset chunks, ${result.feed_cards} feed cards; ` +
+      `${result.bitset_scenarios} bitset scenario / ${result.bitset_chunks} chunks, ` +
+      `${result.feed_cards} feed cards; ` +
       `largest value ${result.largest_serialized_value} characters.\n`,
   )
 }

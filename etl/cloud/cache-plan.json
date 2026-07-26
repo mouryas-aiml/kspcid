@@ -11,7 +11,7 @@
   },
   "families": {
     "station": "Top 20 station aggregates, one key per station",
-    "bitsets": "Corridor coverage_bitsets.bin encoded as 12,000-character base64 chunks plus an index key",
+    "bitsets": "Every bitset-consuming scenario (currently the audited corridor patrol scenario) gets a scenario-keyed index and 12,000-character base64 chunks",
     "command-feed": "One index key plus one key per alert card"
   },
   "constraints": {

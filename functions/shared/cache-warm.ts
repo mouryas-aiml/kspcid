@@ -19,9 +19,15 @@ interface FeedFixture {
   readonly alerts: readonly Readonly<Record<string, unknown>>[]
 }
 
+interface BitsetScenario {
+  readonly scenario_id: string
+  readonly region_id: string
+}
+
 export interface WarmCacheResult {
   readonly keys: number
   readonly station_aggregates: number
+  readonly bitset_scenarios: number
   readonly bitset_chunks: number
   readonly feed_cards: number
   readonly largest_serialized_value: number
@@ -88,24 +94,34 @@ export async function warmRuntimeCache(
     })
   }
 
-  const bitsets = await adapter.getObject('routing/coverage_bitsets.bin')
+  const [bitsets, patrolScenario] = await Promise.all([
+    adapter.getObject('routing/coverage_bitsets.bin'),
+    adapter.getDocument<BitsetScenario>({
+      collection: 'scenarios',
+      id: 'demo_corridor_patrol',
+    }),
+  ])
+  if (!patrolScenario) throw new Error('Patrol bitset scenario is missing')
   const encoded = Buffer.from(bitsets).toString('base64')
   const chunks = []
   for (let offset = 0; offset < encoded.length; offset += CHUNK_CHARACTERS) {
     chunks.push(encoded.slice(offset, offset + CHUNK_CHARACTERS))
   }
+  const bitsetPrefix = `bitsets:scenario:${patrolScenario.scenario_id}`
   writes.push({
-    key: 'bitsets:corridor:index',
+    key: `${bitsetPrefix}:index`,
     value: {
       encoding: 'base64',
       source: 'routing/coverage_bitsets.bin',
+      scenario_id: patrolScenario.scenario_id,
+      region_id: patrolScenario.region_id,
       source_bytes: bitsets.byteLength,
       chunks: chunks.length,
       chunk_characters: CHUNK_CHARACTERS,
     },
   })
   chunks.forEach((value, index) => {
-    writes.push({ key: `bitsets:corridor:${index}`, value })
+    writes.push({ key: `${bitsetPrefix}:${index}`, value })
   })
 
   const feed = await adapter.getDocument<FeedFixture>({
@@ -150,6 +166,7 @@ export async function warmRuntimeCache(
   return {
     keys: writes.length,
     station_aggregates: topStations.length,
+    bitset_scenarios: 1,
     bitset_chunks: chunks.length,
     feed_cards: feed.alerts.length,
     largest_serialized_value: largest,
