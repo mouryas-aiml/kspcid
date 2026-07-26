@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "stack": "node22",
+  "scaffold_gate": "Owner must run `catalyst init`; never overwrite the existing functions/ sources.",
+  "environment": {
+    "functions": {
+      "KSPCID_DATA_ADAPTER": "catalyst",
+      "KSPCID_STRATUS_BUCKET": "provisioned bucket name or ID",
+      "KSPCID_CACHE_SEGMENT": "provisioned Cache segment ID"
+    },
+    "client": {
+      "NEXT_PUBLIC_DEMO_MODE": "cloud",
+      "NEXT_PUBLIC_CATALYST_API_BASE": "production API Gateway base URL",
+      "NEXT_PUBLIC_STRATUS_BASE_URL": "public production Stratus bucket base URL"
+    }
+  },
+  "runtime_functions": [
+    { "name": "kv-incidents", "type": "bio", "route": "/incidents", "methods": ["GET"] },
+    { "name": "kv-hotspots", "type": "bio", "route": "/hotspots", "methods": ["GET"] },
+    { "name": "kv-explain", "type": "bio", "route": "/explain", "methods": ["POST"] },
+    { "name": "kv-similar", "type": "bio", "route": "/similar", "methods": ["POST"] },
+    { "name": "kv-optimize", "type": "aio", "route": "/optimize", "methods": ["POST"], "timeout_seconds": 30 },
+    { "name": "kv-graph", "type": "aio", "route": "/graph", "methods": ["GET"], "timeout_seconds": 30 },
+    { "name": "kv-cache-warm", "type": "cron", "schedule": "every 24 hours" }
+  ],
+  "api_gateway_acceptance": {
+    "authentication": "Catalyst application user",
+    "cors_origin": "mapped production Slate domain",
+    "minimum_optimize_capacity": {
+      "sustained_requests_per_second": 1,
+      "burst_requests": 3,
+      "client_timeout_milliseconds": 2000
+    },
+    "must_be_measured_after_deploy": true
+  }
+}

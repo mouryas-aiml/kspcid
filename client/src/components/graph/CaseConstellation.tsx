@@ -432,7 +432,16 @@ export function CaseConstellation() {
   const [pathEnd, setPathEnd] = useState<string | null>(null)
 
   useEffect(() => {
-    void fetch('/data/graph/graph_snapshot.json')
+    const offline = (process.env.NEXT_PUBLIC_DEMO_MODE ?? 'offline') === 'offline'
+    const apiBase = process.env.NEXT_PUBLIC_CATALYST_API_BASE?.replace(/\/+$/, '')
+    if (!offline && !apiBase) {
+      setError('NEXT_PUBLIC_CATALYST_API_BASE is required in cloud mode')
+      return
+    }
+    const snapshotUrl = offline
+      ? '/data/graph/graph_snapshot.json'
+      : `${apiBase}/graph`
+    void fetch(snapshotUrl)
       .then((response) => {
         if (!response.ok) throw new Error(`Graph snapshot HTTP ${response.status}`)
         return response.json() as Promise<GraphSnapshot>

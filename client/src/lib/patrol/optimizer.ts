@@ -148,7 +148,9 @@ export async function optimizeDeploymentWithFallback(
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), data.fallback.timeout_ms)
   try {
-    const response = await fetch('/api/optimize', {
+    const apiBase = process.env.NEXT_PUBLIC_CATALYST_API_BASE?.replace(/\/+$/, '')
+    if (!apiBase) throw new Error('NEXT_PUBLIC_CATALYST_API_BASE is required')
+    const response = await fetch(`${apiBase}/optimize`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({

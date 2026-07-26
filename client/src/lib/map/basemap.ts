@@ -17,7 +17,15 @@ import { addProtocol, type StyleSpecification } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
 
 export const BASEMAP_SOURCE = 'protomaps'
-export const BASEMAP_ARCHIVE = '/tiles/bengaluru.pmtiles'
+const cloudMode = (process.env.NEXT_PUBLIC_DEMO_MODE ?? 'offline') !== 'offline'
+const stratusBase = process.env.NEXT_PUBLIC_STRATUS_BASE_URL?.replace(/\/+$/, '')
+if (cloudMode && !stratusBase) {
+  throw new Error('NEXT_PUBLIC_STRATUS_BASE_URL is required in cloud mode')
+}
+export const BASEMAP_ARCHIVE =
+  cloudMode && stratusBase
+    ? `${stratusBase}/tiles/bengaluru.pmtiles`
+    : '/tiles/bengaluru.pmtiles'
 
 /**
  * Explicit tile template rather than `url: 'pmtiles://…'`.
