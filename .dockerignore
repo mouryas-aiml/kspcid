@@ -1,0 +1,60 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+.github
+.devcontainer
+
+# Python environments and generated files
+.venv
+venv
+env
+ENV
+**/__pycache__
+*.py[cod]
+*$py.class
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# Streamlit and application secrets
+.env
+.env.*
+!.env.example
+**/.streamlit/secrets.toml
+**/secrets.toml
+*.pem
+*.key
+credentials.json
+service-account*.json
+
+# IDE and operating-system files
+.idea
+.vscode
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and runtime artifacts
+*.log
+logs
+tmp
+temp
+*.pid
+
+# Non-runtime documentation and media
+screenshots
+docs
+README.md
+CONTRIBUTING.md
+
+# Local build and distribution outputs
+build
+dist
+*.egg-info
+Dockerfile*
+docker-compose*.yml
+docker-compose*.yaml
