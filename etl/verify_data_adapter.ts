@@ -20,6 +20,14 @@ interface VectorDocument {
   readonly vector: readonly number[]
 }
 
+interface SearchRow {
+  readonly incident_id: string
+  readonly case_ref: string
+  readonly act_section: string
+  readonly place_of_offence: string
+  readonly crime_head: string
+}
+
 async function main(): Promise<void> {
   const adapter = createDataAdapter({ mode: 'local' })
   try {
@@ -56,8 +64,52 @@ async function main(): Promise<void> {
     assert.equal(Number(vector.dimensions), 64)
     assert.equal(vector.vector.length, 64)
 
+    const searchable = await adapter.queryTable<SearchRow>({
+      table: 'IncidentsTime',
+      columns: [
+        'incident_id',
+        'case_ref',
+        'act_section',
+        'place_of_offence',
+        'crime_head',
+      ],
+      filters: [{ column: 'act_section', operator: 'is_not_null' }],
+      orderBy: [{ column: 'incident_id' }],
+      limit: 1,
+    })
+    const target = searchable[0]
+    assert.ok(target, 'An incident must be available for full-text verification')
+    const caseHits = await adapter.searchText<SearchRow>({
+      table: 'IncidentsTime',
+      search: target.case_ref,
+      searchColumns: ['case_ref'],
+      selectColumns: ['incident_id', 'case_ref', 'act_section', 'place_of_offence', 'crime_head'],
+      limit: 10,
+    })
+    assert.ok(
+      caseHits.some((row) => row.incident_id === target.incident_id),
+      'Full-text case reference search must return the source incident',
+    )
+    const sectionToken = target.act_section
+      .split(/[^A-Za-z0-9]+/)
+      .find((token) => token.length >= 3)
+    assert.ok(sectionToken, 'Act/section sample must contain a searchable token')
+    const sectionHits = await adapter.searchText<SearchRow>({
+      table: 'IncidentsTime',
+      search: `${sectionToken}*`,
+      searchColumns: ['act_section'],
+      selectColumns: ['incident_id', 'case_ref', 'act_section', 'place_of_offence', 'crime_head'],
+      limit: 100,
+    })
+    assert.ok(
+      sectionHits.some((row) =>
+        row.act_section.toLowerCase().includes(sectionToken.toLowerCase()),
+      ),
+      'Full-text act/section search must return a matching incident',
+    )
+
     process.stdout.write(
-      'Data adapter verified: DuckDB Parquet, disk JSON, and NoSQL JSONL are functional.\n',
+      'Data adapter verified: relational queries, FTS, disk JSON, and NoSQL JSONL are functional.\n',
     )
   } finally {
     await adapter.close()

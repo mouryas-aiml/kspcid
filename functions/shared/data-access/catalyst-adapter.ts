@@ -10,6 +10,7 @@ import type {
   DocumentKey,
   PutCacheOptions,
   TableQuery,
+  TextSearchQuery,
 } from './types.js'
 
 async function streamBytes(stream: NodeJS.ReadableStream): Promise<Uint8Array> {
@@ -32,6 +33,8 @@ export class CatalystAdapter implements DataAdapter {
   readonly mode = 'catalyst' as const
   readonly #app: CatalystApp
   readonly #bucketName: string
+  readonly #tableNames: Readonly<Record<string, string>>
+  readonly #collectionNames: Readonly<Record<string, string>>
 
   constructor(options: CatalystAdapterOptions = {}) {
     this.#app = options.context
@@ -39,16 +42,72 @@ export class CatalystAdapter implements DataAdapter {
       : catalyst.initializeApp({})
     this.#bucketName =
       options.stratusBucket ?? process.env.KSPCID_STRATUS_BUCKET ?? 'kspcid-data'
+    this.#tableNames = {
+      IncidentsTime: 'Incidents',
+      ...options.tableNames,
+    }
+    this.#collectionNames = {
+      scenarios: 'Scenarios',
+      graph_nodes: 'GraphNodes',
+      graph_edges: 'GraphEdges',
+      ...options.collectionNames,
+    }
+  }
+
+  #table(logicalName: string): string {
+    return this.#tableNames[logicalName] ?? logicalName
+  }
+
+  #collection(logicalName: string): string {
+    return this.#collectionNames[logicalName] ?? logicalName
   }
 
   async queryTable<T extends object>(query: TableQuery): Promise<T[]> {
-    const rows = await this.#app.zcql().executeZCQLQuery(buildTableQuery(query))
+    const rows = await this.#app.zcql().executeZCQLQuery(
+      buildTableQuery({ ...query, table: this.#table(query.table) }),
+    )
     return rows.map((row) => flattenZcqlRow<T>(row as Record<string, unknown>))
+  }
+
+  async searchText<T extends object>(query: TextSearchQuery): Promise<T[]> {
+    const table = this.#table(query.table)
+    const limit = query.limit ?? 100
+    const offset = query.offset ?? 0
+    if (!query.search.trim()) throw new Error('Full-text search requires a non-empty term')
+    if (query.searchColumns.length === 0) {
+      throw new Error('Full-text search requires at least one indexed column')
+    }
+    if (!Number.isInteger(limit) || limit < 1 || limit > 500) {
+      throw new Error('Full-text search limit must be an integer from 1 to 500')
+    }
+    if (!Number.isInteger(offset) || offset < 0) {
+      throw new Error('Full-text search offset must be a non-negative integer')
+    }
+    const response = await this.#app.search().executeSearchQuery({
+      search: query.search,
+      search_table_columns: { [table]: [...query.searchColumns] },
+      ...(query.selectColumns
+        ? { select_table_columns: { [table]: [...query.selectColumns] } }
+        : {}),
+      ...(query.orderBy && query.orderBy.length > 0
+        ? {
+            order_by: Object.fromEntries(
+              query.orderBy.map((order) => [
+                order.column,
+                (order.direction ?? 'asc').toUpperCase(),
+              ]),
+            ),
+          }
+        : {}),
+      start: offset,
+      end: offset + limit - 1,
+    })
+    return ((response[table] ?? []) as T[]).slice(0, limit)
   }
 
   async getDocument<T>(key: DocumentKey): Promise<T | null> {
     const keyField = key.keyField ?? 'id'
-    const response = await this.#app.nosql().table(key.collection).fetchItem({
+    const response = await this.#app.nosql().table(this.#collection(key.collection)).fetchItem({
       keys: NoSQLItem.from({ [keyField]: key.id }),
       consistent_read: true,
     })
@@ -60,7 +119,7 @@ export class CatalystAdapter implements DataAdapter {
     const keyField = key.keyField ?? 'id'
     await this.#app
       .nosql()
-      .table(key.collection)
+      .table(this.#collection(key.collection))
       .insertItems({ item: NoSQLItem.from({ [keyField]: key.id, ...value }) })
   }
 

@@ -11,6 +11,7 @@ import type {
   LocalAdapterOptions,
   PutCacheOptions,
   TableQuery,
+  TextSearchQuery,
 } from './types.js'
 
 interface CacheEnvelope<T> {
@@ -37,6 +38,28 @@ function ensureInside(root: string, candidate: string): string {
   return normalizedCandidate
 }
 
+function searchPattern(search: string): string {
+  const value = search.trim()
+  if (!value) throw new Error('Full-text search requires a non-empty term')
+  let pattern = ''
+  let hasWildcard = false
+  for (const character of value) {
+    if (character === '*') {
+      pattern += '%'
+      hasWildcard = true
+    } else if (character === '?') {
+      pattern += '_'
+      hasWildcard = true
+    } else if (character === '%' || character === '_' || character === '\\') {
+      pattern += `\\${character}`
+    } else {
+      pattern += character
+    }
+  }
+  if (!hasWildcard) pattern = `%${pattern}%`
+  return pattern.replaceAll("'", "''")
+}
+
 async function writeAtomic(path: string, value: Uint8Array | string): Promise<void> {
   await mkdir(dirname(path), { recursive: true })
   const temporary = `${path}.${process.pid}.tmp`
@@ -47,12 +70,17 @@ async function writeAtomic(path: string, value: Uint8Array | string): Promise<vo
 export class LocalAdapter implements DataAdapter {
   readonly mode = 'local' as const
   readonly #dataRoot: string
+  readonly #objectNames: Readonly<Record<string, string>>
   #instance: DuckDBInstance | null = null
   #connection: DuckDBConnection | null = null
   #ready: Promise<void> | null = null
 
   constructor(options: LocalAdapterOptions = {}) {
     this.#dataRoot = resolve(options.dataRoot ?? join(process.cwd(), 'data'))
+    this.#objectNames = {
+      'graph/graph_snapshot.json.br': 'derived/graph_snapshot.json.br',
+      ...options.objectNames,
+    }
   }
 
   async #initialize(): Promise<void> {
@@ -81,6 +109,44 @@ export class LocalAdapter implements DataAdapter {
   async queryTable<T extends object>(query: TableQuery): Promise<T[]> {
     const connection = await this.#database()
     const reader = await connection.runAndReadAll(buildTableQuery(query))
+    return reader.getRowObjectsJS() as T[]
+  }
+
+  async searchText<T extends object>(query: TextSearchQuery): Promise<T[]> {
+    if (query.searchColumns.length === 0) {
+      throw new Error('Full-text search requires at least one indexed column')
+    }
+    const limit = query.limit ?? 100
+    const offset = query.offset ?? 0
+    if (!Number.isInteger(limit) || limit < 1 || limit > 500) {
+      throw new Error('Full-text search limit must be an integer from 1 to 500')
+    }
+    if (!Number.isInteger(offset) || offset < 0) {
+      throw new Error('Full-text search offset must be a non-negative integer')
+    }
+    const selections =
+      query.selectColumns && query.selectColumns.length > 0
+        ? query.selectColumns.map(quoteIdentifier).join(', ')
+        : '*'
+    const pattern = searchPattern(query.search)
+    const predicates = query.searchColumns.map(
+      (column) =>
+        `CAST(${quoteIdentifier(column)} AS VARCHAR) ILIKE '${pattern}' ESCAPE '\\'`,
+    )
+    const order =
+      query.orderBy && query.orderBy.length > 0
+        ? ` ORDER BY ${query.orderBy
+            .map(
+              (item) =>
+                `${quoteIdentifier(item.column)} ${(item.direction ?? 'asc').toUpperCase()}`,
+            )
+            .join(', ')}`
+        : ''
+    const connection = await this.#database()
+    const reader = await connection.runAndReadAll(
+      `SELECT ${selections} FROM ${quoteIdentifier(query.table)} ` +
+        `WHERE ${predicates.join(' OR ')}${order} LIMIT ${limit} OFFSET ${offset}`,
+    )
     return reader.getRowObjectsJS() as T[]
   }
 
@@ -116,7 +182,7 @@ export class LocalAdapter implements DataAdapter {
   }
 
   async getObject(key: string): Promise<Uint8Array> {
-    return readFile(this.#path(key))
+    return readFile(this.#path(this.#objectNames[key] ?? key))
   }
 
   async putObject(key: string, value: Uint8Array): Promise<void> {

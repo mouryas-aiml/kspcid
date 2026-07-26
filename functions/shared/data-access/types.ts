@@ -44,6 +44,23 @@ export interface TableQuery {
   readonly offset?: number
 }
 
+/**
+ * Full-text search contract shared by local DuckDB and Catalyst Search.
+ *
+ * `searchColumns` are deliberately explicit: Catalyst only searches columns
+ * whose Search Index constraint is enabled, and silently broadening this list
+ * would turn a schema change into a runtime behavior change.
+ */
+export interface TextSearchQuery {
+  readonly table: string
+  readonly search: string
+  readonly searchColumns: readonly string[]
+  readonly selectColumns?: readonly string[]
+  readonly orderBy?: readonly QueryOrder[]
+  readonly limit?: number
+  readonly offset?: number
+}
+
 export interface DocumentKey {
   readonly collection: string
   readonly id: string
@@ -63,6 +80,7 @@ export interface DataAdapter {
   readonly mode: 'local' | 'catalyst'
 
   queryTable<T extends object>(query: TableQuery): Promise<T[]>
+  searchText<T extends object>(query: TextSearchQuery): Promise<T[]>
 
   getDocument<T>(key: DocumentKey): Promise<T | null>
   putDocument<T extends object>(key: DocumentKey, value: T): Promise<void>
@@ -78,6 +96,12 @@ export interface DataAdapter {
 
 export interface LocalAdapterOptions {
   readonly dataRoot?: string
+  /**
+   * Map cloud-stable object keys to checked local artifact paths. This keeps
+   * Functions unaware that local compiler output and Stratus use different
+   * directory layouts.
+   */
+  readonly objectNames?: Readonly<Record<string, string>>
 }
 
 export interface CatalystAdapterOptions {
@@ -87,6 +111,15 @@ export interface CatalystAdapterOptions {
    */
   readonly context?: Record<string, unknown>
   readonly stratusBucket?: string
+  /**
+   * Map stable logical table names used by Functions to physical Data Store
+   * names. The default maps IncidentsTime -> Incidents.
+   */
+  readonly tableNames?: Readonly<Record<string, string>>
+  /**
+   * Map local collection paths to physical NoSQL table names.
+   */
+  readonly collectionNames?: Readonly<Record<string, string>>
 }
 
 export interface CreateDataAdapterOptions {

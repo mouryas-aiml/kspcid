@@ -16,6 +16,7 @@ export type {
   QueryFilter,
   QueryOrder,
   TableQuery,
+  TextSearchQuery,
 } from './types.js'
 
 export function createDataAdapter(options: CreateDataAdapterOptions = {}): DataAdapter {
