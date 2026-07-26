@@ -17,6 +17,7 @@ import { Panel } from '@/components/primitives/Panel'
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import { OpsShell } from '@/components/shell/OpsShell'
 import type { Provenance } from '@/lib/provenance'
+import { publicPath } from '@/lib/publicPath'
 
 interface Weights {
   readonly sections: number
@@ -261,7 +262,7 @@ export function CaseSimilarity() {
   })
 
   useEffect(() => {
-    void fetch('/data/scenarios/similarity_demo.json')
+    void fetch(publicPath('/data/scenarios/similarity_demo.json'))
       .then((response) => {
         if (!response.ok) throw new Error(`Similarity fixture HTTP ${response.status}`)
         return response.json() as Promise<SimilarityFixture>

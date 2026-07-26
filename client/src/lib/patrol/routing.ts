@@ -8,8 +8,9 @@ import type {
   RoutingRegion,
   HexIndex,
 } from './types'
+import { publicPath } from '../publicPath'
 
-const DATA_ROOT = '/data'
+const DATA_ROOT = publicPath('/data')
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path)

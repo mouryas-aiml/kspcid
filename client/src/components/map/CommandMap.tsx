@@ -36,6 +36,7 @@ import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
 import { dur } from '@/lib/motion'
 import type { Provenance } from '@/lib/provenance'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { publicPath } from '@/lib/publicPath'
 
 interface Cell {
   readonly h3_r9: string
@@ -105,7 +106,7 @@ const MAX_PULSES = 6
 /** §7.1 — pulse period. */
 const PULSE_MS = 1800
 /** 106 official station polygons, copied to `public/data/` by `sync-demo-data.mjs`. */
-const JURISDICTIONS_URL = '/data/reference/jurisdictions.geojson'
+const JURISDICTIONS_URL = publicPath('/data/reference/jurisdictions.geojson')
 
 interface JurisdictionProperties {
   readonly station_code: string
@@ -586,7 +587,7 @@ export function CommandMap() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetch('/data/scenarios/command_map.json')
+    fetch(publicPath('/data/scenarios/command_map.json'))
       .then((response) => {
         if (!response.ok) throw new Error(`Command Map snapshot failed (${response.status})`)
         return response.json() as Promise<CommandMapFixture>

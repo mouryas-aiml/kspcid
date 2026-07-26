@@ -10,6 +10,7 @@ import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import { OpsShell } from '@/components/shell/OpsShell'
 import { OTHER_COLOUR, seriesColour } from '@/lib/charts'
 import type { Provenance } from '@/lib/provenance'
+import { publicPath } from '@/lib/publicPath'
 
 interface CyberFixture {
   readonly zero_geographic_dependency: boolean
@@ -285,7 +286,7 @@ export function CyberWing() {
   const [fixture, setFixture] = useState<CyberFixture | null>(null)
   const [error, setError] = useState('')
   useEffect(() => {
-    fetch('/data/scenarios/cyber_wing.json')
+    fetch(publicPath('/data/scenarios/cyber_wing.json'))
       .then((response) => {
         if (!response.ok) throw new Error(`Cyber snapshot request failed (${response.status})`)
         return response.json() as Promise<CyberFixture>

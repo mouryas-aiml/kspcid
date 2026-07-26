@@ -1,0 +1,11 @@
+{
+  "client": {
+    "source": ".catalyst-client"
+  },
+  "slate": [
+    {
+      "name": "KSPCID",
+      "source": "client/out"
+    }
+  ]
+}

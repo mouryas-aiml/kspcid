@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>KSPCID — opening route</title>
+    <style>
+      html { color-scheme: dark; background: #071018; color: #d8e1e8; font: 16px system-ui, sans-serif; }
+      body { min-height: 100vh; display: grid; place-items: center; margin: 0; }
+    </style>
+    <script>
+      (function () {
+        var match = location.pathname.match(/^\/app\/(feed|map|similarity|network|patrol|review|justice|cyber)\/?$/)
+        var target = match ? '/app/' + match[1] + '/index.html' : '/app/index.html'
+        location.replace(target + location.search + location.hash)
+      })()
+    </script>
+  </head>
+  <body>Opening KSPCID…</body>
+</html>

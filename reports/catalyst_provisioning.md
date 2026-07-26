@@ -2,11 +2,23 @@
 
 Date: 2026-07-26  
 Repository baseline: `d358856`  
-Cloud mutation performed in this work: **none**
+Cloud mutation performed in this work: **Development Web Client Hosting v1.0.1**
 
 ## Outcome
 
-The repository side of A4 is ready: the shared adapter supports ZCQL and
+The hackathon submission client is deployed to the authenticated Catalyst
+project `KSPCID` (`94658000000014095`) in the Development environment:
+
+**Submission URL:** https://kspcid-932804752.development.catalystserverless.com/app/index.html
+
+Version `1.0.1` was verified on 2026-07-26 with public HTTP checks for the
+homepage, compiled CSS, Command Feed fixture, and Command Map HTML (all HTTP
+200), followed by a clean-browser run from the landing page into the rendered
+interactive Command Map. The Catalyst-specific export uses `/app` as its base
+path and includes a deep-route recovery page. `npm run check` passes before the
+deployment.
+
+The broader repository side of A4 is ready: the shared adapter supports ZCQL and
 Catalyst Search, deterministic Data Store CSVs and upsert configs are compiled,
 the 0.2 cloud allowlist is checksummed, NoSQL and Cache loaders are dry-run safe,
 and all 14 Node 22 Catalyst packages build from source without DuckDB or other
@@ -15,17 +27,18 @@ the Cache Cron, and seven Basic I/O functions implementing the cloud-publication
 Circuit states. Six authenticated API Gateway rules are also recorded as an
 owner-reconcilable template.
 
-Actual provisioning remains owner-gated. No `catalyst.json`, project ID, data
-center, schema, bucket, table, function, route, domain, or deployment has been
-created or claimed here.
+The project is now initialized locally and the web client is deployed. Data
+Store schema/imports, Stratus, NoSQL, Cache, functions, API Gateway, Circuits,
+custom domain, Production promotion, and Slate activation remain owner/console
+gated and are deliberately deferred until after the hackathon submission.
 
 | Stage | Status | Evidence / blocker |
 |---|---|---|
 | 0 — decisions and adapter | PASS locally | Shared `queryTable` + `searchText`; adapter verifier passes |
-| 1 — project initialization | BLOCKED — owner | `catalyst project:list`, `init`, `apig:enable`, certificate request not run |
+| 1 — project initialization | PASS (Development) | Project `94658000000014095` selected; `.catalystrc` and `catalyst.json` created |
 | 2 — Data Store | READY locally / NOT IMPORTED | Schema, five configs, CSV compiler, committed manifest, cloud verifier |
 | 3 — Stratus / NoSQL / Cache | READY locally / NOT UPLOADED | Six runtime objects, three NoSQL tables, 148 Cache keys |
-| 4 — functions / client / gateway | PACKAGES READY / NOT DEPLOYED | 14 packages build; project IDs, remote function IDs, gateway deployment, and Slate remain owner-gated |
+| 4 — functions / client / gateway | CLIENT DEPLOYED / BACKEND READY LOCALLY | Web Client Hosting v1.0.1 live; 14 function packages build; gateway and Slate remain deferred |
 | 5 — Circuits | IMPLEMENTED LOCALLY / STOP gate | Seven real state functions and failure/idempotency tests pass; project DC and console Code View IDs remain unknown |
 
 ## What ships

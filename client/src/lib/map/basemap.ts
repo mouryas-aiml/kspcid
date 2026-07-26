@@ -15,6 +15,7 @@
 import { layers, namedFlavor } from '@protomaps/basemaps'
 import { addProtocol, type StyleSpecification } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
+import { publicPath } from '@/lib/publicPath'
 
 export const BASEMAP_SOURCE = 'protomaps'
 const cloudMode = (process.env.NEXT_PUBLIC_DEMO_MODE ?? 'offline') !== 'offline'
@@ -25,7 +26,7 @@ if (cloudMode && !stratusBase) {
 export const BASEMAP_ARCHIVE =
   cloudMode && stratusBase
     ? `${stratusBase}/tiles/bengaluru.pmtiles`
-    : '/tiles/bengaluru.pmtiles'
+    : publicPath('/tiles/bengaluru.pmtiles')
 
 /**
  * Explicit tile template rather than `url: 'pmtiles://…'`.
@@ -117,8 +118,8 @@ export function buildBasemapStyle(lang = 'en'): StyleSpecification {
     // MapLibre rejects a relative sprite URL ("must be absolute"), so it is
     // resolved against the page origin. Same-origin either way — this stays
     // offline-safe and never reaches an external host.
-    glyphs: `${origin}/basemap/fonts/{fontstack}/{range}.pbf`,
-    sprite: `${origin}/basemap/sprites/dark`,
+    glyphs: `${origin}${publicPath('/basemap/fonts/{fontstack}/{range}.pbf')}`,
+    sprite: `${origin}${publicPath('/basemap/sprites/dark')}`,
     sources: {
       [BASEMAP_SOURCE]: {
         type: 'vector',

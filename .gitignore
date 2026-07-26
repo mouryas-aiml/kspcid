@@ -35,6 +35,7 @@ reference/raw/bengaluru_osm_overpass.json
 
 # ── Catalyst ─────────────────────────────────────────────────────────────────
 .catalyst/
+.catalyst-client/
 **/.build/
 functions/**/node_modules/
 client/.next/

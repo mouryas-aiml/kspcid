@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import type { Provenance } from '@/lib/provenance'
+import { publicPath } from '@/lib/publicPath'
 
 interface StageCount {
   readonly stage: string
@@ -387,7 +388,7 @@ export function JusticePipeline() {
   const [percentage, setPercentage] = useState(false)
 
   useEffect(() => {
-    fetch('/data/scenarios/justice_pipeline.json')
+    fetch(publicPath('/data/scenarios/justice_pipeline.json'))
       .then((response) => {
         if (!response.ok) throw new Error(`Fixture request failed (${response.status})`)
         return response.json() as Promise<JusticeFixture>

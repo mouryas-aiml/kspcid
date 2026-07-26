@@ -27,6 +27,7 @@ import type {
   SnapshotNode,
 } from '@/lib/graph/types'
 import type { Provenance } from '@/lib/provenance'
+import { publicPath } from '@/lib/publicPath'
 
 const GraphCanvas = dynamic(() => import('./GraphCanvas'), {
   ssr: false,
@@ -439,7 +440,7 @@ export function CaseConstellation() {
       return
     }
     const snapshotUrl = offline
-      ? '/data/graph/graph_snapshot.json'
+      ? publicPath('/data/graph/graph_snapshot.json')
       : `${apiBase}/graph`
     void fetch(snapshotUrl)
       .then((response) => {
