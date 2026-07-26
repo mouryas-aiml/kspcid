@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "dataset_sha256": "b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878",
+  "source_manifest": "data/manifest.json",
+  "baseline_reduction": {
+    "raw_rows": 5797660,
+    "imported_rows": 286330,
+    "retained_station_crime_pairs": 685,
+    "command_feed_fact_mismatches": 0
+  },
+  "files": [
+    {
+      "table": "stations",
+      "path": ".staging/dsimport/stations.csv",
+      "rows": 178,
+      "bytes": 11883,
+      "sha256": "85dcc29f61ce057787732db83c5775f38bccbbdf3b2fea7ed8529bc9b112721c"
+    },
+    {
+      "table": "incidents",
+      "path": ".staging/dsimport/incidents.csv",
+      "rows": 425408,
+      "bytes": 352661735,
+      "sha256": "6571eefde18d283c9d6b6f6686d33c3d787528822d539bfa33017b051fef66ad"
+    },
+    {
+      "table": "baselines",
+      "path": ".staging/dsimport/baselines.csv",
+      "rows": 286330,
+      "bytes": 100126737,
+      "sha256": "71c1b1160629aecf8203378a355702f9b7d77d3d0312ed628f5b7c5396c14815"
+    },
+    {
+      "table": "justice",
+      "path": ".staging/dsimport/justice.csv",
+      "rows": 2150,
+      "bytes": 480422,
+      "sha256": "8bfdcc4dc3e71b819a598d441a07c531a781fc38695570a57959fade43f85639"
+    },
+    {
+      "table": "alerts",
+      "path": ".staging/dsimport/alerts.csv",
+      "rows": 0,
+      "bytes": 90,
+      "sha256": "a9f709a2166df5c409b155a5b68d73f5d19398d3771a614a96b91c7b882c0872"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "table_identifier": "WeeklyBaselines",
+  "operation": "upsert",
+  "find_by": "baseline_id"
+}

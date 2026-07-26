@@ -1,0 +1,5 @@
+{
+  "table_identifier": "Stations",
+  "operation": "upsert",
+  "find_by": "station_code"
+}

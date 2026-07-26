@@ -1,0 +1,5 @@
+{
+  "table_identifier": "JusticeFlow",
+  "operation": "upsert",
+  "find_by": "flow_id"
+}

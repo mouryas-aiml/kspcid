@@ -1,0 +1,5 @@
+{
+  "table_identifier": "Incidents",
+  "operation": "upsert",
+  "find_by": "incident_id"
+}
