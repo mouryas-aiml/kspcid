@@ -39,6 +39,8 @@ functions/**/node_modules/
 client/.next/
 client/out/
 client/public/data/
+client/public/tiles/
+client/public/basemap/
 
 # ── Local ────────────────────────────────────────────────────────────────────
 .DS_Store
