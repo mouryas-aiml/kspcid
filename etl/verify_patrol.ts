@@ -2,10 +2,15 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-import { baselineDeployment, optimizeDeployment } from '../client/src/lib/patrol/optimizer.js'
+import {
+  baselineDeployment,
+  initialDeployment,
+  optimizeDeployment,
+} from '../client/src/lib/patrol/optimizer.js'
 import { bitsetAt, isCovered } from '../client/src/lib/patrol/routing.js'
 import { scoreDeployment } from '../client/src/lib/patrol/scoring.js'
-import type { PatrolData, PatrolScenario } from '../client/src/lib/patrol/types.js'
+import { simulateUntil } from '../client/src/lib/patrol/simulation.js'
+import type { Deployment, PatrolData, PatrolScenario } from '../client/src/lib/patrol/types.js'
 import { handleOptimize } from '../functions/kv-optimize/index.js'
 import { OUTPUT } from './00_config.js'
 import { sha256File } from './lib/hash.js'
@@ -116,12 +121,58 @@ async function main(): Promise<void> {
   assert(live.method.includes('MCLP-inspired heuristic'), 'Heuristic truth label missing')
   assert(Object.keys(live.deployment).length === scenario.roster.length, 'Optimizer roster mismatch')
 
+  // Dispatch trail geometry (§8.9) covers every dispatch the three reference
+  // plans produce. Without this the trails vanish silently the next time the
+  // scenario, the roster or the optimizer moves, and the map quietly loses a
+  // layer rather than failing a gate.
+  const dispatchRoutes = JSON.parse(
+    await readFile(resolve(OUTPUT.routing, 'dispatch_routes.json'), 'utf8'),
+  ) as {
+    scenario_id: string
+    plans: string[]
+    routes: Array<{ origin: number; destination: number; points: number }>
+  }
+  assert(dispatchRoutes.scenario_id === scenario.scenario_id, 'Dispatch route scenario drift')
+  assert(
+    ['opening', 'baseline', 'optimizer'].every((plan) => dispatchRoutes.plans.includes(plan)),
+    'Dispatch routes must cover the opening, baseline and optimizer plans',
+  )
+  assert(
+    dispatchRoutes.routes.every((route) => route.points >= 2),
+    'Dispatch route geometry must have at least two points',
+  )
+  const routeKeys = new Set(
+    dispatchRoutes.routes.map((route) => `${route.origin}:${route.destination}`),
+  )
+  const referencePlans: Array<readonly [string, Deployment]> = [
+    ['opening', initialDeployment(data, 2)],
+    ['baseline', baseline],
+    ['optimizer', optimized.deployment],
+  ]
+  const lastMinute = scenario.replay_events.reduce(
+    (latest, event) => Math.max(latest, event.simulation_minute),
+    0,
+  )
+  for (const [plan, deployment] of referencePlans) {
+    for (const dispatch of simulateUntil(data, deployment, lastMinute, false, false).dispatches) {
+      if (!dispatch.unitId) continue
+      const origin = deployment[dispatch.unitId]
+      if (origin === null || origin === undefined) continue
+      if (origin === dispatch.event.hex_index) continue
+      assert(
+        routeKeys.has(`${origin}:${dispatch.event.hex_index}`),
+        `Dispatch trail missing for ${plan}: ${origin} → ${dispatch.event.hex_index}`,
+      )
+    }
+  }
+
   const scenarioChecksum = await sha256File(
     resolve(OUTPUT.scenarios, 'demo_corridor_patrol.json'),
   )
   process.stdout.write(
     `verify:patrol — PASS\n` +
       `  scenario sha256     ${scenarioChecksum}\n` +
+      `  dispatch trails     ${dispatchRoutes.routes.length} routes · 3 reference plans covered\n` +
       `  score recompute     ${averageScoreMs.toFixed(3)} ms average (${scoreRuns} runs)\n` +
       `  client heuristic    ${optimized.elapsedMs.toFixed(1)} ms · ${optimized.score.total}\n` +
       `  kv-optimize         ${live.elapsedMs.toFixed(1)} ms · ${(live.coverageRatio * 100).toFixed(1)}% coverage\n` +

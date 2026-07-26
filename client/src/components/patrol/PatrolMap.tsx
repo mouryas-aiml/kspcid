@@ -14,7 +14,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { MapboxOverlay } from '@deck.gl/mapbox'
-import { H3HexagonLayer } from '@deck.gl/geo-layers'
+import { H3HexagonLayer, TripsLayer } from '@deck.gl/geo-layers'
 import { IconLayer, PathLayer, ScatterplotLayer } from '@deck.gl/layers'
 import { PathStyleExtension } from '@deck.gl/extensions'
 import type { Layer, PickingInfo } from '@deck.gl/core'
@@ -24,7 +24,7 @@ import { interpolateMagma } from 'd3-scale-chromatic'
 import { useReducedMotion } from 'motion/react'
 
 import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
-import { isCovered, unionCoverage } from '@/lib/patrol/routing'
+import { dispatchRoute, isCovered, unionCoverage } from '@/lib/patrol/routing'
 import { simulateUntil } from '@/lib/patrol/simulation'
 import { usePatrolStore } from '@/lib/patrol/store'
 import type { PatrolData, ScoreBreakdown } from '@/lib/patrol/types'
@@ -54,6 +54,55 @@ const SHOCKWAVE_MS = 700
 const REVEAL_MS = 500
 /** Idle unit breathe — scale 1.00 ↔ 1.04 over 2.4s (§8.9). */
 const BREATHE_MS = 2400
+/** Dispatch trail length, in seconds of simulation time (§8.9). */
+const TRAIL_LENGTH_S = 90
+/** Arrival ring — expands over 400ms, then the incident dot turns solid green (§8.9). */
+const ARRIVAL_RING_MS = 400
+
+/**
+ * A dispatch in flight, resolved onto its precomputed OSRM path.
+ *
+ * `timestamps` are seconds of simulation time, so `TripsLayer.currentTime` is
+ * just the playback minute × 60 and the head sits where the unit actually is.
+ * Vertices are spaced by cumulative great-circle distance rather than evenly,
+ * so the head does not lurch through the dense parts of the polyline.
+ */
+interface Trail {
+  readonly key: string
+  readonly path: [number, number][]
+  readonly timestamps: number[]
+}
+
+function haversineMetres(a: readonly [number, number], b: readonly [number, number]): number {
+  const toRad = Math.PI / 180
+  const dLat = (b[1] - a[1]) * toRad
+  const dLon = (b[0] - a[0]) * toRad
+  const lat = ((a[1] + b[1]) / 2) * toRad
+  const x = dLon * Math.cos(lat)
+  return Math.hypot(x, dLat) * 6_371_000
+}
+
+function buildTrail(
+  key: string,
+  geometry: readonly (readonly [number, number])[],
+  startSeconds: number,
+  travelSecondsTotal: number,
+): Trail | null {
+  if (geometry.length < 2 || travelSecondsTotal <= 0) return null
+  const cumulative = [0]
+  for (let i = 1; i < geometry.length; i += 1) {
+    cumulative.push((cumulative[i - 1] ?? 0) + haversineMetres(geometry[i - 1]!, geometry[i]!))
+  }
+  const total = cumulative[cumulative.length - 1] ?? 0
+  if (total <= 0) return null
+  return {
+    key,
+    path: geometry.map(([lon, lat]) => [lon, lat] as [number, number]),
+    timestamps: cumulative.map(
+      (distance) => startSeconds + (distance / total) * travelSecondsTotal,
+    ),
+  }
+}
 
 function useAnimationClock(active: boolean): number {
   const [now, setNow] = useState(0)
@@ -224,6 +273,57 @@ export function PatrolMap({
     [snapshot],
   )
 
+  // Dispatch trails — only for pairs `10b_dispatch_routes.ts` precomputed.
+  // A hand-built plan produces origins no precompute anticipated; those draw no
+  // trail rather than a straight line that asserts a path OSRM never returned.
+  const trails = useMemo<Trail[]>(() => {
+    const built: Trail[] = []
+    for (const dispatch of snapshot.dispatches) {
+      if (dispatch.unitId === null || dispatch.responseMinutes === null) continue
+      const origin = deployment[dispatch.unitId]
+      if (origin === null || origin === undefined) continue
+      const destination = dispatch.event.hex_index
+      const route = dispatchRoute(data, origin, destination)
+      if (!route) continue
+      // Math.ceil matches simulation.ts, so the head lands exactly when the
+      // dispatch flips to on_scene rather than a fraction of a minute early.
+      const travelMinutes = Math.ceil(dispatch.responseMinutes)
+      const startSeconds = dispatch.event.simulation_minute * 60
+      if (minute * 60 > startSeconds + travelMinutes * 60 + TRAIL_LENGTH_S) continue
+      const trail = buildTrail(
+        `${dispatch.event.incident_id}:${dispatch.unitId}`,
+        route.geometry,
+        startSeconds,
+        travelMinutes * 60,
+      )
+      if (trail) built.push(trail)
+    }
+    return built
+  }, [snapshot, deployment, data, minute])
+
+  // Arrival rings are wall-clock (§8.9: 400ms), so the ring is recorded the
+  // first time a dispatch is seen arrived and expires on its own.
+  const arrivals = useRef(new Map<string, number>())
+  const arrivedKeys = useMemo(
+    () =>
+      snapshot.dispatches
+        .filter((d) => d.unitId && d.result !== 'missed' && d.result !== 'enroute')
+        .map((d) => `${d.event.incident_id}:${d.unitId}`),
+    [snapshot],
+  )
+  useEffect(() => {
+    const seen = new Set(arrivedKeys)
+    const now = performance.now()
+    for (const key of seen) {
+      if (!arrivals.current.has(key)) arrivals.current.set(key, now)
+    }
+    // Scrubbing backwards un-arrives dispatches; drop them so replaying the
+    // same minute plays the ring again instead of silently skipping it.
+    for (const key of arrivals.current.keys()) {
+      if (!seen.has(key)) arrivals.current.delete(key)
+    }
+  }, [arrivedKeys])
+
   const clock = useAnimationClock(!reduce)
 
   const layers = useMemo<Layer[]>(() => {
@@ -371,22 +471,119 @@ export function PatrolMap({
       )
     }
 
-    // Incident dots.
+    // Dispatch trail along the real OSRM route geometry (§8.9).
+    if (trails.length > 0) {
+      built.push(
+        new TripsLayer<Trail>({
+          id: 'dispatch-trails',
+          data: trails,
+          getPath: (d) => d.path,
+          getTimestamps: (d) => d.timestamps,
+          getColor: [56, 189, 248],
+          getWidth: 3,
+          widthUnits: 'pixels',
+          opacity: 0.85,
+          trailLength: TRAIL_LENGTH_S,
+          currentTime: minute * 60,
+          fadeTrail: true,
+          capRounded: true,
+          jointRounded: true,
+        }),
+      )
+      // Head — 6px cyan dot at the interpolated position along the same path.
+      const heads = trails
+        .map((trail) => {
+          const now = minute * 60
+          const last = trail.timestamps[trail.timestamps.length - 1] ?? 0
+          if (now < (trail.timestamps[0] ?? 0) || now > last) return null
+          let i = 1
+          while (i < trail.timestamps.length && (trail.timestamps[i] ?? 0) < now) i += 1
+          const t0 = trail.timestamps[i - 1] ?? 0
+          const t1 = trail.timestamps[i] ?? t0
+          const a = trail.path[i - 1]!
+          const b = trail.path[i] ?? a
+          const f = t1 > t0 ? (now - t0) / (t1 - t0) : 0
+          return {
+            key: trail.key,
+            lon: a[0] + (b[0] - a[0]) * f,
+            lat: a[1] + (b[1] - a[1]) * f,
+          }
+        })
+        .filter((h): h is NonNullable<typeof h> => h !== null)
+      if (heads.length > 0) {
+        built.push(
+          new ScatterplotLayer<(typeof heads)[0]>({
+            id: 'dispatch-heads',
+            data: heads,
+            getPosition: (d) => [d.lon, d.lat],
+            getRadius: 3,
+            radiusUnits: 'pixels',
+            getFillColor: [56, 189, 248, 255],
+          }),
+        )
+      }
+    }
+
+    // Arrival ring — 400ms expanding --ok, then the incident dot goes solid green.
+    if (!reduce) {
+      const rings = recentDispatches
+        .map((d) => {
+          if (!d.unitId || d.result === 'missed' || d.result === 'enroute') return null
+          const started = arrivals.current.get(`${d.event.incident_id}:${d.unitId}`)
+          if (started === undefined) return null
+          const progress = (clock - started) / ARRIVAL_RING_MS
+          if (progress < 0 || progress > 1) return null
+          const cell = data.hexIndex.cells[d.event.hex_index]
+          if (!cell) return null
+          return { lon: cell.longitude, lat: cell.latitude, progress }
+        })
+        .filter((r): r is NonNullable<typeof r> => r !== null)
+      if (rings.length > 0) {
+        built.push(
+          new ScatterplotLayer<(typeof rings)[0]>({
+            id: 'arrival-rings',
+            data: rings,
+            getPosition: (d) => [d.lon, d.lat],
+            getRadius: (d) => 4 + d.progress * 16,
+            radiusUnits: 'pixels',
+            filled: false,
+            stroked: true,
+            getLineColor: (d): RGBA => [18, 183, 106, Math.round((1 - d.progress) * 255)],
+            getLineWidth: 2,
+            lineWidthUnits: 'pixels',
+            updateTriggers: { getRadius: [clock], getLineColor: [clock] },
+          }),
+        )
+      }
+    }
+
+    // Incident dots — gold while open, --critical when missed, solid --ok once served.
     built.push(
-      new ScatterplotLayer<{ lon: number; lat: number; missed: boolean }>({
+      new ScatterplotLayer<{ lon: number; lat: number; state: 'open' | 'missed' | 'served' }>({
         id: 'incidents',
         data: recentDispatches
           .map((d) => {
             const cell = data.hexIndex.cells[d.event.hex_index]
-            return cell
-              ? { lon: cell.longitude, lat: cell.latitude, missed: d.result === 'missed' }
-              : null
+            if (!cell) return null
+            const state =
+              d.result === 'missed'
+                ? ('missed' as const)
+                : d.result === 'enroute'
+                  ? ('open' as const)
+                  : ('served' as const)
+            return { lon: cell.longitude, lat: cell.latitude, state }
           })
           .filter((d): d is NonNullable<typeof d> => d !== null),
         getPosition: (d) => [d.lon, d.lat],
         getRadius: 4.5,
         radiusUnits: 'pixels',
-        getFillColor: (d): RGBA => (d.missed ? [240, 68, 56, 255] : [255, 197, 61, 255]),
+        getFillColor: (d): RGBA =>
+          d.state === 'missed'
+            ? [240, 68, 56, 255]
+            : d.state === 'served'
+              ? [18, 183, 106, 255]
+              : [255, 197, 61, 255],
+        updateTriggers: { getFillColor: [minute] },
       }),
     )
 
@@ -444,6 +641,8 @@ export function PatrolMap({
     optimized,
     missedEver,
     recentDispatches,
+    trails,
+    minute,
     deployment,
     committedUnits,
     selectedUnit,

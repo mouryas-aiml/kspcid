@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 
+import { initialDeployment } from './optimizer'
 import type { Deployment, OptimizationResult, PatrolData } from './types'
 
 type Phase = 'deploy' | 'simulate' | 'score' | 'compare'
@@ -35,14 +36,8 @@ interface PatrolState {
   setShowGhost: (show: boolean) => void
 }
 
-function initialDeployment(data: PatrolData): Deployment {
-  const reserve = data.scenario.planning_defaults.reserve_units
-  return Object.fromEntries(
-    data.scenario.roster.map((unit, index) => [
-      unit.unit_id,
-      index < data.scenario.roster.length - reserve ? unit.start_hex_index : null,
-    ]),
-  )
+function openingDeployment(data: PatrolData): Deployment {
+  return initialDeployment(data, data.scenario.planning_defaults.reserve_units)
 }
 
 export const usePatrolStore = create<PatrolState>((set, get) => ({
@@ -62,7 +57,7 @@ export const usePatrolStore = create<PatrolState>((set, get) => ({
   setData: (data) =>
     set({
       data,
-      deployment: initialDeployment(data),
+      deployment: openingDeployment(data),
       targetMinutes: data.scenario.planning_defaults.response_target_minutes,
       requiredReserve: data.scenario.planning_defaults.reserve_units,
     }),
@@ -95,7 +90,7 @@ export const usePatrolStore = create<PatrolState>((set, get) => ({
     const { data } = get()
     if (!data) return
     set({
-      deployment: initialDeployment(data),
+      deployment: openingDeployment(data),
       selectedUnit: null,
       phase: 'deploy',
       minute: 0,

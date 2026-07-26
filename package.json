@@ -17,6 +17,7 @@
     "etl:08:full": "node --import tsx etl/08_full_routing.ts",
     "etl:08:full:start": "node scripts/start-full-routing.mjs",
     "etl:10:patrol": "node --import tsx etl/10_patrol_fixture.ts",
+    "etl:10b:dispatch": "node --import tsx etl/10b_dispatch_routes.ts",
     "etl:12:similarity": "node --import tsx etl/12_similarity_fixture.ts",
     "etl:07:graph": "node --import tsx etl/07_entity_graph.ts",
     "etl:09:graph": "node --import tsx etl/09_compile_graph.ts",

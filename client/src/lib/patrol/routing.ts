@@ -1,5 +1,7 @@
 import type {
   Deployment,
+  DispatchRoute,
+  DispatchRoutes,
   PatrolData,
   PatrolScenario,
   PrecomputedOptimizerFallback,
@@ -24,14 +26,34 @@ async function fetchTypedArray<T extends Float32Array | Uint32Array>(
   return create(await response.arrayBuffer())
 }
 
+/** Key for the dispatch-route lookup. Origin and destination are cell indices. */
+export function routeKey(origin: number, destination: number): string {
+  return `${origin}:${destination}`
+}
+
+/**
+ * The precomputed OSRM path for a dispatch, or `null` if this pair was never
+ * precomputed — which is the honest answer for a plan the user built by hand
+ * (see `etl/10b_dispatch_routes.ts`). Callers must draw nothing on `null`; a
+ * straight line over a street basemap asserts a path that does not exist.
+ */
+export function dispatchRoute(
+  data: PatrolData,
+  origin: number,
+  destination: number,
+): DispatchRoute | null {
+  return data.dispatchRoutes.get(routeKey(origin, destination)) ?? null
+}
+
 export async function loadPatrolData(): Promise<PatrolData> {
-  const [region, hexIndex, scenario, durations, coverage, fallback] = await Promise.all([
+  const [region, hexIndex, scenario, durations, coverage, fallback, routes] = await Promise.all([
     fetchJson<RoutingRegion>(`${DATA_ROOT}/routing/corridor_region.json`),
     fetchJson<HexIndex>(`${DATA_ROOT}/routing/hex_index.json`),
     fetchJson<PatrolScenario>(`${DATA_ROOT}/scenarios/demo_corridor_patrol.json`),
     fetchTypedArray(`${DATA_ROOT}/routing/duration_matrix.bin`, (buffer) => new Float32Array(buffer)),
     fetchTypedArray(`${DATA_ROOT}/routing/coverage_bitsets.bin`, (buffer) => new Uint32Array(buffer)),
     fetchJson<PrecomputedOptimizerFallback>(`${DATA_ROOT}/scenarios/optimizer_fallback.json`),
+    fetchJson<DispatchRoutes>(`${DATA_ROOT}/routing/dispatch_routes.json`),
   ])
   if (hexIndex.cells.length !== region.cells) throw new Error('Routing index does not match region')
   if (durations.length !== region.cells * region.cells) throw new Error('Duration matrix size mismatch')
@@ -39,7 +61,11 @@ export async function loadPatrolData(): Promise<PatrolData> {
     region.cells * region.response_budgets_seconds.length * region.words_per_bitset
   if (coverage.length !== expectedCoverage) throw new Error('Coverage bitset size mismatch')
   if (fallback.scenario_id !== scenario.scenario_id) throw new Error('Optimizer fallback scenario mismatch')
-  return { region, hexIndex, scenario, durations, coverage, fallback }
+  if (routes.scenario_id !== scenario.scenario_id) throw new Error('Dispatch route scenario mismatch')
+  const dispatchRoutes = new Map(
+    routes.routes.map((route) => [routeKey(route.origin, route.destination), route]),
+  )
+  return { region, hexIndex, scenario, durations, coverage, fallback, dispatchRoutes }
 }
 
 export function budgetIndex(region: RoutingRegion, targetMinutes: number): number {

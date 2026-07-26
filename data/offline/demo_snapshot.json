@@ -83,6 +83,13 @@
       "required": true
     },
     {
+      "id": "dispatch_routes",
+      "url": "/data/routing/dispatch_routes.json",
+      "sha256": "d6a86efaf1fafcb7f1abc614f40cb5e26ace12578628010c933680e443870561",
+      "bytes": 2085218,
+      "required": true
+    },
+    {
       "id": "justice_brief",
       "url": "/data/scenarios/justice_pipeline.json",
       "sha256": "0e39832dd6d6350b6cca374e2f5be4ba03ea34f35e7aa390391ce71f5b0ce71a",

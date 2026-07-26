@@ -182,6 +182,27 @@ export async function optimizeDeploymentWithFallback(
   }
 }
 
+/**
+ * The plan the Patrol Lab opens on — every unit at its roster start post, the
+ * last `reserve_units` held back.
+ *
+ * This lives beside `baselineDeployment` rather than in the store because it is
+ * a *reference plan*, not UI state: `etl/10b_dispatch_routes.ts` replays it to
+ * precompute dispatch geometry, and the two must not be allowed to drift. They
+ * already had: the opening plan posts units at `start_hex_index` while the
+ * baseline posts them at `planning_defaults.baseline_posts`, which is why the
+ * first precompute pass produced no trails for the screen as it loads.
+ */
+export function initialDeployment(data: PatrolData, reserve: number): Deployment {
+  const activeCount = Math.max(0, data.scenario.roster.length - reserve)
+  return Object.fromEntries(
+    data.scenario.roster.map((unit, index) => [
+      unit.unit_id,
+      index < activeCount ? unit.start_hex_index : null,
+    ]),
+  )
+}
+
 export function baselineDeployment(data: PatrolData, reserve: number): Deployment {
   const posts = data.scenario.planning_defaults.baseline_posts
   const activeCount = Math.max(0, data.scenario.roster.length - reserve)

@@ -9,6 +9,7 @@ const files = [
   ['data/routing/hex_index.json', 'public/data/routing/hex_index.json'],
   ['data/routing/duration_matrix.bin', 'public/data/routing/duration_matrix.bin'],
   ['data/routing/coverage_bitsets.bin', 'public/data/routing/coverage_bitsets.bin'],
+  ['data/routing/dispatch_routes.json', 'public/data/routing/dispatch_routes.json'],
   ['data/scenarios/demo_corridor_patrol.json', 'public/data/scenarios/demo_corridor_patrol.json'],
   ['data/scenarios/similarity_demo.json', 'public/data/scenarios/similarity_demo.json'],
   ['data/scenarios/justice_pipeline.json', 'public/data/scenarios/justice_pipeline.json'],

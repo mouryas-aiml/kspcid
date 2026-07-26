@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     ])
   assert(snapshot.demo_mode === 'offline', 'Snapshot mode must be offline')
   assert(snapshot.routes.length === 7, 'Expected the seven-screen offline path')
-  assert(snapshot.artifacts.length === 12 && snapshot.artifacts.every((artifact) => artifact.required), 'Offline artifact contract incomplete')
+  assert(snapshot.artifacts.length === 13 && snapshot.artifacts.every((artifact) => artifact.required), 'Offline artifact contract incomplete')
   assert(snapshot.optimizer_contract.live_timeout_ms === 2_000, 'Optimizer timeout drift')
   assert(fallback.source === 'precomputed_fallback' && fallback.timeout_ms === 2_000, 'Stored fallback label/timeout drift')
   assert(Object.keys(fallback.deployment).length === scenario.roster.length, 'Stored deployment roster mismatch')
@@ -96,6 +96,9 @@ async function main(): Promise<void> {
     durations: new Float32Array(durationCopy.buffer),
     coverage: new Uint32Array(coverageCopy.buffer),
     fallback,
+    // The optimizer never consults route geometry; an empty lookup keeps this
+    // check independent of 10b's artifact.
+    dispatchRoutes: new Map(),
   } satisfies PatrolData
   const fresh = optimizeDeployment(data, fallback.target_minutes, fallback.reserve_units)
   assert(

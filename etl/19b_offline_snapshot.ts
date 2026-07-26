@@ -93,6 +93,7 @@ async function main(): Promise<void> {
     ['routing_hexes', hexPath, '/data/routing/hex_index.json'],
     ['routing_durations', durationPath, '/data/routing/duration_matrix.bin'],
     ['routing_coverage', coveragePath, '/data/routing/coverage_bitsets.bin'],
+    ['dispatch_routes', resolve(OUTPUT.routing, 'dispatch_routes.json'), '/data/routing/dispatch_routes.json'],
     ['justice_brief', resolve(OUTPUT.scenarios, 'justice_pipeline.json'), '/data/scenarios/justice_pipeline.json'],
     ['cyber_brief', resolve(OUTPUT.scenarios, 'cyber_wing.json'), '/data/scenarios/cyber_wing.json'],
   ] as const

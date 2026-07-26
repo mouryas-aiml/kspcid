@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-26T04:40:23.792Z",
+  "updated_at": "2026-07-26T06:52:50.675Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -380,9 +380,9 @@
     "app/data/offline/demo_snapshot.json": {
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
-      "rows": 12,
-      "sha256": "dbe66539e8f04b5f175f6463b1d80d20954e17d3492b506b0ff438c11c56c4a0",
-      "bytes": 3880,
+      "rows": 13,
+      "sha256": "4467fd5a0e0509b8160af323c21fc4f7df60bb360dec6c8cf7267bef65014123",
+      "bytes": 4106,
       "inputs": [
         {
           "path": "app/data/scenarios/command_feed.json",
@@ -425,6 +425,10 @@
           "sha256": "2f11f7d1ef99a2656af5613d1f429c4e39e21d830b0f2c9e305003af0947d9b3"
         },
         {
+          "path": "app/data/routing/dispatch_routes.json",
+          "sha256": "d6a86efaf1fafcb7f1abc614f40cb5e26ace12578628010c933680e443870561"
+        },
+        {
           "path": "app/data/scenarios/justice_pipeline.json",
           "sha256": "0e39832dd6d6350b6cca374e2f5be4ba03ea34f35e7aa390391ce71f5b0ce71a"
         },
@@ -434,7 +438,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:40:23.792Z",
+      "generated_at": "2026-07-26T06:52:50.675Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10891,7 +10895,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T04:40:23.789Z",
+      "generated_at": "2026-07-26T06:52:50.671Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,

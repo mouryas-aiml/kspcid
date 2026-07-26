@@ -124,6 +124,27 @@ export interface PatrolScenario {
   }
 }
 
+/** One precomputed OSRM path, `[lon, lat]` at 5 dp. See `etl/10b_dispatch_routes.ts`. */
+export interface DispatchRoute {
+  readonly origin: number
+  readonly destination: number
+  readonly plans: readonly string[]
+  readonly osrm_duration_seconds: number
+  readonly osrm_distance_m: number
+  readonly points: number
+  readonly geometry: readonly (readonly [number, number])[]
+}
+
+export interface DispatchRoutes {
+  readonly schema_version: number
+  readonly region_id: string
+  readonly scenario_id: string
+  readonly plans: readonly string[]
+  readonly routes_total: number
+  readonly coverage_note: string
+  readonly routes: readonly DispatchRoute[]
+}
+
 export interface PatrolData {
   readonly region: RoutingRegion
   readonly hexIndex: HexIndex
@@ -131,6 +152,11 @@ export interface PatrolData {
   readonly durations: Float32Array
   readonly coverage: Uint32Array
   readonly fallback: PrecomputedOptimizerFallback
+  /**
+   * `origin:destination` → path. Only the pairs the baseline and stored
+   * optimizer replays produce; a hand-built plan will miss and gets no trail.
+   */
+  readonly dispatchRoutes: ReadonlyMap<string, DispatchRoute>
 }
 
 export type Deployment = Record<string, number | null>
