@@ -8,6 +8,7 @@ import {
   Map,
   Network,
   RadioTower,
+  ScanSearch,
   Shield,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -47,6 +48,16 @@ export function AppRail() {
             </Link>
           )
         })}
+        <a
+          aria-label="CipherWatch"
+          className="rail-item"
+          href="https://cipherwatch-ksp.streamlit.app/"
+          rel="noopener noreferrer"
+          target="_blank"
+          title="CipherWatch — open in a new tab"
+        >
+          <ScanSearch size={19} strokeWidth={1.7} />
+        </a>
       </div>
       <button className="rail-avatar" type="button" aria-label="Officer profile">
         DCP

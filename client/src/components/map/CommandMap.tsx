@@ -36,7 +36,7 @@ import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
 import { dur } from '@/lib/motion'
 import type { Provenance } from '@/lib/provenance'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { publicPath } from '@/lib/publicPath'
+import { isCatalystClientHosting, publicPath } from '@/lib/publicPath'
 
 interface Cell {
   readonly h3_r9: string
@@ -274,6 +274,7 @@ function MapCanvas({
   // Jurisdiction polygons are 2.5 MB and only ever a background wash, so they
   // load after the map rather than blocking it. Absent, the layer is skipped.
   useEffect(() => {
+    if (isCatalystClientHosting) return
     let live = true
     fetch(JURISDICTIONS_URL)
       .then((response) => (response.ok ? (response.json() as Promise<GeoJSON.FeatureCollection>) : null))

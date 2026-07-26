@@ -15,7 +15,7 @@
 import { layers, namedFlavor } from '@protomaps/basemaps'
 import { addProtocol, type StyleSpecification } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
-import { publicPath } from '@/lib/publicPath'
+import { isCatalystClientHosting, publicPath } from '@/lib/publicPath'
 
 export const BASEMAP_SOURCE = 'protomaps'
 const cloudMode = (process.env.NEXT_PUBLIC_DEMO_MODE ?? 'offline') !== 'offline'
@@ -72,7 +72,7 @@ let protocolRegistered = false
  * protocol registration.
  */
 export function registerPmtilesProtocol(): void {
-  if (protocolRegistered) return
+  if (protocolRegistered || isCatalystClientHosting) return
   const protocol = new Protocol()
   addProtocol('pmtiles', protocol.tile)
   protocolRegistered = true
@@ -88,6 +88,24 @@ function isWaterFill(id: string): boolean {
 
 /** Build the §3.4 style. `lang` follows §5.3's bilingual intent. */
 export function buildBasemapStyle(lang = 'en'): StyleSpecification {
+  // Catalyst Web Client Hosting does not honor the PMTiles byte-range reads:
+  // Chrome begins a 39 MB transfer and PMTiles aborts it. The submission build
+  // therefore keeps the analytical overlays on a neutral canvas and avoids the
+  // incompatible request entirely. Root/offline builds retain the full map.
+  if (isCatalystClientHosting) {
+    return {
+      version: 8,
+      sources: {},
+      layers: [
+        {
+          id: 'submission-background',
+          type: 'background',
+          paint: { 'background-color': '#171D26' },
+        },
+      ],
+    }
+  }
+
   const flavor = namedFlavor('dark')
   const base = layers(BASEMAP_SOURCE, flavor, { lang })
   const origin = typeof window === 'undefined' ? '' : window.location.origin
