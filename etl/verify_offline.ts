@@ -62,6 +62,31 @@ async function main(): Promise<void> {
   for (const route of snapshot.routes) {
     assert(worker.includes(`'${route}'`), `Service worker does not pre-cache route ${route}`)
   }
+
+  // No 206 ever reaches cache.put.
+  //
+  // The Cache API rejects partial responses outright, and the worker's writes
+  // are fire-and-forget, so the rejection is invisible. MapLibre reads the
+  // PMTiles basemap exclusively by HTTP range — a handler that caches whatever
+  // it fetches would silently drop every tile and leave a blank canvas. Pin the
+  // single guarded write path so this cannot regress.
+  const putCallSites = worker.match(/cache\.put\(/g)?.length ?? 0
+  assert(putCallSites === 1, `Service worker must write to caches in exactly one place, found ${putCallSites}`)
+  assert(
+    /async function putIfComplete\([\s\S]*?response\.status !== 200[\s\S]*?headers\.has\('range'\)/.test(worker),
+    'Service worker cache write is missing the 200-only / no-Range guards',
+  )
+  assert(
+    worker.includes("url.pathname.startsWith('/tiles/')"),
+    'Service worker does not handle the PMTiles basemap',
+  )
+  assert(
+    worker.includes("url.pathname.startsWith('/basemap/')"),
+    'Service worker does not pre-cache basemap glyphs and sprites',
+  )
+  for (const asset of ['/basemap/sprites/dark.json', '/basemap/fonts/Noto%20Sans%20Regular/3072-3327.pbf']) {
+    assert(worker.includes(`'${asset}'`), `Service worker does not pre-cache ${asset}`)
+  }
   const durationCopy = Uint8Array.from(durationBytes)
   const coverageCopy = Uint8Array.from(coverageBytes)
   const data = {
