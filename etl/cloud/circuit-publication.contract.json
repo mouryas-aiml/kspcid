@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "name": "kspcid-cloud-publication",
+  "status": "blocked_pending_owner_dc_confirmation_and_basic_io_scaffolds",
+  "scope": "BUILD_SPEC §6.4 Stage 2 cloud publication only",
+  "excluded_local_stage": ["DuckDB", "OSRM", "Neo4j/GDS", "CSV shaping"],
+  "service_gate": {
+    "required": "Catalyst Circuits available in the selected project data center",
+    "known_unavailable_data_centers": ["EU", "AU", "IN", "JP", "SA", "CA"],
+    "function_constraint": "Every functional state must invoke a Basic I/O function"
+  },
+  "dataset_sha256": "b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878",
+  "publication_input_prefix": "publication/b99f84ed57fce1119c4a396005bab25f385ec26892e814be91623e3d46b87878/",
+  "states": [
+    { "name": "Validate Manifest", "type": "Function", "function": "publish-validate-manifest", "next": "Manifest Valid?" },
+    { "name": "Manifest Valid?", "type": "Branch", "conditions": [
+      { "when": "$.valid == true", "next": "Start Data Store Imports" },
+      { "when": "$.valid == false", "next": "Validation Failed" }
+    ]},
+    { "name": "Validation Failed", "type": "Failure", "reason": "Manifest, checksum, row-count, or allowlist validation failed" },
+    { "name": "Start Data Store Imports", "type": "Function", "function": "publish-start-imports", "next": "Wait For Imports" },
+    { "name": "Wait For Imports", "type": "Wait", "seconds": 10, "next": "Poll Data Store Imports" },
+    { "name": "Poll Data Store Imports", "type": "Function", "function": "publish-poll-imports", "next": "Imports Complete?" },
+    { "name": "Imports Complete?", "type": "Branch", "conditions": [
+      { "when": "$.status == 'completed'", "next": "Verify Stratus Objects" },
+      { "when": "$.status == 'in_progress'", "next": "Wait For Imports" },
+      { "when": "$.status == 'failed'", "next": "Publication Failed" }
+    ]},
+    { "name": "Verify Stratus Objects", "type": "Function", "function": "publish-verify-stratus", "next": "Warm Cache" },
+    { "name": "Warm Cache", "type": "Function", "function": "publish-warm-cache", "next": "Smoke Checks" },
+    { "name": "Smoke Checks", "type": "Function", "function": "publish-smoke-checks", "next": "Smoke Checks Pass?" },
+    { "name": "Smoke Checks Pass?", "type": "Branch", "conditions": [
+      { "when": "$.passed == true", "next": "Publish" },
+      { "when": "$.passed == false", "next": "Publication Failed" }
+    ]},
+    { "name": "Publish", "type": "Function", "function": "publish-marker", "next": "Published" },
+    { "name": "Published", "type": "Success" },
+    { "name": "Publication Failed", "type": "Failure", "reason": "No production marker is written; previous published dataset remains active" }
+  ],
+  "idempotency": {
+    "manifest": "Immutable dataset_sha256 identifies the run",
+    "data_store": "All four imports are upserts against unique keys",
+    "stratus": "Objects use checksummed immutable keys; runtime uploads use overwrite only after checksum validation",
+    "cache": "The warmer overwrites deterministic keys with a two-day TTL",
+    "publish": "The production marker is written only after all verification states pass",
+    "retry": "A retry may re-run any state without duplicating rows or changing a previously published dataset"
+  },
+  "console_compilation_required": true,
+  "note": "This is the audited workflow contract, not claimed to be Catalyst Code View JSON. Function IDs and exact Code View fields only exist after owner project initialization."
+}
