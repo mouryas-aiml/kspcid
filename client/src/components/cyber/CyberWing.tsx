@@ -1,11 +1,14 @@
 'use client'
 
+import { Group } from '@visx/group'
+import { Treemap, hierarchy, treemapSquarify } from '@visx/hierarchy'
 import { AlertCircle, BarChart3, FileText, MonitorSmartphone, ShieldCheck, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Panel } from '@/components/primitives/Panel'
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import { OpsShell } from '@/components/shell/OpsShell'
+import { OTHER_COLOUR, seriesColour } from '@/lib/charts'
 import type { Provenance } from '@/lib/provenance'
 
 interface CyberFixture {
@@ -68,21 +71,134 @@ function VolumeChart({ rows }: { readonly rows: CyberFixture['monthly_volume'] }
   )
 }
 
-function SectionBars({ rows }: { readonly rows: CyberFixture['top_act_sections'] }) {
-  const maximum = Math.max(...rows.map((row) => row.count))
+/**
+ * Act/section treemap (BUILD_SPEC §7 chart set).
+ *
+ * A ranked bar list answers "which is biggest"; the question this panel is
+ * actually asked is "how concentrated is cyber crime in a handful of section
+ * combinations", and area answers that in one glance — the top two combinations
+ * are over half of the caseload.
+ *
+ * Two truth constraints held here:
+ *  - The exact source `act_section` strings are used verbatim. Similar-looking
+ *    strings are NOT merged, which is what the panel's provenance note claims.
+ *  - The fixture carries the top 18 combinations, not all of them. The tail is
+ *    drawn as one "All other combinations" tile whose value is the genuine
+ *    remainder against `summary.cyber_records`, so the areas sum to the real
+ *    caseload instead of silently dropping 6,319 FIRs.
+ */
+function SectionTreemap({
+  rows,
+  totalRecords,
+}: {
+  readonly rows: CyberFixture['top_act_sections']
+  readonly totalRecords: number
+}) {
+  const width = 640
+  const height = 320
+  const listed = rows.reduce((sum, row) => sum + row.count, 0)
+  const remainder = Math.max(0, totalRecords - listed)
+
+  const leaves = [
+    ...rows.map((row, index) => ({
+      id: row.act_section,
+      label: shortSection(row.act_section),
+      full: row.act_section,
+      count: row.count,
+      colour: seriesColour(index),
+      isOther: false,
+    })),
+    ...(remainder > 0
+      ? [
+          {
+            id: '__other__',
+            label: 'All other combinations',
+            full: `All act/section combinations outside the top ${rows.length}`,
+            count: remainder,
+            colour: OTHER_COLOUR,
+            isOther: true,
+          },
+        ]
+      : []),
+  ]
+
+  const root = hierarchy<{ children: typeof leaves }>({ children: leaves } as never)
+    .sum((node) => (node as unknown as { count?: number }).count ?? 0)
+    .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
+
   return (
-    <div className="mt-5 space-y-2">
-      {rows.slice(0, 12).map((row) => (
-        <div className="grid grid-cols-[minmax(0,1fr)_72px] items-center gap-3" key={row.act_section}>
-          <div className="relative min-w-0 overflow-hidden rounded-[--r-sm] border border-[--ink-600] bg-[--ink-850] px-3 py-2">
-            <span className="absolute inset-y-0 left-0 bg-[rgb(56_189_248_/_0.1)]" style={{ width: `${(row.count / maximum) * 100}%` }} />
-            <span className="relative block truncate text-[11px] text-[--txt-2]" title={row.act_section}>{row.act_section}</span>
-          </div>
-          <span className="text-right font-mono text-xs text-[--txt]">{format(row.count)}</span>
-        </div>
-      ))}
-    </div>
+    <figure className="mt-5">
+      <svg
+        aria-label={`Treemap of cyber FIRs by exact act and section combination, ${format(totalRecords)} records`}
+        className="w-full"
+        role="img"
+        viewBox={`0 0 ${width} ${height}`}
+      >
+        <Treemap<typeof root.data> root={root} size={[width, height]} tile={treemapSquarify} round>
+          {(treemap) => (
+            <Group>
+              {treemap.leaves().map((leaf, index) => {
+                const node = leaf.data as unknown as (typeof leaves)[number]
+                const w = leaf.x1 - leaf.x0
+                const h = leaf.y1 - leaf.y0
+                const share = totalRecords > 0 ? ((leaf.value ?? 0) / totalRecords) * 100 : 0
+                return (
+                  <Group key={node.id ?? index} left={leaf.x0} top={leaf.y0}>
+                    <rect
+                      fill={node.colour}
+                      fillOpacity={node.isOther ? 0.18 : 0.26}
+                      height={h}
+                      rx={3}
+                      stroke={node.colour}
+                      strokeOpacity={0.7}
+                      width={w}
+                    />
+                    <title>{`${node.full}: ${format(node.count)} FIRs (${share.toFixed(1)}%)`}</title>
+                    {/* Labels are clipped to their own tile — a treemap where a
+                        small tile's caption spills over its neighbour reads as
+                        the neighbour's value. */}
+                    {w > 78 && h > 34 ? (
+                      <>
+                        <text fill="var(--txt-hi)" fontSize="10" x={7} y={16}>
+                          {node.label.length > Math.floor((w - 12) / 4.6)
+                            ? `${node.label.slice(0, Math.max(3, Math.floor((w - 12) / 4.6) - 1))}…`
+                            : node.label}
+                        </text>
+                        <text className="tabular-nums" fill="var(--txt-2)" fontSize="10" x={7} y={30}>
+                          {format(node.count)} · {share.toFixed(1)}%
+                        </text>
+                      </>
+                    ) : null}
+                  </Group>
+                )
+              })}
+            </Group>
+          )}
+        </Treemap>
+      </svg>
+      <figcaption className="mt-2 text-[11px] leading-4 tabular-nums text-[--txt-3]">
+        Area is FIR count. Exact source strings, not merged — several tiles differ only by
+        Act year or section order. Top {rows.length} shown plus the {format(remainder)}-FIR
+        remainder, totalling {format(totalRecords)}.
+      </figcaption>
+    </figure>
   )
+}
+
+/**
+ * A readable tile label from a 90-character act/section string.
+ *
+ * Shortens the statute names to their common abbreviations and keeps the section
+ * list, which is the part that distinguishes one combination from another. The
+ * full string is on the tile's tooltip and in the panel's own table.
+ */
+function shortSection(value: string): string {
+  return value
+    .replace(/INFORMATION TECHNOLOGY\s+ACT/gi, 'IT Act')
+    .replace(/IPC 1860/gi, 'IPC')
+    .replace(/U\/s:/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function ModeByYear({ rows }: { readonly rows: CyberFixture['complaint_modes_by_year'] }) {
@@ -214,11 +330,13 @@ export function CyberWing() {
           <VolumeChart rows={fixture.monthly_volume} />
         </section>
 
-        <div className="mt-4 grid gap-4 xl:grid-cols-[1.3fr_.7fr]">
-          <section className="panel">
-            <div className="panel-header"><div><p className="type-micro text-[--txt-3]">LEGAL CLASSIFICATION</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><FileText size={16} /> Top exact Act / section combinations</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Exact source act_section strings, ranked by FIR count. Similar-looking strings are not merged." /></div>
-            <SectionBars rows={fixture.top_act_sections} />
-          </section>
+        {/* Full width: a treemap in a 250px column cannot label its own tiles. */}
+        <section className="panel mt-4">
+          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">LEGAL CLASSIFICATION</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><FileText size={16} /> Top exact Act / section combinations</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Exact source act_section strings, ranked by FIR count. Similar-looking strings are not merged." /></div>
+          <SectionTreemap rows={fixture.top_act_sections} totalRecords={fixture.summary.cyber_records} />
+        </section>
+
+        <div className="mt-4 grid gap-4 xl:grid-cols-2">
           <section className="panel">
             <div className="panel-header"><div><p className="type-micro text-[--txt-3]">COMPLAINT → FIR</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><MonitorSmartphone size={16} /> Recorded complaint mode</h3></div></div>
             <div className="mt-4 space-y-3">

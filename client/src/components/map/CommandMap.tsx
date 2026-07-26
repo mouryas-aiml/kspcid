@@ -31,6 +31,7 @@ import { Panel } from '@/components/primitives/Panel'
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
 import { OpsShell } from '@/components/shell/OpsShell'
 import { BLR_CENTER, INITIAL_VIEW_STATE, magma, magmaCss } from '@/lib/geo'
+import { PulseRing } from './PulseRing'
 import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
 import { dur } from '@/lib/motion'
 import type { Provenance } from '@/lib/provenance'
@@ -183,42 +184,6 @@ function Context({
   )
 }
 
-function PulseRing({ fixture }: { readonly fixture: CommandMapFixture }) {
-  const maximum = Math.max(1, ...fixture.pulse_ring.hourly.map((row) => row.count))
-  return (
-    <svg aria-label="24-hour derived occurrence pulse with generated roster overlay" className="mx-auto mt-4 h-[250px] w-[250px]" role="img" viewBox="0 0 280 280">
-      {[0, 1, 2, 3, 4].map((ring) => <circle cx="140" cy="140" fill="none" key={ring} r={42 + ring * 18} stroke="#2B3849" />)}
-      {fixture.pulse_ring.hourly.map((row) => {
-        const ring = fixture.pulse_ring.crime_heads.indexOf(row.crime_head)
-        if (ring < 0) return null
-        const angle = row.estimated_occurrence_hour * 15 - 90
-        const radius = 42 + ring * 18
-        const length = 5 + (row.count / maximum) * 13
-        const radians = (angle * Math.PI) / 180
-        const startX = 140 + Math.cos(radians) * (radius - length / 2)
-        const startY = 140 + Math.sin(radians) * (radius - length / 2)
-        const endX = 140 + Math.cos(radians) * (radius + length / 2)
-        const endY = 140 + Math.sin(radians) * (radius + length / 2)
-        // Sequential ramp on categorical rings is a §5.2 miss inherited from the
-        // SVG map; kept visually identical here and left to T1.5's chart pass.
-        return <line key={`${row.crime_head}-${row.estimated_occurrence_hour}`} stroke={magmaCss((ring + 1) / 5)} strokeLinecap="round" strokeWidth="5" x1={startX} x2={endX} y1={startY} y2={endY} />
-      })}
-      {fixture.pulse_ring.generated_roster_strength.map((strength, hour) => {
-        const angle = hour * 15 - 90
-        const radians = (angle * Math.PI) / 180
-        return <circle cx={140 + Math.cos(radians) * 128} cy={140 + Math.sin(radians) * 128} fill="#FFC53D" key={hour} opacity={0.15 + strength / 16} r="2.5" />
-      })}
-      <text fill="#94A3B8" fontSize="9" textAnchor="middle" x="140" y="136">DERIVED HOURS</text>
-      <text fill="#FFC53D" fontSize="9" textAnchor="middle" x="140" y="151">GOLD · GENERATED ROSTER</text>
-      {[0, 6, 12, 18].map((hour) => {
-        const angle = hour * 15 - 90
-        const radians = (angle * Math.PI) / 180
-        return <text fill="#64748B" fontSize="8" key={hour} textAnchor="middle" x={140 + Math.cos(radians) * 136} y={143 + Math.sin(radians) * 136}>{String(hour).padStart(2, '0')}</text>
-      })}
-    </svg>
-  )
-}
-
 function InspectorContent({
   fixture,
   selected,
@@ -244,7 +209,7 @@ function InspectorContent({
       </Panel>
       {selected.h3_r9 === fixture.pulse_ring.h3_r9 ? (
         <Panel title="Pulse Ring" eyebrow="24-HOUR HEARTBEAT">
-          <PulseRing fixture={fixture} />
+          <PulseRing data={fixture.pulse_ring} />
           <p className="mt-3 text-[10px] leading-4 text-[--txt-3]">Occurrence hours are derived. Gold roster strength is a generated demonstration overlay, never source fact.</p>
         </Panel>
       ) : (

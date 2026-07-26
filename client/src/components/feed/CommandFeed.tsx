@@ -18,11 +18,17 @@ import {
   ShieldAlert,
   X,
 } from 'lucide-react'
+import { Map as MapLibreMap, Marker } from 'maplibre-gl'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Panel } from '@/components/primitives/Panel'
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
+import { Sparkline } from '@/components/primitives/Sparkline'
+import { BLR_CENTER, INITIAL_VIEW_STATE } from '@/lib/geo'
+import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
+import { dur } from '@/lib/motion'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { OpsShell } from '@/components/shell/OpsShell'
 import type { Provenance } from '@/lib/provenance'
 
@@ -82,28 +88,6 @@ function queryFor(alert: FeedAlert): string {
   }).toString()
 }
 
-function Sparkline({ values }: { readonly values: readonly number[] }) {
-  const maximum = Math.max(1, ...values)
-  const points = values
-    .map((value, index) => `${(index / Math.max(1, values.length - 1)) * 220},${46 - (value / maximum) * 42}`)
-    .join(' ')
-  return (
-    <svg aria-label="13-week observed control series" className="h-14 w-full" preserveAspectRatio="none" role="img" viewBox="0 0 220 52">
-      <line x1="0" x2="220" y1="46" y2="46" stroke="#2B3849" />
-      <polyline fill="none" points={points} stroke="#38BDF8" strokeLinejoin="round" strokeWidth="2" />
-      {values.map((value, index) => (
-        <circle
-          cx={(index / Math.max(1, values.length - 1)) * 220}
-          cy={46 - (value / maximum) * 42}
-          fill={index === values.length - 1 ? '#FFC53D' : '#38BDF8'}
-          key={`${index}-${value}`}
-          r={index === values.length - 1 ? 3.5 : 1.5}
-        />
-      ))}
-    </svg>
-  )
-}
-
 function FeedCard({
   alert,
   active,
@@ -141,6 +125,21 @@ function FeedCard({
   )
 }
 
+/**
+ * The Command Feed's map surface.
+ *
+ * This was the product's third geographic renderer, and the only one whose
+ * projection was simply wrong: it placed DOM markers at
+ * `((lon - 77.45) / 0.4)` × `((13.2 - lat) / 0.45)`, a bounding box that is
+ * neither the OSRM extract nor the PMTiles archive, linearly stretched. Two
+ * alerts a kilometre apart could land in the wrong order relative to each other.
+ *
+ * Now the same self-hosted basemap as every other surface (§3.4), with the
+ * alert markers as MapLibre `Marker`s. Markers rather than a deck.gl layer
+ * deliberately: there are 26 of them, they are buttons with hover, focus and
+ * selection states, and a DOM element keeps the keyboard path and the styling
+ * that a WebGL layer would have to reinvent.
+ */
 function MapCanvas({
   alerts,
   selected,
@@ -150,50 +149,101 @@ function MapCanvas({
   readonly selected: FeedAlert
   readonly onSelect: (alert: FeedAlert) => void
 }) {
-  const mappable = alerts.filter((alert) => alert.geography)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const mapRef = useRef<MapLibreMap | null>(null)
+  const markersRef = useRef<Marker[]>([])
+  const [ready, setReady] = useState(false)
+  const mappable = useMemo(() => alerts.filter((alert) => alert.geography), [alerts])
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    registerPmtilesProtocol()
+    const map = new MapLibreMap({
+      container,
+      style: buildBasemapStyle(),
+      center: BLR_CENTER,
+      zoom: INITIAL_VIEW_STATE.zoom,
+      attributionControl: { compact: true },
+    })
+    mapRef.current = map
+    setReady(true)
+    const observer = new ResizeObserver(() => map.resize())
+    observer.observe(container)
+    requestAnimationFrame(() => map.resize())
+    return () => {
+      observer.disconnect()
+      mapRef.current = null
+      map.remove()
+    }
+  }, [])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!ready || !map) return
+    for (const marker of markersRef.current) marker.remove()
+    markersRef.current = mappable.map((alert) => {
+      const geography = alert.geography!
+      const style = severityStyle[alert.severity]
+      const active = alert.id === selected.id
+      const size = active ? 58 : 22 + Math.min(22, alert.observed_count)
+      const element = document.createElement('button')
+      element.type = 'button'
+      element.className = 'grid place-items-center rounded-full transition-all duration-500'
+      element.setAttribute('aria-label', `${alert.station_name}: ${alert.title}`)
+      element.title = `${alert.station_name} · ${alert.observed_count} observed`
+      Object.assign(element.style, {
+        width: `${size}px`,
+        height: `${size}px`,
+        border: `1px solid ${style.color}`,
+        background: style.background,
+        boxShadow: active ? `0 0 0 10px ${style.background}, 0 0 34px ${style.color}` : '',
+        zIndex: active ? '4' : '2',
+        cursor: 'pointer',
+      })
+      const dot = document.createElement('span')
+      Object.assign(dot.style, {
+        width: '6px',
+        height: '6px',
+        borderRadius: '9999px',
+        background: style.color,
+      })
+      element.append(dot)
+      element.addEventListener('click', () => onSelect(alert))
+      return new Marker({ element }).setLngLat([geography.longitude, geography.latitude]).addTo(map)
+    })
+    return () => {
+      for (const marker of markersRef.current) marker.remove()
+      markersRef.current = []
+    }
+  }, [mappable, onSelect, ready, selected.id])
+
+  // Selecting from the list moves the camera, so the two halves stay in step.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !selected.geography) return
+    map.flyTo({
+      center: [selected.geography.longitude, selected.geography.latitude],
+      zoom: Math.max(map.getZoom(), 11.5),
+      duration: dur.fly * 1000,
+      essential: true,
+    })
+  }, [selected.geography, selected.id])
+
   return (
     <div className="relative h-full overflow-hidden bg-[--ink-900]">
-      <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgb(56_189_248_/_0.06)_1px,transparent_1px),linear-gradient(90deg,rgb(56_189_248_/_0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_55%_46%,rgb(56_189_248_/_0.12),transparent_48%)]" />
-      <div className="absolute left-5 top-5 z-10 flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] text-[--txt-2]">
+      {/* maplibre-gl.css forces position:relative on its container. */}
+      <div className="h-full w-full" ref={containerRef} />
+      <div className="pointer-events-none absolute left-5 top-5 z-10 flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] tabular-nums text-[--txt-2]">
         <Radar size={14} className="text-[--cyan-400]" />
         Station centroids from eligible reported coordinates · {mappable.length}/{alerts.length}
       </div>
-      {mappable.map((alert) => {
-        const geography = alert.geography!
-        const left = Math.max(5, Math.min(95, ((geography.longitude - 77.45) / 0.4) * 100))
-        const top = Math.max(8, Math.min(92, ((13.2 - geography.latitude) / 0.45) * 100))
-        const active = alert.id === selected.id
-        const style = severityStyle[alert.severity]
-        return (
-          <button
-            aria-label={`${alert.station_name}: ${alert.title}`}
-            className="absolute grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full transition-all duration-500"
-            key={alert.id}
-            onClick={() => onSelect(alert)}
-            style={{
-              left: `${left}%`,
-              top: `${top}%`,
-              width: active ? 58 : 22 + Math.min(22, alert.observed_count),
-              height: active ? 58 : 22 + Math.min(22, alert.observed_count),
-              border: `1px solid ${style.color}`,
-              background: style.background,
-              boxShadow: active ? `0 0 0 10px ${style.background}, 0 0 34px ${style.color}` : undefined,
-              zIndex: active ? 4 : 2,
-            }}
-            title={`${alert.station_name} · ${alert.observed_count} observed`}
-            type="button"
-          >
-            <span className="h-1.5 w-1.5 rounded-full" style={{ background: style.color }} />
-          </button>
-        )
-      })}
-      <div className="absolute bottom-5 left-5 max-w-sm rounded-[--r-md] border border-[--ink-500] bg-[rgb(10_15_22_/_0.96)] p-4 shadow-2xl">
+      <div className="absolute bottom-5 left-5 z-10 max-w-sm rounded-[--r-md] border border-[--ink-500] bg-[rgb(10_15_22_/_0.96)] p-4">
         <p className="type-micro text-[--gold-400]">{selected.geography ? 'Selected geography' : 'No eligible station centroid'}</p>
         <p className="mt-2 text-base font-semibold">{selected.station_name}</p>
         <p className="mt-1 text-xs leading-5 text-[--txt-2]">{selected.title}</p>
         {selected.geography ? (
-          <p className="mt-3 flex items-center gap-2 text-[10px] text-[--txt-3]">
+          <p className="mt-3 flex items-center gap-2 text-[10px] tabular-nums text-[--txt-3]">
             <MapPin size={12} /> Mean of {selected.geography.coordinate_records.toLocaleString('en-IN')} eligible reported coordinates
           </p>
         ) : (
@@ -306,7 +356,38 @@ export function CommandFeed() {
               <div><p className="font-mono text-xl font-semibold text-[--txt-hi]">{selected.expected_count}</p><p className="type-micro mt-1 text-[--txt-3]">Expected</p></div>
               <div><p className="font-mono text-xl font-semibold text-[--warn]">{selected.ucl_99}</p><p className="type-micro mt-1 text-[--txt-3]">99% UCL</p></div>
             </div>
-            <div className="mt-4"><Sparkline values={selected.history_13_weeks} /><p className="mt-1 text-[10px] text-[--txt-3]">13 observed weeks · current week highlighted</p></div>
+            <div className="mt-4">
+              <Sparkline
+                expected={selected.expected_count}
+                label={`${selected.station_name}, ${selected.title}: 13 observed weeks against the expected count and the 99% upper control limit`}
+                ucl={selected.ucl_99}
+                values={selected.history_13_weeks}
+              />
+              {/* §5.7 — the band is the whole claim, so it is labelled. */}
+              <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] tabular-nums text-[--txt-3]">
+                <span>13 observed weeks · current week marked</span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-px w-3 bg-[--txt-3]" /> expected {selected.expected_count}
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-px w-3 border-t border-dashed border-[--warn]" /> 99% UCL {selected.ucl_99}
+                </span>
+              </p>
+              {/*
+                A "20+σ" badge against a zero baseline is not a rate excursion,
+                and a reader who is not told that will read it as one. Every
+                alert in the shipped snapshot has expected 0 and UCL 0 — the
+                detector is surfacing categories with no 13-week history, which
+                is a different and weaker claim than an unusual rate.
+              */}
+              {selected.ucl_99 <= selected.expected_count ? (
+                <p className="mt-2 border-l-2 border-[--warn] pl-2 text-[10px] leading-4 text-[--txt-2]">
+                  No control band: the 13-week baseline for this category is zero, so the
+                  expected count and the 99% limit are both 0. This is a first-occurrence
+                  signal, not an excursion above a fitted rate.
+                </p>
+              ) : null}
+            </div>
           </Panel>
           <Panel title="Open in workflow" eyebrow="DEMO SPINE">
             <div className="grid gap-2">

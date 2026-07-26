@@ -1,6 +1,7 @@
 'use client'
 
-import { AlertTriangle, ArrowRight, GitBranch, Scale, TimerReset } from 'lucide-react'
+import { Group } from '@visx/group'
+import { AlertTriangle, GitBranch, Scale, TimerReset } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { ProvenanceChip } from '@/components/primitives/ProvenanceChip'
@@ -153,27 +154,225 @@ function FlowFigure({
   )
 }
 
+/**
+ * The modelled view is a real Sankey, because the modelled data is a real
+ * node/link graph: `modelled.edges` is a DAG rooted at `registered` and five
+ * columns deep. It was previously drawn as a grid of independent bars, which
+ * threw away the one thing the data has — that these paths connect.
+ *
+ * The observed view above is deliberately NOT a Sankey and is not called one.
+ * `observed.stages` is a single hop from registration to the current stage; a
+ * multi-stage ribbon diagram over one hop would imply transitions the data does
+ * not record.
+ *
+ * Visx has no Sankey primitive. The layered layout is below, and the ribbons are
+ * generated directly: `@visx/shape`'s link generators emit a stroked centre
+ * line, and a Sankey link is a filled variable-width band, not a stroke.
+ */
+interface SankeyNode {
+  readonly id: string
+  readonly depth: number
+  readonly value: number
+  x0: number
+  x1: number
+  y0: number
+  y1: number
+}
+
+interface SankeyLink {
+  readonly source: string
+  readonly target: string
+  readonly count: number
+  sy0: number
+  ty0: number
+  width: number
+}
+
+function layoutSankey(
+  edges: readonly { source: string; target: string; count: number }[],
+  width: number,
+  height: number,
+): { nodes: SankeyNode[]; links: SankeyLink[] } {
+  const ids = [...new Set(edges.flatMap((edge) => [edge.source, edge.target]))]
+  const incoming = new Map<string, typeof edges>()
+  const outgoing = new Map<string, typeof edges>()
+  for (const edge of edges) {
+    outgoing.set(edge.source, [...(outgoing.get(edge.source) ?? []), edge])
+    incoming.set(edge.target, [...(incoming.get(edge.target) ?? []), edge])
+  }
+
+  // Longest path from a root, so a node always sits to the right of every
+  // node that feeds it. The graph is acyclic by construction (15 nodes).
+  const depths = new Map<string, number>()
+  const resolve = (id: string, seen: Set<string>): number => {
+    const cached = depths.get(id)
+    if (cached !== undefined) return cached
+    if (seen.has(id)) return 0
+    const parents = incoming.get(id) ?? []
+    const depth =
+      parents.length === 0
+        ? 0
+        : Math.max(...parents.map((edge) => resolve(edge.source, new Set([...seen, id])) + 1))
+    depths.set(id, depth)
+    return depth
+  }
+  for (const id of ids) resolve(id, new Set())
+
+  const value = (id: string): number =>
+    Math.max(
+      (incoming.get(id) ?? []).reduce((sum, edge) => sum + edge.count, 0),
+      (outgoing.get(id) ?? []).reduce((sum, edge) => sum + edge.count, 0),
+    )
+
+  const maxDepth = Math.max(...ids.map((id) => depths.get(id) ?? 0))
+  const columnWidth = 14
+  const gap = maxDepth > 0 ? (width - columnWidth) / maxDepth : 0
+  const padding = 6
+
+  const nodes: SankeyNode[] = []
+  for (let depth = 0; depth <= maxDepth; depth += 1) {
+    const column = ids
+      .filter((id) => depths.get(id) === depth)
+      .sort((a, b) => value(b) - value(a))
+    const total = column.reduce((sum, id) => sum + value(id), 0)
+    const usable = height - padding * Math.max(0, column.length - 1)
+    let cursor = 0
+    for (const id of column) {
+      const nodeHeight = total > 0 ? (value(id) / total) * usable : 0
+      nodes.push({
+        id,
+        depth,
+        value: value(id),
+        x0: depth * gap,
+        x1: depth * gap + columnWidth,
+        y0: cursor,
+        y1: cursor + nodeHeight,
+      })
+      cursor += nodeHeight + padding
+    }
+  }
+
+  const byId = new Map(nodes.map((node) => [node.id, node]))
+  const sourceCursor = new Map<string, number>()
+  const targetCursor = new Map<string, number>()
+  const links: SankeyLink[] = []
+  // Order links by target depth so ribbons leaving a node stack top-to-bottom
+  // in the same order as the nodes they land on.
+  const ordered = [...edges].sort(
+    (a, b) =>
+      (byId.get(a.target)?.y0 ?? 0) - (byId.get(b.target)?.y0 ?? 0) ||
+      a.target.localeCompare(b.target),
+  )
+  for (const edge of ordered) {
+    const source = byId.get(edge.source)
+    const target = byId.get(edge.target)
+    if (!source || !target) continue
+    const sourceHeight = source.y1 - source.y0
+    const targetHeight = target.y1 - target.y0
+    const sourceTotal = (outgoing.get(edge.source) ?? []).reduce((sum, e) => sum + e.count, 0)
+    const targetTotal = (incoming.get(edge.target) ?? []).reduce((sum, e) => sum + e.count, 0)
+    const sourceBand = sourceTotal > 0 ? (edge.count / sourceTotal) * sourceHeight : 0
+    const targetBand = targetTotal > 0 ? (edge.count / targetTotal) * targetHeight : 0
+    const sy0 = source.y0 + (sourceCursor.get(edge.source) ?? 0)
+    const ty0 = target.y0 + (targetCursor.get(edge.target) ?? 0)
+    sourceCursor.set(edge.source, (sourceCursor.get(edge.source) ?? 0) + sourceBand)
+    targetCursor.set(edge.target, (targetCursor.get(edge.target) ?? 0) + targetBand)
+    links.push({
+      source: edge.source,
+      target: edge.target,
+      count: edge.count,
+      sy0,
+      ty0,
+      width: Math.max(0.6, Math.min(sourceBand, targetBand)),
+    })
+  }
+  return { nodes, links }
+}
+
+function ribbon(source: SankeyNode, target: SankeyNode, link: SankeyLink): string {
+  const curve = (source.x1 + target.x0) / 2
+  const sy1 = link.sy0 + link.width
+  const ty1 = link.ty0 + link.width
+  return [
+    `M${source.x1},${link.sy0}`,
+    `C${curve},${link.sy0} ${curve},${link.ty0} ${target.x0},${link.ty0}`,
+    `L${target.x0},${ty1}`,
+    `C${curve},${ty1} ${curve},${sy1} ${source.x1},${sy1}`,
+    'Z',
+  ].join(' ')
+}
+
 function ModelledFigure({ fixture }: { readonly fixture: JusticeFixture }) {
-  const max = Math.max(...fixture.modelled.edges.map((edge) => edge.count))
+  const width = 660
+  const height = 420
+  const margin = { top: 16, right: 150, bottom: 16, left: 8 }
+  const { nodes, links } = layoutSankey(
+    fixture.modelled.edges,
+    width - margin.left - margin.right,
+    height - margin.top - margin.bottom,
+  )
+  const byId = new Map(nodes.map((node) => [node.id, node]))
+  const total = fixture.modelled.edges
+    .filter((edge) => edge.source === 'registered')
+    .reduce((sum, edge) => sum + edge.count, 0)
+
   return (
-    <div className="mt-5 grid gap-2 sm:grid-cols-2">
-      {fixture.modelled.edges.map((edge) => (
-        <div
-          className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border border-[#D8C7F2] bg-[#FAF7FF] px-3 py-2"
-          key={`${edge.source}-${edge.target}`}
-        >
-          <span className="truncate text-xs">{humanize(edge.source)}</span>
-          <ArrowRight size={13} className="text-[#7C3AED]" />
-          <span className="truncate text-right text-xs font-semibold">{humanize(edge.target)}</span>
-          <div className="col-span-3 h-1 bg-[#EDE5F7]">
-            <div className="h-full bg-[#7C3AED]" style={{ width: `${(edge.count / max) * 100}%` }} />
-          </div>
-          <span className="col-span-3 text-right font-mono text-[10px] text-[--ink-soft]">
-            {format(edge.count)} generated paths
-          </span>
-        </div>
-      ))}
-    </div>
+    <figure className="mt-5 overflow-x-auto">
+      <svg
+        aria-label="Generated terminal-constrained case paths from registration to disposal"
+        className="min-w-[660px]"
+        role="img"
+        viewBox={`0 0 ${width} ${height}`}
+      >
+        <Group left={margin.left} top={margin.top}>
+          {links.map((link) => {
+            const source = byId.get(link.source)
+            const target = byId.get(link.target)
+            if (!source || !target) return null
+            return (
+              <path
+                d={ribbon(source, target, link)}
+                fill={COLORS[link.target] ?? '#7C3AED'}
+                fillOpacity={0.26}
+                key={`${link.source}-${link.target}`}
+              >
+                <title>{`${humanize(link.source)} → ${humanize(link.target)}: ${format(link.count)} generated paths`}</title>
+              </path>
+            )
+          })}
+          {nodes.map((node) => {
+            const terminal = node.x1 >= (width - margin.left - margin.right) - 1
+            return (
+              <Group key={node.id}>
+                <rect
+                  fill={COLORS[node.id] ?? '#7C3AED'}
+                  height={Math.max(1, node.y1 - node.y0)}
+                  width={node.x1 - node.x0}
+                  x={node.x0}
+                  y={node.y0}
+                />
+                <text
+                  className="tabular-nums"
+                  fill="#14181F"
+                  fontSize="10"
+                  x={terminal ? node.x1 + 6 : node.x0 - 6}
+                  textAnchor={terminal ? 'start' : 'end'}
+                  y={(node.y0 + node.y1) / 2 + 3}
+                >
+                  {humanize(node.id)} · {format(node.value)}
+                </text>
+              </Group>
+            )
+          })}
+        </Group>
+      </svg>
+      <figcaption className="mt-2 text-[11px] leading-4 tabular-nums text-[--ink-soft]">
+        {format(total)} registered FIRs distributed over generated terminal-constrained paths.
+        Node height is the larger of a stage’s inflow and outflow; ribbon width is the path count.
+        Path <em>counts</em> are generated to reconcile with the observed terminal stages —
+        the transitions themselves are not recorded in the source.
+      </figcaption>
+    </figure>
   )
 }
 
