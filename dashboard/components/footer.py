@@ -15,7 +15,7 @@ def render_footer(df: pd.DataFrame) -> None:
     with metadata:
         st.caption(
             f"CipherWatch UI v{APP_VERSION} · System operational · "
-            "Historical source: repository-configured crime dataset · "
+            "Source: synthetic Bengaluru demonstration dataset · "
             "Human review required for all model outputs"
         )
     with action:
@@ -26,5 +26,5 @@ def render_footer(df: pd.DataFrame) -> None:
             mime="text/csv",
             icon=":material/download:",
             width="stretch",
-            help="Download the currently filtered historical records as CSV.",
+            help="Download the currently filtered synthetic records as CSV.",
         )

@@ -15,6 +15,26 @@ from config.settings import (
 )
 
 
+def _stable_quantile_categories(values, quantiles, labels):
+    """Bin counts without splitting equal values or failing on tied quantiles."""
+    upper_bounds = [values.quantile(value) for value in quantiles]
+    upper_bounds.append(values.max())
+    edges = [0, *upper_bounds]
+    if all(left < right for left, right in zip(edges, edges[1:])):
+        return pd.cut(values, bins=edges, labels=labels)
+
+    # Sparse filtered datasets often have counts of only 1, 2, or 3. Ranking
+    # distinct count values preserves equal-count labels and avoids duplicate
+    # quantile edges.
+    dense_percentile = values.rank(method="dense", pct=True)
+    return pd.cut(
+        dense_percentile,
+        bins=[0, *quantiles, 1],
+        labels=labels,
+        include_lowest=True,
+    )
+
+
 class CrimeClusterer:
     """DBSCAN clustering for spatial hotspot detection."""
     
@@ -69,15 +89,29 @@ class CrimeClusterer:
                 )
             })
         
-        cluster_df = pd.DataFrame(cluster_stats).sort_values("incident_count", ascending=False)
-        
+        cluster_columns = [
+            "cluster_id",
+            "incident_count",
+            "center_lat",
+            "center_lon",
+            "primary_neighborhood",
+            "density_score",
+        ]
+        cluster_df = pd.DataFrame(cluster_stats, columns=cluster_columns)
+        if cluster_df.empty:
+            cluster_df["risk_level"] = pd.Series(dtype="string")
+            return cluster_df, n_clusters, n_noise
+
+        cluster_df = cluster_df.sort_values(
+            "incident_count",
+            ascending=False,
+        )
+
         # Add risk levels
-        cluster_df["risk_level"] = pd.cut(
+        cluster_df["risk_level"] = _stable_quantile_categories(
             cluster_df["incident_count"],
-            bins=[0, cluster_df["incident_count"].quantile(0.33), 
-                  cluster_df["incident_count"].quantile(0.67), 
-                  cluster_df["incident_count"].max()],
-            labels=["🟡 Moderate", "🟠 High", "🔴 Critical"]
+            (0.33, 0.67),
+            ["🟡 Moderate", "🟠 High", "🔴 Critical"],
         )
         
         return cluster_df, n_clusters, n_noise
@@ -113,12 +147,10 @@ class NeighborhoodRiskPredictor:
         neighborhood_risk = neighborhood_risk.merge(incident_counts, on="neighborhood")
         
         # Create risk categories
-        neighborhood_risk["risk_category"] = pd.cut(
+        neighborhood_risk["risk_category"] = _stable_quantile_categories(
             neighborhood_risk["total_incidents"],
-            bins=[0, neighborhood_risk["total_incidents"].quantile(0.50), 
-                  neighborhood_risk["total_incidents"].quantile(0.80), 
-                  neighborhood_risk["total_incidents"].max()],
-            labels=[0, 1, 2]
+            (0.50, 0.80),
+            [0, 1, 2],
         )
         
         return neighborhood_risk
@@ -183,12 +215,10 @@ class TimeLocationRiskClassifier:
             risk_features = ml_data.groupby(["hour", "weekday", "neighborhood"]).size().reset_index(name="incident_count")
             
             # Create risk categories FIRST
-            risk_features["risk"] = pd.cut(
+            risk_features["risk"] = _stable_quantile_categories(
                 risk_features["incident_count"],
-                bins=[0, risk_features["incident_count"].quantile(0.60), 
-                      risk_features["incident_count"].quantile(0.85), 
-                      risk_features["incident_count"].max()],
-                labels=["Low", "Medium", "High"]
+                (0.60, 0.85),
+                ["Low", "Medium", "High"],
             )
             
             # Encode categorical variables

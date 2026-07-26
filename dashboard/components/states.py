@@ -84,12 +84,10 @@ def render_error_state(
 def render_responsible_ai_notice(compact: bool = False) -> None:
     """Render the responsible-use disclosure required for predictive views."""
     message = (
-        "CipherWatch provides analytical estimates based on historical "
-        "reported-crime data. Predictions may reflect reporting patterns, data "
-        "quality limitations, demographic bias, geographic imbalance, and "
-        "historical enforcement practices. Results must be reviewed by qualified "
-        "human decision-makers and must not be used as the sole basis for "
-        "enforcement or individual-level decisions."
+        "CipherWatch is running on generated synthetic Bengaluru records, not "
+        "real reported crimes. Outputs demonstrate analytical behavior only and "
+        "must not be used for policing, safety claims, neighborhood ranking, "
+        "enforcement, or individual-level decisions."
     )
     class_name = "cw-ethics cw-ethics--compact" if compact else "cw-ethics"
     st.html(

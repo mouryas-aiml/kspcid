@@ -142,21 +142,21 @@ def render_filters(filter_options: dict) -> dict:
             "Year",
             year_options,
             key=FILTER_KEYS["years"],
-            help="Filter the historical incident period.",
+            help="Filter the synthetic incident period.",
         )
         selected_crime_types = st.multiselect(
             "Crime type",
             crime_types,
             key=FILTER_KEYS["crime_types"],
             placeholder="All crime types",
-            help="Select one or more recorded crime categories.",
+            help="Select one or more synthetic crime categories.",
         )
         selected_neighborhoods = st.multiselect(
-            "Neighborhood",
+            "Police station area",
             neighborhoods,
             key=FILTER_KEYS["neighborhoods"],
-            placeholder="All neighborhoods",
-            help="Select one or more geographic areas.",
+            placeholder="All police station areas",
+            help="Select one or more synthetic Bengaluru station areas.",
         )
         selected_arrest = st.selectbox(
             "Arrest status",

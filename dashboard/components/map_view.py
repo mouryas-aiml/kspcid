@@ -205,8 +205,8 @@ def render_map_workspace(df: pd.DataFrame, *, compact: bool = False) -> None:
             st.subheader("Layer legend")
             st.markdown(
                 """
-                - **Heat intensity:** relative density of mapped historical records.
-                - **Incident marker:** one historical record with available metadata.
+                - **Heat intensity:** relative density of mapped synthetic records.
+                - **Incident marker:** one synthetic record with available metadata.
                 - **Marker cluster:** a display grouping that expands as the map zooms.
                 - **Risk classification:** shown only in model-generated workspaces.
                 """
@@ -216,11 +216,11 @@ def render_map_workspace(df: pd.DataFrame, *, compact: bool = False) -> None:
         "Geographic density matrix",
         (
             "Interactive longitude-latitude bin counts derived from mapped "
-            "historical incident coordinates."
+            "synthetic incident coordinates."
         ),
         create_geographic_density_heatmap(geo_df),
         caption=(
-            "This density surface summarizes historical source points; it is "
+            "This density surface summarizes synthetic source points; it is "
             "not a risk prediction or hotspot-model output."
         ),
         key="cw_geographic_density_heatmap",
@@ -270,7 +270,7 @@ def _build_dbscan_map(stats: pd.DataFrame) -> folium.Map:
         radius = 5 + 17 * (float(row.incident_count) / max_count) ** 0.5
         color = _cluster_color(row.risk_level)
         popup = (
-            f"<b>Historical cluster {int(row.cluster_id)}</b><br>"
+            f"<b>Synthetic cluster {int(row.cluster_id)}</b><br>"
             f"Records: {int(row.incident_count):,}<br>"
             f"Primary area: {html.escape(str(row.primary_neighborhood))}<br>"
             f"Relative class: {html.escape(str(row.risk_level))}"
@@ -303,7 +303,7 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
 
     try:
         with st.status(
-            "Detecting historical spatial concentrations",
+            "Detecting synthetic spatial concentrations",
             expanded=False,
         ) as status:
             status.write(
@@ -325,7 +325,7 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
 
     if stats.empty:
         render_empty_state(
-            "No historical clusters detected",
+            "No synthetic clusters detected",
             "DBSCAN did not identify a density-based cluster for the active records.",
             "Broaden the filters or review another geographic period.",
             icon="scatter_plot",
@@ -335,7 +335,7 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
     largest = stats.iloc[0]
     densest = stats.loc[stats["density_score"].idxmax()]
     with st.container(horizontal=True):
-        st.metric("Historical clusters", f"{cluster_count:,}", border=True)
+        st.metric("Synthetic clusters", f"{cluster_count:,}", border=True)
         st.metric("Noise records", f"{noise_count:,}", border=True)
         st.metric(
             "Largest cluster",
@@ -364,12 +364,13 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
             st.subheader("Cluster interpretation")
             st.write(
                 "DBSCAN identifies density-based geographic concentrations "
-                "in historical coordinates. Circles represent cluster centers; "
-                "their size reflects historical record count."
+                "in synthetic coordinates. Circles represent cluster centers; "
+                "their size reflects synthetic record count."
             )
             st.warning(
-                "A historical cluster is not an individual incident, a forecast, "
-                "or a declaration that a community is unsafe.",
+                "A synthetic cluster is a demonstration artifact, not an "
+                "individual incident, forecast, or declaration that a "
+                "community is unsafe.",
                 icon=":material/info:",
             )
         with st.container(border=True):
@@ -386,13 +387,13 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
     render_chart_panel(
         "Hotspot cluster profile",
         (
-            "Historical record volumes for the 20 largest density-based DBSCAN "
+            "Synthetic record volumes for the 20 largest density-based DBSCAN "
             "clusters detected under the active controls."
         ),
         create_hotspot_cluster_chart(stats),
         caption=(
             "Cluster identifiers and concentration bands come directly from "
-            "the unchanged DBSCAN pipeline."
+            "the synthetic-sample-calibrated DBSCAN pipeline."
         ),
         key="cw_hotspot_cluster_profile",
     )
@@ -409,8 +410,8 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
     ].head(50).copy()
     display.columns = [
         "Cluster ID",
-        "Historical records",
-        "Primary neighborhood",
+        "Synthetic records",
+        "Primary station area",
         "Density score",
         "Relative concentration",
     ]
@@ -420,11 +421,11 @@ def render_hotspot_intelligence(df: pd.DataFrame) -> None:
         width="stretch",
         column_config={
             "Cluster ID": st.column_config.NumberColumn(format="%d"),
-            "Historical records": st.column_config.NumberColumn(format="%d"),
+            "Synthetic records": st.column_config.NumberColumn(format="%d"),
             "Density score": st.column_config.NumberColumn(format="%.2f"),
         },
         key="cw_cluster_register",
     )
     st.caption(
-        f"Showing the 50 largest of {cluster_count:,} detected historical clusters."
+        f"Showing the 50 largest of {cluster_count:,} detected synthetic clusters."
     )

@@ -1,4 +1,5 @@
 """Data loading and preprocessing functions."""
+import os
 import streamlit as st
 import pandas as pd
 from pathlib import Path
@@ -8,26 +9,105 @@ import sys
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root))
 
-from config.settings import DATA_FILES
+from config.settings import (
+    BENGALURU_BOUNDS,
+    DATA_FILE_ENV,
+    DATA_FILES,
+    DATASET_REQUIRED_COLUMNS,
+)
+
+
+def _configured_data_paths() -> list[Path]:
+    """Return one explicit override or the bundled dataset candidates."""
+    override = os.environ.get(DATA_FILE_ENV)
+    if override:
+        override_path = Path(override).expanduser()
+        if not override_path.is_file():
+            raise FileNotFoundError(
+                f"{DATA_FILE_ENV} does not point to a readable file: "
+                f"{override_path}"
+            )
+        return [override_path]
+
+    data_dir = Path(__file__).resolve().parents[1] / "data" / "processed"
+    return [data_dir / filename for filename in DATA_FILES]
+
+
+def _adapt_synthetic_schema(df: pd.DataFrame) -> pd.DataFrame:
+    """Add dashboard aliases when the full prepared dataset is mounted."""
+    aliases = {
+        "occurred_at": "datetime",
+        "crime_subcategory": "crime_type",
+        "police_station": "neighborhood",
+    }
+    adapted = df.copy()
+    for source, target in aliases.items():
+        if target not in adapted.columns and source in adapted.columns:
+            adapted[target] = adapted[source]
+
+    if "crime_type" in adapted.columns:
+        adapted["crime_type"] = (
+            adapted["crime_type"]
+            .astype("string")
+            .str.replace("_", " ", regex=False)
+            .str.title()
+        )
+    return adapted
+
+
+def _validate_synthetic_dataset(df: pd.DataFrame, source: Path) -> None:
+    """Reject incomplete, non-synthetic, or geographically invalid inputs."""
+    missing = sorted(DATASET_REQUIRED_COLUMNS.difference(df.columns))
+    if missing:
+        raise ValueError(
+            f"{source} is missing required dataset columns: {', '.join(missing)}"
+        )
+    if df.empty:
+        raise ValueError(f"{source} contains no incident rows.")
+
+    synthetic_values = (
+        df["is_synthetic"]
+        .astype("string")
+        .str.strip()
+        .str.lower()
+    )
+    if not synthetic_values.isin({"true", "1", "yes"}).all():
+        raise ValueError(
+            f"{source} is not the prepared synthetic Bengaluru dataset."
+        )
+
+    for column, (minimum, maximum) in BENGALURU_BOUNDS.items():
+        values = pd.to_numeric(df[column], errors="coerce")
+        if values.isna().any() or not values.between(minimum, maximum).all():
+            raise ValueError(
+                f"{source} contains invalid {column} values outside the "
+                "configured Bengaluru bounds."
+            )
 
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
 def load_crime_data():
-    """Load crime data from CSV files with caching."""
-    data_dir = Path(__file__).resolve().parents[1] / "data" / "processed"  # Look in processed folder
-    
-    for fname in DATA_FILES:
-        f = data_dir / fname
-        if f.exists():
+    """Load and validate the prepared synthetic Bengaluru incident dataset."""
+    candidates = _configured_data_paths()
+
+    for path in candidates:
+        if path.is_file():
             # Read header first to determine parse columns
-            hdr = pd.read_csv(f, nrows=1)
-            parse_cols = [c for c in ["datetime", "date"] if c in hdr.columns]
-            
+            header = pd.read_csv(path, nrows=0)
+            parse_cols = [
+                column
+                for column in ["datetime", "occurred_at", "date"]
+                if column in header.columns
+            ]
+
             # Load full dataset
-            df = pd.read_csv(f, parse_dates=parse_cols, low_memory=False)
+            df = pd.read_csv(path, parse_dates=parse_cols, low_memory=False)
+            df = _adapt_synthetic_schema(df)
+            _validate_synthetic_dataset(df, path)
             return df
-    
-    st.warning(f"No data found in {data_dir}; using empty frame.")
+
+    searched = ", ".join(str(path) for path in candidates)
+    st.warning(f"No configured synthetic dataset found. Searched: {searched}")
     return pd.DataFrame()
 
 
@@ -58,7 +138,7 @@ def process_datetime_columns(df):
         df["year"] = df["datetime"].dt.year
         df["hour"] = df["datetime"].dt.hour
         df["weekday"] = df["datetime"].dt.day_name()
-        df["month"] = df["datetime"].dt.to_period("M").astype(str)
+        df["month"] = df["datetime"].dt.strftime("%Y-%m")
     
     return df
 

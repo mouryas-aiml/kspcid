@@ -54,10 +54,10 @@ def create_geographic_density_heatmap(df: pd.DataFrame):
             nbinsx=42,
             nbinsy=42,
             colorscale=HEATMAP_SCALE,
-            colorbar=dict(title="Historical<br>records"),
+            colorbar=dict(title="Synthetic<br>records"),
             hovertemplate=(
                 "Longitude bin: %{x}<br>Latitude bin: %{y}<br>"
-                "Historical records: %{z}<extra></extra>"
+                "Synthetic records: %{z}<extra></extra>"
             ),
         )
     )
@@ -87,10 +87,10 @@ def create_day_hour_heatmap(df: pd.DataFrame):
             x=matrix.columns,
             y=matrix.index,
             colorscale=HEATMAP_SCALE,
-            colorbar=dict(title="Historical<br>records"),
+            colorbar=dict(title="Synthetic<br>records"),
             hovertemplate=(
                 "Day: %{y}<br>Hour: %{x}:00<br>"
-                "Historical records: %{z}<extra></extra>"
+                "Synthetic records: %{z}<extra></extra>"
             ),
         )
     )
@@ -119,10 +119,10 @@ def create_month_year_heatmap(df: pd.DataFrame):
             x=[calendar.month_abbr[month] for month in matrix.columns],
             y=[str(year) for year in matrix.index],
             colorscale=HEATMAP_SCALE,
-            colorbar=dict(title="Historical<br>records"),
+            colorbar=dict(title="Synthetic<br>records"),
             hovertemplate=(
                 "Month: %{x}<br>Year: %{y}<br>"
-                "Historical records: %{z}<extra></extra>"
+                "Synthetic records: %{z}<extra></extra>"
             ),
         )
     )
@@ -163,10 +163,10 @@ def create_neighborhood_crime_heatmap(
             x=matrix.columns,
             y=matrix.index,
             colorscale=HEATMAP_SCALE,
-            colorbar=dict(title="Historical<br>records"),
+            colorbar=dict(title="Synthetic<br>records"),
             hovertemplate=(
                 "Neighborhood: %{y}<br>Crime category: %{x}<br>"
-                "Historical records: %{z}<extra></extra>"
+                "Synthetic records: %{z}<extra></extra>"
             ),
         )
     )
@@ -185,23 +185,23 @@ def create_daily_trend_chart(df: pd.DataFrame):
         .assign(analysis_date=lambda frame: frame["datetime"].dt.floor("D"))
         .groupby("analysis_date")
         .size()
-        .rename("Historical records")
+        .rename("Synthetic records")
         .asfreq("D", fill_value=0)
         .reset_index()
     )
     daily["7-day moving average"] = (
-        daily["Historical records"].rolling(7, min_periods=1).mean()
+        daily["Synthetic records"].rolling(7, min_periods=1).mean()
     )
     fig = go.Figure()
     fig.add_trace(
         go.Bar(
             x=daily["analysis_date"],
-            y=daily["Historical records"],
+            y=daily["Synthetic records"],
             name="Observed daily records",
             marker_color="rgba(59,130,246,0.40)",
             hovertemplate=(
                 "Date: %{x|%d %b %Y}<br>"
-                "Historical records: %{y}<extra></extra>"
+                "Synthetic records: %{y}<extra></extra>"
             ),
         )
     )
@@ -220,7 +220,7 @@ def create_daily_trend_chart(df: pd.DataFrame):
     )
     fig.update_layout(title="Observed daily incident trend", barmode="overlay")
     fig.update_xaxes(title="Date")
-    fig.update_yaxes(title="Historical records")
+    fig.update_yaxes(title="Synthetic records")
     return fig
 
 
@@ -251,9 +251,9 @@ def create_hotspot_cluster_chart(stats: pd.DataFrame):
         y="cluster_label",
         orientation="h",
         color="relative_concentration",
-        title="Largest DBSCAN historical clusters",
+        title="Largest DBSCAN synthetic clusters",
         labels={
-            "incident_count": "Historical records",
+            "incident_count": "Synthetic records",
             "cluster_label": "",
             "relative_concentration": "Relative concentration",
         },
@@ -275,7 +275,7 @@ def create_risk_distribution_chart(risk_features: pd.DataFrame):
         risk_features[["risk", "predicted_risk"]]
         .rename(
             columns={
-                "risk": "Historical density-derived class",
+                "risk": "Synthetic density-derived class",
                 "predicted_risk": "Model-predicted class",
             }
         )
@@ -298,7 +298,7 @@ def create_risk_distribution_chart(risk_features: pd.DataFrame):
             "series": "",
         },
         color_discrete_map={
-            "Historical density-derived class": COLORS["blue"],
+            "Synthetic density-derived class": COLORS["blue"],
             "Model-predicted class": COLORS["purple"],
         },
     )

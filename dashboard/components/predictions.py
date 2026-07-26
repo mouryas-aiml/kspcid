@@ -190,9 +190,9 @@ def _risk_card(
     color = RISK_COLORS.get(risk, COLORS["cyan"])
     symbol = {"High": "▲", "Medium": "◆", "Low": "●"}.get(risk, "◇")
     explanation = {
-        "High": "Elevated incident likelihood for the selected historical pattern.",
-        "Medium": "Moderate incident likelihood for the selected historical pattern.",
-        "Low": "Lower relative incident likelihood for the selected historical pattern.",
+        "High": "Elevated model class for the selected synthetic pattern.",
+        "Medium": "Moderate model class for the selected synthetic pattern.",
+        "Low": "Lower relative model class for the selected synthetic pattern.",
     }.get(risk, "Model output available for the selected scenario.")
     st.html(
         f"""
@@ -228,9 +228,9 @@ def _scenario_form(df: pd.DataFrame) -> tuple[bool, str, str, int]:
             "are selecting values."
         )
         neighborhood = st.selectbox(
-            "Neighborhood",
+            "Police station area",
             neighborhoods,
-            help="Choose a location represented in the historical dataset.",
+            help="Choose an area represented in the synthetic dataset.",
         )
         weekday = st.selectbox(
             "Day of week",
@@ -326,15 +326,15 @@ def _render_scenario_result(result: dict) -> None:
     )
     metric_one, metric_two = st.columns(2)
     metric_one.metric(
-        "Historical baseline",
+        "Synthetic baseline",
         (
             f"{result['historical_count']:,} records"
             if result["historical_count"] is not None
             else "No exact baseline"
         ),
-        "Observed grouped count",
+        "Generated grouped count",
         border=True,
-        help="Historical grouped records for the exact selected scenario.",
+        help="Synthetic grouped records for the exact selected scenario.",
     )
     metric_two.metric(
         "Predicted incident count",
@@ -347,7 +347,7 @@ def _render_scenario_result(result: dict) -> None:
         border=True,
         help=(
             "Shown only when the existing regression pipeline has an exact "
-            "historical feature row for this scenario."
+            "synthetic feature row for this scenario."
         ),
     )
     with st.container(border=True):
@@ -363,9 +363,9 @@ def _render_scenario_result(result: dict) -> None:
             "evaluation metric, not scenario-level confidence."
         )
     st.warning(
-        "This output is a statistical estimate derived from historical incident "
-        "patterns. It should support human analysis and must not be interpreted "
-        "as certainty or used as the sole basis for operational decisions.",
+        "This output is a demonstration derived from synthetic incident "
+        "patterns. It is not evidence about a real area and must not be used "
+        "for operational decisions.",
         icon=":material/gavel:",
     )
 
@@ -398,7 +398,7 @@ def render_risk_assessment(df: pd.DataFrame) -> None:
             with _pipeline_status(
                 "Running the existing risk-assessment pipeline"
             ) as status:
-                status.write("Preparing historical time-location features.")
+                status.write("Preparing synthetic time-location features.")
                 risk_result = run_risk_pipeline(df)
                 status.write("Evaluating the selected scenario.")
                 try:
@@ -434,7 +434,7 @@ def render_risk_assessment(df: pd.DataFrame) -> None:
         else:
             render_empty_state(
                 "Assessment not yet executed",
-                "Choose a represented neighborhood, day, and hour.",
+                "Choose a represented police station area, day, and hour.",
                 "Select Execute risk assessment to generate a model output.",
                 icon="shield_question",
             )
@@ -462,7 +462,7 @@ def _render_high_risk_table(high_risk: pd.DataFrame) -> None:
         "Hour",
         "Day",
         "Neighborhood",
-        "Historical records",
+        "Synthetic records",
         "Model-generated risk",
     ]
     st.dataframe(
@@ -472,7 +472,7 @@ def _render_high_risk_table(high_risk: pd.DataFrame) -> None:
         key="cw_high_risk_register",
         column_config={
             "Hour": st.column_config.NumberColumn(format="%02d:00"),
-            "Historical records": st.column_config.NumberColumn(format="%d"),
+            "Synthetic records": st.column_config.NumberColumn(format="%d"),
         },
     )
     st.caption(
@@ -513,12 +513,12 @@ def _render_risk_classification(result: dict) -> None:
     render_chart_panel(
         "Risk-level distribution",
         (
-            "Comparison of historical density-derived target classes and "
+            "Comparison of synthetic density-derived target classes and "
             "model-generated classes for the same grouped scenarios."
         ),
         create_risk_distribution_chart(risk_features),
         caption=(
-            "The historical class is derived from incident-count quantiles; "
+            "The synthetic class is derived from incident-count quantiles; "
             "the predicted class is the unchanged classifier output."
         ),
         key="cw_risk_distribution_panel",
@@ -581,19 +581,19 @@ def _render_risk_classification(result: dict) -> None:
         x="historical_records",
         y="neighborhood",
         orientation="h",
-        title="Historical records within model-classified scenarios",
+        title="Synthetic records within model-classified scenarios",
         labels={
-            "historical_records": "Historical records",
+            "historical_records": "Synthetic records",
             "neighborhood": "Neighborhood",
         },
         color_discrete_sequence=[COLORS["cyan"]],
     )
     render_chart_panel(
         "Location risk intelligence",
-        "Historical record volume within scenarios classified as high risk.",
+        "Synthetic record volume within scenarios classified as high risk.",
         location_chart,
         caption=(
-            "This chart combines a historical count with a model-generated "
+            "This chart combines a synthetic count with a model-generated "
             "scenario class; it does not classify a community or individual."
         ),
         key="cw_risk_location_panel",
@@ -680,7 +680,7 @@ def _render_count_predictions(result: dict) -> None:
         "Hour",
         "Day",
         "Neighborhood",
-        "Observed historical count",
+        "Synthetic grouped count",
         "Predicted incident count",
     ]
     st.subheader("Predicted count register")
@@ -691,7 +691,7 @@ def _render_count_predictions(result: dict) -> None:
         key="cw_count_prediction_register",
         column_config={
             "Hour": st.column_config.NumberColumn(format="%02d:00"),
-            "Observed historical count": st.column_config.NumberColumn(
+            "Synthetic grouped count": st.column_config.NumberColumn(
                 format="%d"
             ),
             "Predicted incident count": st.column_config.NumberColumn(
@@ -705,9 +705,9 @@ def _render_count_predictions(result: dict) -> None:
         x="incident_count",
         y="predicted_incident_count",
         color="neighborhood",
-        title="Observed historical baseline vs model-generated estimate",
+        title="Synthetic baseline vs model-generated estimate",
         labels={
-            "incident_count": "Observed historical count",
+            "incident_count": "Synthetic grouped count",
             "predicted_incident_count": "Predicted incident count",
             "neighborhood": "Neighborhood",
         },
@@ -833,7 +833,7 @@ def render_predictive_intelligence(df: pd.DataFrame) -> None:
                     ),
                     _temporal_heatmap(result["high_risk"]),
                     caption=(
-                        "Historical records and model-generated classifications "
+                        "Synthetic records and model-generated classifications "
                         "are aggregated by time only; no individual is assessed."
                     ),
                     key="cw_temporal_risk_panel",
@@ -845,7 +845,7 @@ def render_predictive_intelligence(df: pd.DataFrame) -> None:
                         st.info(
                             f"**{row.neighborhood}** · {row.weekday} · "
                             f"{int(row.hour):02d}:00 · "
-                            f"{int(row.incident_count):,} historical records",
+                            f"{int(row.incident_count):,} synthetic records",
                             icon=":material/radar:",
                         )
     except Exception as error:
@@ -996,7 +996,7 @@ def render_model_intelligence(df: pd.DataFrame) -> None:
     render_chart_panel(
         "Risk-classification confusion matrix",
         (
-            "Actual historical density-derived classes versus unchanged model "
+            "Actual synthetic density-derived classes versus model "
             "predictions on the held-out evaluation split."
         ),
         create_confusion_matrix_heatmap(

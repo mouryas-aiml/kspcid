@@ -61,7 +61,7 @@ def render_command_center(
         render_empty_state(
             "No incidents match the selected filters",
             "The command center has no records to analyse.",
-            "Adjust the date, neighborhood, or crime category and apply filters.",
+            "Adjust the date, police station area, or crime category and apply filters.",
             icon="search_off",
         )
         return
@@ -71,7 +71,7 @@ def render_command_center(
     with left:
         render_chart_panel(
             "Observed incident trend",
-            "Historical monthly record volume for the active controls.",
+            "Synthetic monthly record volume for the active controls.",
             create_monthly_trend_chart(filtered_df),
             caption=_data_period(filtered_df),
             key="cw_command_trend",
@@ -79,7 +79,7 @@ def render_command_center(
     with right:
         render_chart_panel(
             "Highest-volume crime types",
-            "Top historical categories in the active records.",
+            "Top synthetic categories in the active records.",
             create_top_crimes_chart(filtered_df),
             caption=_data_period(filtered_df),
             key="cw_command_types",
@@ -106,10 +106,10 @@ def _neighborhood_chart(df: pd.DataFrame):
         x="incidents",
         y="neighborhood",
         orientation="h",
-        title="Historical incidents by neighborhood",
+        title="Synthetic incidents by police station area",
         labels={
-            "incidents": "Historical incident records",
-            "neighborhood": "Neighborhood",
+            "incidents": "Synthetic incident records",
+            "neighborhood": "Police station area",
         },
         color_discrete_sequence=[COLORS["blue"]],
     )
@@ -131,7 +131,7 @@ def _arrest_chart(df: pd.DataFrame):
         x="status",
         y="incidents",
         title="Recorded arrest status",
-        labels={"status": "", "incidents": "Historical incident records"},
+        labels={"status": "", "incidents": "Synthetic incident records"},
         color="status",
         color_discrete_map={
             "Arrest recorded": COLORS["success"],
@@ -163,7 +163,7 @@ def render_incident_analytics(df: pd.DataFrame) -> None:
     with row_two:
         render_chart_panel(
             "Crime category distribution",
-            "Highest-volume historical crime categories.",
+            "Highest-volume synthetic crime categories.",
             create_top_crimes_chart(df),
             caption=_data_period(df),
             key="cw_incident_categories",
@@ -172,8 +172,8 @@ def render_incident_analytics(df: pd.DataFrame) -> None:
     row_three, row_four = st.columns(2, gap="medium")
     with row_three:
         render_chart_panel(
-            "Neighborhood comparison",
-            "Historical record volume by represented neighborhood.",
+            "Police station area comparison",
+            "Synthetic record volume by represented police station area.",
             _neighborhood_chart(df),
             caption=_data_period(df),
             key="cw_incident_neighborhoods",
@@ -191,10 +191,10 @@ def render_incident_analytics(df: pd.DataFrame) -> None:
         )
 
     render_chart_panel(
-        "Neighborhood and crime-category matrix",
+        "Police station area and crime-category matrix",
         (
-            "Observed historical record counts across the most represented "
-            "neighborhoods and crime categories."
+            "Synthetic record counts across the most represented police "
+            "station areas and crime categories."
         ),
         create_neighborhood_crime_heatmap(df),
         caption=(
@@ -229,7 +229,7 @@ def render_incident_analytics(df: pd.DataFrame) -> None:
             key="cw_incident_register",
             column_config={
                 "datetime": st.column_config.DatetimeColumn(
-                    "Reported date and time",
+                    "Synthetic event date and time",
                     format="DD MMM YYYY, HH:mm",
                 ),
                 "latitude": st.column_config.NumberColumn(format="%.5f"),
@@ -255,13 +255,13 @@ def render_temporal_intelligence(df: pd.DataFrame) -> None:
         st.metric(
             "Peak activity window",
             f"{peak_hour:02d}:00" if peak_hour is not None else "Unavailable",
-            "Observed historical hour",
+            "Synthetic sample hour",
             border=True,
         )
         st.metric(
             "Peak recorded day",
             peak_day or "Unavailable",
-            "Observed historical weekday",
+            "Synthetic sample weekday",
             border=True,
         )
         st.metric(
@@ -275,7 +275,7 @@ def render_temporal_intelligence(df: pd.DataFrame) -> None:
         st.info(
             f"**Observed pattern:** The highest recorded hour is "
             f"**{peak_hour:02d}:00**, and **{peak_day}** has the largest "
-            "historical weekday count under the active controls.",
+            "synthetic weekday count under the active controls.",
             icon=":material/insights:",
         )
 
@@ -306,7 +306,7 @@ def render_temporal_intelligence(df: pd.DataFrame) -> None:
                 "and hour combination."
             ),
             create_day_hour_heatmap(df),
-            caption="Darker and warmer cells indicate more historical records.",
+            caption="Darker and warmer cells indicate more synthetic records.",
             key="cw_temporal_day_hour_heatmap",
         )
     with heatmap_two:
@@ -314,7 +314,7 @@ def render_temporal_intelligence(df: pd.DataFrame) -> None:
             "Month and year heatmap",
             (
                 "Observed record volume by calendar month and year. The current "
-                "demonstration dataset contains one represented year."
+                "demonstration dataset contains five represented years."
             ),
             create_month_year_heatmap(df),
             caption="This view expands automatically when additional years exist.",
@@ -375,13 +375,14 @@ def render_system_information(
             st.subheader("Dataset status")
             st.success("Incident dataset loaded", icon=":material/database:")
             st.write(
-                "The repository currently loads the first configured file "
-                "available under `data/processed/`."
+                "The repository loads the validated synthetic Bengaluru sample "
+                "under `data/processed/`, or an explicit full-dataset path from "
+                "`CIPHERWATCH_DATA_FILE`."
             )
             st.warning(
-                "The bundled demonstration data originates from the LA Open "
-                "Data sample in this repository. The Karnataka State Police "
-                "branding does not change that source.",
+                "SYNTHETIC DATA: these are generated Bengaluru demonstration "
+                "records, not real crimes. Do not use them for policing, safety "
+                "claims, or neighborhood ranking.",
                 icon=":material/data_info_alert:",
             )
             st.write("Available fields:")
@@ -394,7 +395,7 @@ def render_system_information(
                 - **Spatial concentration:** existing DBSCAN clusterer
                 - **Risk classification:** existing Gradient Boosting classifier
                 - **Crime-count estimate:** existing Gradient Boosting regressor
-                - **Historical charts:** existing temporal and category functions
+                - **Synthetic charts:** existing temporal and category functions
                 - **Geographic display:** existing Folium heatmap and marker clusters
                 - **Analytical matrices:** frontend-only aggregations of existing records
                 - **Model diagnostics:** evaluation-only charts from unchanged outputs
@@ -413,8 +414,8 @@ def render_system_information(
             """
             CipherWatch separates four analytical concepts:
 
-            1. **Reported incident:** an individual historical source record.
-            2. **Historical cluster:** a density-based spatial concentration.
+            1. **Synthetic incident:** an individual generated demonstration record.
+            2. **Synthetic cluster:** a density-based spatial concentration.
             3. **Risk classification:** a model-generated category for grouped scenarios.
             4. **Predicted count:** a regression estimate for a represented grouped scenario.
             """

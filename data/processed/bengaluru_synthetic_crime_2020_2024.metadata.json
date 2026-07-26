@@ -1,0 +1,52 @@
+{
+  "title": "CipherWatch synthetic Bengaluru demonstration sample",
+  "warning": "SYNTHETIC DATA. NOT REAL BENGALURU CRIME RECORDS. NOT FOR POLICING, SAFETY CLAIMS, OR NEIGHBORHOOD RANKING.",
+  "source_file": "bengaluru_synthetic_crime_2020_2024.csv",
+  "source_sha256": "153aaa03ce2a50c33981b7b5daa11c55a00b290eaa2182f1ff84ebbc11ad8c10",
+  "source_rows": 1004894,
+  "sample_file": "bengaluru_synthetic_crime_2020_2024.csv",
+  "sample_sha256": "87e085a59bdcd4058b322c398fbba792ea156bbfb306fc51cc9b883c8c63fdfb",
+  "sampling": {
+    "method": "year-stratified deterministic UUID ordering (lexically smallest incident_id values)",
+    "rows_per_year": 2000,
+    "year_counts": {
+      "2020": 2000,
+      "2021": 2000,
+      "2022": 2000,
+      "2023": 2000,
+      "2024": 2000
+    }
+  },
+  "rows": 10000,
+  "date_range": {
+    "start": "2020-01-01T00:01:00+05:30",
+    "end": "2024-12-29T17:35:00+05:30"
+  },
+  "crime_types": 31,
+  "police_stations": 106,
+  "generation_versions": [
+    "blr-synthetic-v1.0.0"
+  ],
+  "schema": [
+    "incident_id",
+    "datetime",
+    "reported_date",
+    "crime_type",
+    "crime_category",
+    "neighborhood",
+    "police_division",
+    "police_station",
+    "station_code",
+    "locality",
+    "latitude",
+    "longitude",
+    "premise_category",
+    "weapon_category",
+    "victim_age",
+    "victim_sex",
+    "case_status",
+    "is_synthetic",
+    "source_dataset",
+    "generation_version"
+  ]
+}

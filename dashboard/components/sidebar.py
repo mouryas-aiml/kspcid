@@ -70,7 +70,7 @@ def render_sidebar_status(
         <section class="cw-system-grid" aria-label="System status">
             <div class="cw-system-cell">
                 <span>Dataset</span>
-                <strong><i class="cw-status-dot cw-status-dot--active"></i>Loaded</strong>
+                <strong><i class="cw-status-dot cw-status-dot--active"></i>Synthetic</strong>
             </div>
             <div class="cw-system-cell">
                 <span>Model</span>
@@ -102,7 +102,7 @@ def render_map_key() -> None:
             </div>
             <div class="cw-legend-item" style="color:#FFB020">
                 <i class="cw-legend-mark" aria-hidden="true"></i>
-                <span><strong>Medium risk</strong><br>Moderate historical concentration</span>
+                <span><strong>Medium risk</strong><br>Moderate synthetic concentration</span>
             </div>
             <div class="cw-legend-item" style="color:#22C55E">
                 <i class="cw-legend-mark" aria-hidden="true"></i>
@@ -110,7 +110,7 @@ def render_map_key() -> None:
             </div>
             <div class="cw-legend-item" style="color:#22D3EE">
                 <i class="cw-legend-mark cw-legend-mark--pulse" aria-hidden="true"></i>
-                <span><strong>Incident marker</strong><br>Reported historical record</span>
+                <span><strong>Incident marker</strong><br>Synthetic demonstration record</span>
             </div>
         </section>
         """

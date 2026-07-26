@@ -17,8 +17,8 @@ PAGE_DESCRIPTIONS = {
         "indicators, and model-generated risk intelligence."
     ),
     "Crime map": (
-        "Explore reported incidents, spatial clusters, neighborhood patterns, "
-        "and geographic risk indicators."
+        "Explore synthetic incidents, spatial clusters, police-station-area "
+        "patterns, and geographic risk indicators."
     ),
     "Incident analytics": (
         "Review incident volume, category distribution, neighborhood patterns, "
@@ -28,7 +28,7 @@ PAGE_DESCRIPTIONS = {
         "Analyse hourly, daily, monthly, and seasonal incident behaviour."
     ),
     "Geographic hotspots": (
-        "Inspect density-based historical incident concentrations detected by "
+        "Inspect density-based synthetic incident concentrations detected by "
         "the existing DBSCAN pipeline."
     ),
     "AI risk assessment": (
@@ -77,12 +77,12 @@ def render_top_header(
                 CipherWatch / <strong>{html.escape(page)}</strong>
             </div>
             <div class="cw-telemetry">
-                <span>Dataset <b>{html.escape(_date_range(source_df))}</b></span>
+                <span>Dataset <b>Synthetic · {html.escape(_date_range(source_df))}</b></span>
                 <span>Filtered <b>{len(filtered_df):,}</b></span>
                 <span>Analysed <b>{timestamp.strftime("%H:%M:%S")}</b></span>
                 <span class="cw-status-pill">
                     <i class="cw-status-dot cw-status-dot--active"></i>
-                    Operational
+                    Demonstration
                 </span>
             </div>
         </header>
@@ -116,7 +116,7 @@ def render_command_hero(source_df: pd.DataFrame) -> None:
                 Karnataka State Police · Intelligence operations
             </div>
             <h1>{html.escape(FULL_TITLE)}</h1>
-            <p>{html.escape(SUBTITLE)}. Last reported record: {html.escape(last_record)}.</p>
+            <p>{html.escape(SUBTITLE)}. Last synthetic event: {html.escape(last_record)}.</p>
         </section>
         """
     )

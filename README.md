@@ -7,11 +7,12 @@ time-location risk classification, crime-count estimation, and transparent model
 evaluation in a responsive dark cybersecurity interface.
 
 > [!IMPORTANT]
-> The current repository uses **demonstration crime data derived from a City of
-> Los Angeles Open Data sample**. It is not connected to live Karnataka State
-> Police systems, operational databases, dispatch systems, or official APIs.
-> Karnataka State Police branding describes the intended project context; it
-> does not change the source or jurisdiction of the bundled demonstration data.
+> The current repository uses a deterministic sample of the prepared
+> **Synthetic Bengaluru Crime Dataset 2020–2024**. These are generated
+> demonstration records, not real crimes. Do not use them for policing, safety
+> claims, neighborhood ranking, enforcement, or individual-level decisions.
+> CipherWatch is not connected to live Karnataka State Police systems,
+> operational databases, dispatch systems, or official APIs.
 
 ![CipherWatch command center](screenshots/cipherwatch_command_center.png)
 
@@ -215,8 +216,7 @@ sequenceDiagram
 ```
 
 1. Streamlit starts through `dashboard/app.py`.
-2. `load_crime_data()` searches `data/processed/` for the configured file names
-   in order and loads the first available file.
+2. `load_crime_data()` loads and validates the configured synthetic dataset.
 3. `process_datetime_columns()` parses or creates the datetime field and derives
    `year`, `hour`, `weekday`, and `month`.
 4. The sidebar reads available filter values from the loaded dataset.
@@ -234,15 +234,18 @@ sequenceDiagram
 
 ### Loading
 
-`src/data_loader.py` reads the first existing configured file:
+`src/data_loader.py` reads:
 
-1. `data/processed/cleaned_crime.csv`
-2. `data/processed/sample_la_crime_2024.csv`
+1. `CIPHERWATCH_DATA_FILE`, when set to an explicit prepared CSV path
+2. `data/processed/bengaluru_synthetic_crime_2020_2024.csv`
 
 The loader:
 
 - Reads the header first to identify parseable date columns.
-- Parses `datetime` or `date` when available.
+- Maps the full prepared schema to dashboard compatibility fields when needed.
+- Parses `datetime`, `occurred_at`, or `date` when available.
+- Requires synthetic provenance fields and Bengaluru coordinate bounds.
+- Rejects incomplete, non-synthetic, or geographically invalid inputs.
 - Uses Streamlit's data cache with a one-hour TTL.
 - Returns an empty DataFrame and UI warning when no configured file exists.
 
@@ -266,7 +269,7 @@ The current filter form supports:
 
 - One or more years
 - One or more crime categories
-- One or more neighborhoods
+- One or more police station areas
 - Arrest status only when the source contains `arrest_made`
 
 The bundled demonstration dataset does not contain `arrest_made`, so the arrest
@@ -282,44 +285,41 @@ CipherWatch uses the following terms deliberately:
 
 | Concept | Source | What it means | What it does not mean |
 |---|---|---|---|
-| Historical incident record | Dataset row | A reported record in the demonstration data | A verified real-time event |
-| Observed value | Aggregation of source rows | A count or pattern calculated from historical records | A future forecast |
-| Geographic density | Latitude/longitude binning or heatmap | Relative concentration of mapped historical points | A model prediction or individual risk |
-| Hotspot cluster | DBSCAN output | A dense group of historical coordinates | A guarantee of future crime |
-| Density-derived risk class | Quantile label from grouped historical counts | Training target for Low/Medium/High grouping | Ground truth about a person or community |
+| Synthetic incident record | Dataset row | A generated demonstration record | A reported or verified real-world event |
+| Observed value | Aggregation of source rows | A count or pattern calculated from synthetic records | A real-world measurement or future forecast |
+| Geographic density | Latitude/longitude binning or heatmap | Relative concentration of generated points | A model prediction or individual risk |
+| Hotspot cluster | DBSCAN output | A dense group of synthetic coordinates | A real hotspot or guarantee of future crime |
+| Density-derived risk class | Quantile label from grouped synthetic counts | Training target for Low/Medium/High grouping | Ground truth about a person or community |
 | Risk prediction | Gradient Boosting classifier output | Model-generated class for a grouped time-location scenario | Scenario confidence or certainty |
 | Predicted crime count | Gradient Boosting regressor output | Estimated grouped historical-pattern count | A guaranteed future incident total |
 
 ## Maps, heatmaps, and analytical graphs
 
-All charts use existing rows or existing model outputs. CipherWatch does not
-generate synthetic incidents.
+All charts use the bundled generated rows or existing model outputs.
+CipherWatch does not present these synthetic incidents as observations.
 
 ### Geographic crime-density heatmap
 
 The **Crime map** uses valid latitude and longitude rows to build a Folium
-`HeatMap`. Density is relative to the historical points in the active filter.
+`HeatMap`. Density is relative to the synthetic points in the active filter.
 The same page includes an interactive binned longitude-latitude density matrix
 for detailed hover inspection.
 
 ### Day-of-week versus hour heatmap
 
-The **Temporal intelligence** workspace groups historical records by weekday and
+The **Temporal intelligence** workspace groups synthetic records by weekday and
 hour, fills the seven-by-twenty-four matrix with counts, and orders weekdays from
-Monday through Sunday. Each cell is an observed historical count.
+Monday through Sunday. Each cell is a generated-sample count.
 
 ### Month versus year heatmap
 
 Records are grouped by calendar year and month. The current demonstration
-dataset contains only 2024, so the matrix has one year row and twelve month
-columns. It will expand automatically if a future official dataset contains
-additional years.
+sample contains 2020–2024, so the matrix has five year rows.
 
 ### Neighborhood versus crime-category heatmap
 
 The **Incident analytics** workspace cross-tabulates the most represented
-neighborhoods and crime categories. This chart makes source imbalance visible:
-the bundled sample is heavily concentrated in one neighborhood.
+police station areas and crime categories.
 
 ### Feature-correlation heatmap
 
@@ -371,14 +371,15 @@ Existing configuration:
 
 | Parameter | Value | Purpose |
 |---|---:|---|
-| `DBSCAN_EPS` | `0.03` | Neighborhood radius in standardized coordinate space |
+| `DBSCAN_EPS` | `0.05` | Radius calibrated for the bundled synthetic sample in standardized coordinate space |
 | `DBSCAN_MIN_SAMPLES` | `10` | Minimum local point count for dense-region formation |
 | Minimum mapped records for UI | `50` | Prevents unhelpful very-small clustering views |
 
-Under the default demonstration dataset and settings, the unchanged pipeline
-identifies **232 historical clusters** and **1,429 noise records**.
+Under the bundled demonstration dataset and calibrated settings, the pipeline
+identifies **117 synthetic-coordinate clusters** and **2,530 noise records**
+when run across all five years.
 
-Cluster results describe historical coordinate density only. They are not
+Cluster results describe generated coordinate density only. They are not
 individual risk scores, forecasts, patrol instructions, or declarations that a
 community is unsafe.
 
@@ -401,6 +402,10 @@ the distribution of that historical count:
 - Low: through the 60th percentile
 - Medium: above the 60th through the 85th percentile
 - High: above the 85th percentile
+
+When a filtered slice has tied quantile edges (for example, grouped counts only
+equal to 1, 2, or 3), the pipeline bins the dense rank of the distinct count
+values. Equal counts always retain the same target label.
 
 The model inputs are:
 
@@ -760,9 +765,9 @@ It is not declared in `requirements.txt` and is not used by the live dashboard.
 |---|---|
 | Input unit | One grouped hour-weekday-neighborhood scenario |
 | Features | Hour, weekday encoding, neighborhood encoding, night, evening, weekend |
-| Target | Historical count-quantile class |
+| Target | Synthetic count-quantile class |
 | Output | Model-generated Low, Medium, or High |
-| Evaluation rows | Held-out 25% of 173 grouped scenarios |
+| Evaluation rows | Held-out 25% of 6,991 grouped scenarios |
 
 ### Active regressor
 
@@ -770,9 +775,9 @@ It is not declared in `requirements.txt` and is not used by the live dashboard.
 |---|---|
 | Input unit | One grouped hour-weekday-neighborhood scenario |
 | Features | Hour, weekday encoding, neighborhood encoding, hour average, neighborhood average, night, evening, weekend, rush hour |
-| Target | Observed grouped incident count |
+| Target | Synthetic grouped incident count |
 | Output | Model-generated numeric grouped count |
-| Evaluation rows | Held-out 25% of 173 grouped scenarios |
+| Evaluation rows | Held-out 25% of 6,991 grouped scenarios |
 
 ## Evaluation metrics
 
@@ -859,44 +864,44 @@ of effect.
 ## Current demonstration results
 
 These results are produced by the existing models, features, parameters, and
-random split on the bundled 9,701-row sample.
+random split on the bundled 10,000-row synthetic sample.
 
 ### Risk classifier
 
 | Metric | Result |
 |---|---:|
-| Grouped scenarios | 173 |
-| Training accuracy | 100.0% |
-| Held-out accuracy | 47.7% |
-| Weighted precision | 44.8% |
-| Weighted recall | 47.7% |
-| Weighted F1 | 46.2% |
+| Grouped scenarios | 6,991 |
+| Training accuracy | 70.1% |
+| Held-out accuracy | 67.3% |
+| Weighted precision | 55.9% |
+| Weighted recall | 67.3% |
+| Weighted F1 | 56.8% |
 
 Held-out confusion matrix:
 
 | Actual \ Predicted | Low | Medium | High |
 |---|---:|---:|---:|
-| Low | 20 | 5 | 2 |
-| Medium | 7 | 1 | 3 |
-| High | 2 | 4 | 0 |
+| Low | 1,156 | 31 | 3 |
+| Medium | 389 | 19 | 3 |
+| High | 140 | 6 | 1 |
 
-The large training/test gap and zero correctly classified High rows in this
-particular held-out split demonstrate why these predictions must not be treated
-as operational certainty.
+The very low High-class recall in this split demonstrates why these outputs
+must not be treated as operational predictions.
 
 ### Crime-count regressor
 
 | Metric | Result |
 |---|---:|
-| Grouped scenarios | 173 |
-| Training R² | 0.976 |
-| Held-out R² | 0.820 |
-| Training MAE | 2.66 |
-| Held-out MAE | 8.03 |
-| Held-out RMSE | 9.98 |
+| Grouped scenarios | 6,991 |
+| Training R² | 0.218 |
+| Held-out R² | 0.062 |
+| Training MAE | 0.488 |
+| Held-out MAE | 0.516 |
+| Held-out RMSE | 0.700 |
 
-Metrics are evaluation results for the current demonstration split. They do not
-guarantee performance on future, live, or Karnataka-specific data.
+The low held-out R² means the regressor explains little of the synthetic
+grouped-count variance. Metrics are evaluation results for this demonstration
+split and do not establish operational validity.
 
 ## Dataset information
 
@@ -904,20 +909,22 @@ Current bundled dataset:
 
 | Attribute | Value |
 |---|---|
-| File | `data/processed/sample_la_crime_2024.csv` |
-| Source context | City of Los Angeles Open Data demonstration sample |
-| Records | 9,701 |
-| Date range | 1 January 2024 to 15 December 2024 |
-| Years represented | 2024 |
-| Neighborhood labels | 5 |
-| Crime categories | 83 |
-| Source columns | `datetime`, `crime_type`, `neighborhood`, `latitude`, `longitude` |
+| File | `data/processed/bengaluru_synthetic_crime_2020_2024.csv` |
+| Source context | Prepared synthetic Bengaluru demonstration dataset |
+| Records | 10,000 |
+| Date range | 1 January 2020 to 29 December 2024 |
+| Years represented | 2020–2024 (2,000 per year) |
+| Police station areas | 106 |
+| Crime types represented | 31 |
+| Generation version | `blr-synthetic-v1.0.0` |
+| Sample SHA-256 | `87e085a59bdcd4058b322c398fbba792ea156bbfb306fc51cc9b883c8c63fdfb` |
 | Arrest status | Not supplied |
 | Live updates | None |
 
-The sample is geographically and categorically imbalanced. It should be used to
-demonstrate software and analytical workflows, not to make claims about
-Karnataka, Los Angeles communities, or future public-safety conditions.
+The full prepared CSV contains 1,004,894 rows but exceeds GitHub's file-size
+limit. The bundled sample is deterministic, year-stratified, and accompanied by
+checksummed metadata. It demonstrates software and analytical workflows only;
+it cannot support claims about Bengaluru or future public-safety conditions.
 
 ## Dashboard workspaces
 
@@ -998,15 +1005,15 @@ city-crime/
 ├── data/
 │   ├── README.md
 │   └── processed/
-│       └── sample_la_crime_2024.csv    # Demonstration dataset
+│       ├── bengaluru_synthetic_crime_2020_2024.csv
+│       └── bengaluru_synthetic_crime_2020_2024.metadata.json
 ├── docs/                               # Supplementary project documentation
 ├── screenshots/                        # Current README screenshots
 ├── scripts/
 │   ├── clean_data.py                   # Data utility
-│   ├── download_sample_data.py         # Demonstration-data utility
-│   ├── fetch_la_data.py                # LA data utility
 │   ├── geo_utils.py                    # Folium heatmap/marker helpers
-│   └── model_comparison.py             # Optional comparison experiment
+│   ├── model_comparison.py             # Optional comparison experiment
+│   └── prepare_synthetic_sample.py      # Deterministic sample builder
 ├── src/
 │   ├── data_loader.py                  # Loading, datetime preparation, filters
 │   ├── ml_models.py                    # Existing ML classes
@@ -1087,7 +1094,7 @@ python -B -c "from src.data_loader import load_crime_data, process_datetime_colu
 Expected with the bundled sample:
 
 ```text
-(9701, ...) 2024-01-01 00:01:00 2024-12-15 13:00:00
+(10000, ...) 2020-01-01 00:01:00+05:30 2024-12-29 17:35:00+05:30
 ```
 
 ### Model smoke test
@@ -1163,21 +1170,22 @@ ok
 
 ## Limitations
 
-1. The bundled data is a demonstration LA sample, not operational Karnataka data.
-2. The sample contains 9,701 rows and only one year, which limits temporal
-   generalization.
-3. Neighborhood coverage is highly imbalanced.
+1. The bundled data is synthetic demonstration data, not operational Karnataka
+   State Police data.
+2. The 10,000-row bundled artifact is a sample of the complete prepared
+   1,004,894-row synthetic dataset.
+3. Generated police-station-area patterns are not measurements of real areas.
 4. Arrest status is absent.
-5. Models train on 173 grouped scenarios, a small evaluation base.
-6. The current classifier's held-out accuracy is 47.7%, with a substantial
-   training/test gap.
+5. Models train on 6,991 grouped synthetic scenarios.
+6. The current classifier has poor High-class recall despite 67.3% aggregate
+   held-out accuracy.
 7. Risk targets are historical count quantiles, not validated operational harm
    labels.
 8. DBSCAN uses latitude and longitude only; it does not incorporate time,
    category, population, reporting exposure, or causal context.
 9. Predicted counts apply only to represented grouped feature rows.
 10. Feature importance and correlation do not establish causality.
-11. Historical reporting and enforcement practices can create bias.
+11. Donor-distribution and generation choices can create synthetic bias.
 12. The project has no live API, official police integration, authentication,
     case-management connection, or real-time alerting.
 13. Visual QA cannot represent every browser, device, or assistive technology.
@@ -1185,14 +1193,12 @@ ok
 ## Responsible AI notice
 
 > [!WARNING]
-> CipherWatch model predictions are statistical estimates based on historical
-> reported-crime data. They may reflect reporting patterns, data-quality issues,
-> geographic imbalance, demographic bias, and historical enforcement practices.
-> Predictions are not guaranteed future events and must not be used as the sole
-> basis for enforcement, detention, surveillance, patrol allocation, or any
-> decision affecting an individual or community. Qualified human review,
-> documented policy, legal authority, fairness assessment, and independent
-> validation are required before any operational use.
+> CipherWatch model outputs are demonstrations trained on generated synthetic
+> Bengaluru records, not real reported crimes. They may reflect donor
+> distributions, generation choices, and sampling artifacts. Outputs must not be
+> used for policing, safety claims, neighborhood ranking, enforcement,
+> detention, surveillance, patrol allocation, or decisions affecting an
+> individual or community.
 
 CipherWatch does not predict whether an individual will commit a crime. Its
 active models operate on grouped hour-weekday-neighborhood patterns in a
@@ -1261,6 +1267,6 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 
 ## Acknowledgments
 
-- City of Los Angeles Open Data for the demonstration-data context
+- The KPSCID synthetic Bengaluru data preparation and validation pipeline
 - Streamlit, Pandas, NumPy, Plotly, Folium, Streamlit-Folium, and scikit-learn
 - Open-source contributors supporting reproducible and responsible data science

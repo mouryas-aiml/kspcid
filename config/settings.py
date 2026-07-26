@@ -6,7 +6,8 @@ DEFAULT_ZOOM = 11
 MAP_TILES = "cartodbpositron"
 
 # ML Model parameters
-DBSCAN_EPS = 0.03
+# Calibrated against the bundled 2,000-row-per-year Bengaluru synthetic sample.
+DBSCAN_EPS = 0.05
 DBSCAN_MIN_SAMPLES = 10
 
 RANDOM_FOREST_ESTIMATORS = 100
@@ -26,6 +27,21 @@ MIN_PREDICTION_DATA = 50
 DEFAULT_YEAR = 2024
 ACCENT_COLOR = "#00d4ff"
 
-# File paths - CHECK THE PROCESSED FOLDER
-DATA_FOLDER = "processed"  # Your data is in data/processed/
-DATA_FILES = ["cleaned_crime.csv", "sample_la_crime_2024.csv"]
+# Dataset contract
+DATA_FOLDER = "processed"
+DATA_FILES = ["bengaluru_synthetic_crime_2020_2024.csv"]
+DATA_FILE_ENV = "CIPHERWATCH_DATA_FILE"
+DATASET_REQUIRED_COLUMNS = {
+    "datetime",
+    "crime_type",
+    "neighborhood",
+    "latitude",
+    "longitude",
+    "incident_id",
+    "is_synthetic",
+    "generation_version",
+}
+BENGALURU_BOUNDS = {
+    "latitude": (12.7, 13.3),
+    "longitude": (77.3, 78.0),
+}

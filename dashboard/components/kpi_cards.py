@@ -36,9 +36,9 @@ def render_kpi_grid(source_df: pd.DataFrame, filtered_df: pd.DataFrame) -> None:
         st.metric(
             "Total incidents",
             f"{len(source_df):,}",
-            "Data loaded",
+            "Synthetic data loaded",
             border=True,
-            help="Total historical records loaded from the active dataset.",
+            help="Total synthetic demonstration records loaded from the active dataset.",
         )
         st.metric(
             "Filtered incidents",
@@ -55,27 +55,27 @@ def render_kpi_grid(source_df: pd.DataFrame, filtered_df: pd.DataFrame) -> None:
             help="Share of filtered records marked with an arrest, when available.",
         )
         st.metric(
-            "Neighborhoods analysed",
+            "Station areas analysed",
             f"{neighborhoods:,}",
             "Geographic coverage",
             border=True,
-            help="Unique neighborhoods represented by the filtered records.",
+            help="Unique police station areas represented by the filtered records.",
         )
 
     with st.container(horizontal=True, gap="small"):
         st.metric(
             "Highest incident area",
             _top_value(filtered_df, "neighborhood"),
-            "Historical concentration",
+            "Synthetic concentration",
             border=True,
-            help="Neighborhood with the largest filtered historical record count.",
+            help="Police station area with the largest filtered synthetic record count.",
         )
         st.metric(
             "Most frequent crime type",
             _top_value(filtered_df, "crime_type"),
             "Observed category",
             border=True,
-            help="Most frequently reported crime category in the filtered data.",
+            help="Most frequent synthetic crime category in the filtered data.",
         )
         st.metric(
             "Estimated risk level",
@@ -120,6 +120,6 @@ def render_area_snapshot(df: pd.DataFrame) -> None:
     )
     st.write(f"Filtered incident count: **{len(df):,}**")
     st.caption(
-        "This panel reports historical concentrations. It is not a prediction "
+        "This panel summarizes synthetic concentrations. It is not a prediction "
         "or an individual-level safety classification."
     )

@@ -89,7 +89,7 @@ try:
             "Preparing incident intelligence",
             expanded=False,
         ) as load_status:
-            load_status.write("Loading the configured historical dataset.")
+            load_status.write("Loading the configured synthetic Bengaluru dataset.")
             source_df = load_crime_data()
             if source_df.empty:
                 load_status.update(
