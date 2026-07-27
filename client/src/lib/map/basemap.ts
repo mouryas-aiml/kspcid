@@ -14,8 +14,9 @@
  */
 import { layers, namedFlavor } from '@protomaps/basemaps'
 import { addProtocol, type StyleSpecification } from 'maplibre-gl'
-import { Protocol } from 'pmtiles'
+import { PMTiles, Protocol } from 'pmtiles'
 import { isCatalystClientHosting, publicPath } from '@/lib/publicPath'
+import { ChunkedPmtilesSource } from './chunkedPmtiles'
 
 export const BASEMAP_SOURCE = 'protomaps'
 const cloudMode = (process.env.NEXT_PUBLIC_DEMO_MODE ?? 'offline') !== 'offline'
@@ -23,8 +24,11 @@ const stratusBase = process.env.NEXT_PUBLIC_STRATUS_BASE_URL?.replace(/\/+$/, ''
 if (cloudMode && !stratusBase) {
   throw new Error('NEXT_PUBLIC_STRATUS_BASE_URL is required in cloud mode')
 }
-export const BASEMAP_ARCHIVE =
-  cloudMode && stratusBase
+const CHUNKED_ARCHIVE_KEY = 'kspcid-bengaluru-chunked'
+const useChunkedArchive = isCatalystClientHosting && !stratusBase
+export const BASEMAP_ARCHIVE = useChunkedArchive
+  ? CHUNKED_ARCHIVE_KEY
+  : cloudMode && stratusBase
     ? `${stratusBase}/tiles/bengaluru.pmtiles`
     : publicPath('/tiles/bengaluru.pmtiles')
 
@@ -72,8 +76,18 @@ let protocolRegistered = false
  * protocol registration.
  */
 export function registerPmtilesProtocol(): void {
-  if (protocolRegistered || isCatalystClientHosting) return
+  if (protocolRegistered) return
   const protocol = new Protocol()
+  if (useChunkedArchive) {
+    protocol.add(
+      new PMTiles(
+        new ChunkedPmtilesSource(
+          CHUNKED_ARCHIVE_KEY,
+          publicPath('/tiles/bengaluru-pmtiles'),
+        ),
+      ),
+    )
+  }
   addProtocol('pmtiles', protocol.tile)
   protocolRegistered = true
 }
@@ -88,24 +102,6 @@ function isWaterFill(id: string): boolean {
 
 /** Build the §3.4 style. `lang` follows §5.3's bilingual intent. */
 export function buildBasemapStyle(lang = 'en'): StyleSpecification {
-  // Catalyst Web Client Hosting does not honor the PMTiles byte-range reads:
-  // Chrome begins a 39 MB transfer and PMTiles aborts it. The submission build
-  // therefore keeps the analytical overlays on a neutral canvas and avoids the
-  // incompatible request entirely. Root/offline builds retain the full map.
-  if (isCatalystClientHosting) {
-    return {
-      version: 8,
-      sources: {},
-      layers: [
-        {
-          id: 'submission-background',
-          type: 'background',
-          paint: { 'background-color': '#171D26' },
-        },
-      ],
-    }
-  }
-
   const flavor = namedFlavor('dark')
   const base = layers(BASEMAP_SOURCE, flavor, { lang })
   const origin = typeof window === 'undefined' ? '' : window.location.origin

@@ -29,7 +29,7 @@ import { BLR_CENTER, INITIAL_VIEW_STATE } from '@/lib/geo'
 import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
 import { dur } from '@/lib/motion'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { publicPath } from '@/lib/publicPath'
+import { fetchPublicArtifact } from '@/lib/publicPath'
 import { OpsShell } from '@/components/shell/OpsShell'
 import type { Provenance } from '@/lib/provenance'
 
@@ -266,7 +266,7 @@ export function CommandFeed() {
   const [replayElapsed, setReplayElapsed] = useState(60_000)
 
   useEffect(() => {
-    fetch(publicPath('/data/scenarios/command_feed.json'))
+    fetchPublicArtifact('/data/scenarios/command_feed.json')
       .then((response) => {
         if (!response.ok) throw new Error(`Feed snapshot request failed (${response.status})`)
         return response.json() as Promise<FeedFixture>

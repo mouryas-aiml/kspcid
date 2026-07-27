@@ -27,7 +27,7 @@ import type {
   SnapshotNode,
 } from '@/lib/graph/types'
 import type { Provenance } from '@/lib/provenance'
-import { publicPath } from '@/lib/publicPath'
+import { fetchPublicArtifact } from '@/lib/publicPath'
 
 const GraphCanvas = dynamic(() => import('./GraphCanvas'), {
   ssr: false,
@@ -439,10 +439,10 @@ export function CaseConstellation() {
       setError('NEXT_PUBLIC_CATALYST_API_BASE is required in cloud mode')
       return
     }
-    const snapshotUrl = offline
-      ? publicPath('/data/graph/graph_snapshot.json')
-      : `${apiBase}/graph`
-    void fetch(snapshotUrl)
+    const snapshotRequest = offline
+      ? fetchPublicArtifact('/data/graph/graph_snapshot.json')
+      : fetch(`${apiBase}/graph`)
+    void snapshotRequest
       .then((response) => {
         if (!response.ok) throw new Error(`Graph snapshot HTTP ${response.status}`)
         return response.json() as Promise<GraphSnapshot>

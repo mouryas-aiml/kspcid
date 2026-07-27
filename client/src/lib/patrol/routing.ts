@@ -8,12 +8,12 @@ import type {
   RoutingRegion,
   HexIndex,
 } from './types'
-import { publicPath } from '../publicPath'
+import { fetchPublicArtifact } from '../publicPath'
 
-const DATA_ROOT = publicPath('/data')
+const DATA_ROOT = '/data'
 
 async function fetchJson<T>(path: string): Promise<T> {
-  const response = await fetch(path)
+  const response = await fetchPublicArtifact(path)
   if (!response.ok) throw new Error(`Unable to load ${path}: ${response.status}`)
   return response.json() as Promise<T>
 }
@@ -22,7 +22,7 @@ async function fetchTypedArray<T extends Float32Array | Uint32Array>(
   path: string,
   create: (buffer: ArrayBuffer) => T,
 ): Promise<T> {
-  const response = await fetch(path)
+  const response = await fetchPublicArtifact(path)
   if (!response.ok) throw new Error(`Unable to load ${path}: ${response.status}`)
   return create(await response.arrayBuffer())
 }

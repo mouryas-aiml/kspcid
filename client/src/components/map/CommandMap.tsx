@@ -36,7 +36,7 @@ import { buildBasemapStyle, registerPmtilesProtocol } from '@/lib/map/basemap'
 import { dur } from '@/lib/motion'
 import type { Provenance } from '@/lib/provenance'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { isCatalystClientHosting, publicPath } from '@/lib/publicPath'
+import { fetchPublicArtifact } from '@/lib/publicPath'
 
 interface Cell {
   readonly h3_r9: string
@@ -106,7 +106,7 @@ const MAX_PULSES = 6
 /** §7.1 — pulse period. */
 const PULSE_MS = 1800
 /** 106 official station polygons, copied to `public/data/` by `sync-demo-data.mjs`. */
-const JURISDICTIONS_URL = publicPath('/data/reference/jurisdictions.geojson')
+const JURISDICTIONS_URL = '/data/reference/jurisdictions.geojson'
 
 interface JurisdictionProperties {
   readonly station_code: string
@@ -274,9 +274,8 @@ function MapCanvas({
   // Jurisdiction polygons are 2.5 MB and only ever a background wash, so they
   // load after the map rather than blocking it. Absent, the layer is skipped.
   useEffect(() => {
-    if (isCatalystClientHosting) return
     let live = true
-    fetch(JURISDICTIONS_URL)
+    fetchPublicArtifact(JURISDICTIONS_URL)
       .then((response) => (response.ok ? (response.json() as Promise<GeoJSON.FeatureCollection>) : null))
       .then((data) => {
         if (live && data) setJurisdictions(data)
@@ -588,7 +587,7 @@ export function CommandMap() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetch(publicPath('/data/scenarios/command_map.json'))
+    fetchPublicArtifact('/data/scenarios/command_map.json')
       .then((response) => {
         if (!response.ok) throw new Error(`Command Map snapshot failed (${response.status})`)
         return response.json() as Promise<CommandMapFixture>

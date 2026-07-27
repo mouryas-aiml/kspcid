@@ -1,8 +1,8 @@
 # Catalyst A1 / A4 provisioning report
 
-Date: 2026-07-26  
+Date: 2026-07-27
 Repository baseline: `d358856`  
-Cloud mutation performed in this work: **Development Web Client Hosting v1.0.2**
+Cloud mutation performed in this work: **Development Web Client Hosting v1.0.4**
 
 ## Outcome
 
@@ -11,21 +11,32 @@ project `KSPCID` (`94658000000014095`) in the Development environment:
 
 **Submission URL:** https://kspcid-932804752.development.catalystserverless.com/app/index.html
 
-Version `1.0.2` was verified on 2026-07-26 with public HTTP checks for the
-homepage, compiled CSS, Command Feed fixture, and Command Map HTML (all HTTP
-200), followed by a clean-browser run from the landing page into the rendered
-interactive Command Map. The Catalyst-specific export uses `/app` as its base
-path and includes a deep-route recovery page. `npm run check` passes before the
-deployment.
+Version `1.0.4` was verified on 2026-07-27 in seven empty-cache browser
+contexts. All routes rendered without failed requests or browser errors. The
+Catalyst-specific export uses `/app` as its base path, includes a deep-route
+recovery page, and keeps the same submission URL across versions.
 
-The Catalyst package was reduced from 66 MB to 25 MB. Web Client Hosting does
-not satisfy the PMTiles byte-range contract, so the Catalyst-only build omits
-the 39 MB archive and optional 2.4 MB jurisdiction wash, retaining the H3,
-reported-point, alert, and explanation overlays on a neutral canvas. A cold
-browser check measured 1.375 seconds from the landing-page click to a settled
-Command Map, with no failed requests. Root/offline builds retain the complete
-self-hosted basemap. The primary rail also includes a `CipherWatch` tab that
-opens `https://cipherwatch-ksp.streamlit.app/` in a new browser tab.
+Catalyst Web Client Hosting does not satisfy the PMTiles byte-range contract.
+The client now preserves the exact 39,135,099-byte archive as 150 static
+256-KiB chunks and reconstructs requested byte ranges in the browser. The
+default map chunks are requested in parallel from the HTML preload phase, so
+the complete street, water, neighborhood-label, jurisdiction, H3, point, and
+alert view is present when the interactive screen settles. The locally packed
+archive hash and a deployed chunk hash were verified byte-for-byte.
+
+The 15 application artifacts are also delivered losslessly: 24,486,480 source
+bytes become 3,683,930 gzip bytes; four-byte binary matrices use reversible
+byte shuffling before gzip. The build verifies every decompressed artifact
+against the original bytes. Large payloads are split and fetched in parallel,
+and a same-origin service worker plus idle route prefetch makes subsequent tabs
+reuse downloaded assets. Before this change, the raw graph took 54.9 seconds
+and the uncompressed duration matrix took 19.9 seconds from Catalyst. The final
+fresh-session readiness sweep measured Command Map 7.5 s, Command Feed 10.9 s,
+Patrol Lab 12.0 s, Case Constellation 7.9 s, Case Similarity 6.9 s, and Justice
+Pipeline 7.1 s, including the complete map on map-bearing screens. Cyber
+Intelligence Wing rendered cleanly in a separate 14.0-second cold check. The
+primary rail also includes a `CipherWatch` tab that opens
+`https://cipherwatch-ksp.streamlit.app/` in a new browser tab.
 
 The broader repository side of A4 is ready: the shared adapter supports ZCQL and
 Catalyst Search, deterministic Data Store CSVs and upsert configs are compiled,
@@ -47,7 +58,7 @@ gated and are deliberately deferred until after the hackathon submission.
 | 1 — project initialization | PASS (Development) | Project `94658000000014095` selected; `.catalystrc` and `catalyst.json` created |
 | 2 — Data Store | READY locally / NOT IMPORTED | Schema, five configs, CSV compiler, committed manifest, cloud verifier |
 | 3 — Stratus / NoSQL / Cache | READY locally / NOT UPLOADED | Six runtime objects, three NoSQL tables, 148 Cache keys |
-| 4 — functions / client / gateway | CLIENT DEPLOYED / BACKEND READY LOCALLY | Optimized Web Client Hosting v1.0.2 live; 14 function packages build; gateway and Slate remain deferred |
+| 4 — functions / client / gateway | CLIENT DEPLOYED / BACKEND READY LOCALLY | Full-map, lossless Web Client Hosting v1.0.4 live; 14 function packages build; gateway and Slate remain deferred |
 | 5 — Circuits | IMPLEMENTED LOCALLY / STOP gate | Seven real state functions and failure/idempotency tests pass; project DC and console Code View IDs remain unknown |
 
 ## What ships

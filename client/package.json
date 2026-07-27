@@ -5,9 +5,10 @@
   "scripts": {
     "predev": "npm run basemap && npm run sync:data",
     "dev": "next dev",
-    "prebuild": "npm run basemap && npm run sync:data",
+    "prebuild": "npm run basemap && npm run sync:data && npm run pack:catalyst",
     "build": "next build",
     "sync:data": "node scripts/sync-demo-data.mjs",
+    "pack:catalyst": "node scripts/pack-catalyst-assets.mjs",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck",
     "basemap": "node scripts/build-basemap.mjs"
