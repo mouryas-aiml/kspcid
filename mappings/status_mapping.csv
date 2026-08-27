@@ -1,0 +1,8 @@
+source_code,source_description,case_status
+,UNK,unknown
+AA,Adult Arrest,arrest_made
+AO,Adult Other,closed_other
+CC,UNK,unknown
+IC,Invest Cont,under_investigation
+JA,Juv Arrest,arrest_made
+JO,Juv Other,closed_other

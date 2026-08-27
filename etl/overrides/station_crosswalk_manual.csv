@@ -1,0 +1,39 @@
+# Reviewed station crosswalk (BUILD_SPEC §6.4 step 02).
+# This file is the source of truth wherever it has a row. A row with an empty
+# is_territorial column is an UNREVIEWED PROPOSAL and is ignored by the script.
+#
+# is_territorial=true  + station_code set    -> mapped to a jurisdiction polygon
+# is_territorial=true  + station_code empty  -> territorial, but NO polygon exists
+#                                               for it in the 106-feature KSRSAC
+#                                               file. Kept in every count; cannot
+#                                               be drawn as a jurisdiction.
+# is_territorial=false                       -> holds no jurisdiction at all
+#                                               (city-wide investigative or
+#                                               functional unit).
+#
+# The 13 mapped rows below each resolve one of the 13 polygons that had no
+# reporting unit, so the assignment is 1:1 and exhaustive on both sides.
+unit_name,station_code,is_territorial,note
+Ashoknagar PS,PSB-795,true,"Transliteration variant of 'Ashokanagara' (edit 0.83). Central division."
+Bagalagunte PS,PSB-112,true,"Transliteration variant of 'Bagalgunte' (edit 0.91). North division."
+Channammanakere Achu Kattu PS,PSB-140,true,"'C.K.Acchukattu' is the abbreviated form: C.K. = Channammanakere. South division."
+Gangammana Gudi PS,PSB-113,true,"Spacing variant of 'Gangammagudi' (edit 0.86). North division."
+Kempegowda Nagar PS,PSB-141,true,"'K.G.Nagar' is the abbreviated form: K.G. = Kempegowda. South division."
+Madivala PS,PSB-151-01,true,"Transliteration variant of 'Madiwala' (edit 0.88). South East division."
+Mahalakshmipuram PS,PSB-107,true,"'Mahalakshmi Layout' - the only unclaimed North-division polygon for this locality."
+Mico Layout PS,PSB-801,true,"'Mico layout Bangalore' (token 0.80). South East division."
+R.M.C. Yard PS,PSB-110,true,"'Yeshwanthpura RMC Yard' - same yard, unit name drops the locality prefix. North division."
+Rajagopal Nagar PS,PSB-106,true,"Transliteration variant of 'Rajgopal Nagar' (edit 0.93). North division."
+Thilaknagar PS,PSB-152,true,"Transliteration variant of 'Tilak Nagar' (edit 0.91). South East division."
+Vidyaranyapura PS,PSB-127-01,true,"Transliteration variant of 'Vidhyaranyapura' (edit 0.93). North East division."
+Vishveshwarapuram PS,PSB-139,true,"'V.V. Puram' is the abbreviated form: V.V. = Vishveshwara. South division."
+Airport PS,,true,"Kempegowda International Airport, Devanahalli - outside the Bengaluru City jurisdiction file."
+BIAL PS,,true,"Bengaluru International Airport Ltd campus - outside the Bengaluru City jurisdiction file."
+Devanahalli PS,,true,"Bengaluru Rural fringe - no polygon in the 106-feature city file."
+Bowring Hospital PS,,true,"Hospital police post, not a jurisdiction. No polygon exists."
+Victoria Hospital PS,,true,"Hospital police post, not a jurisdiction. No polygon exists."
+Byadarahalli PS,,true,"Real west-Bengaluru station with no polygon in the KSRSAC snapshot. NOT Byappanahalli (east) despite edit 0.77."
+Chickpet PS,,true,"No Chickpet polygon in the 106-feature file; 91 FIRs only. Not merged into Cottonpet/Upparpet - that would be a silent reassignment."
+Govindapura PS,,true,"No polygon in the KSRSAC snapshot. Not merged into Siddapura (edit 0.64) - different locality."
+Govindaraja Nagar PS,,true,"Real west-Bengaluru station with no polygon. NOT Vijayanagar or Indiranagar despite name overlap."
+Thyagarajanagar PS,,true,"Real south-Bengaluru station with no polygon in the snapshot; 142 FIRs."

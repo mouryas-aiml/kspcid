@@ -1,0 +1,316 @@
+source_code,source_description,premise_category,broad_anchor_class
+,,unknown,built_other
+101,STREET,outdoor,outdoor
+102,SIDEWALK,outdoor,outdoor
+103,ALLEY,outdoor,outdoor
+104,DRIVEWAY,outdoor,outdoor
+105,PEDESTRIAN OVERCROSSING,built_other,built_other
+106,TUNNEL,built_other,built_other
+107,VACANT LOT,built_other,built_other
+108,PARKING LOT,outdoor,outdoor
+109,PARK/PLAYGROUND,public_institutional,public_institutional
+110,FREEWAY,built_other,built_other
+111,BUS-CHARTER/PRIVATE,transit,transit
+112,"BUS, SCHOOL, CHURCH",transit,transit
+113,"TRUCK, COMMERICAL",vehicle,outdoor
+114,TAXI,vehicle,outdoor
+115,AIRCRAFT,built_other,built_other
+116,OTHER/OUTSIDE,built_other,built_other
+117,BEACH,outdoor,outdoor
+118,CONSTRUCTION SITE,built_other,built_other
+119,"PORCH, RESIDENTIAL",residential,residential
+120,STORAGE SHED,built_other,built_other
+121,YARD (RESIDENTIAL/BUSINESS),residential,residential
+122,"VEHICLE, PASSENGER/TRUCK",vehicle,outdoor
+123,PARKING UNDERGROUND/BUILDING,outdoor,outdoor
+124,BUS STOP,transit,transit
+125,PAY PHONE,built_other,built_other
+126,"TRAIN, OTHER THAN MTA (ALSO QUERY 809/810/811)",transit,transit
+127,TRASH CAN/TRASH DUMPSTER,built_other,built_other
+128,BUS STOP/LAYOVER (ALSO QUERY 124),transit,transit
+129,"TERMINAL, OTHER THAN MTA",transit,transit
+135,MTA PROPERTY OR PARKING LOT,outdoor,outdoor
+136,"OTHER INTERSTATE, CHARTER BUS",transit,transit
+137,TRAM/STREETCAR(BOXLIKE WAG ON RAILS)*,built_other,built_other
+138,STAIRWELL*,built_other,built_other
+139,AMUSEMENT PARK*,public_institutional,public_institutional
+140,BALCONY*,built_other,built_other
+141,CEMETARY*,built_other,built_other
+142,DRIVE THRU*,built_other,built_other
+143,ESCALATOR*,built_other,built_other
+144,GOLF COURSE*,built_other,built_other
+145,MAIL BOX,built_other,built_other
+146,PATIO*,built_other,built_other
+147,POOL-PUBLIC/OUTDOOR OR INDOOR*,built_other,built_other
+148,PUBLIC RESTROOM/OUTSIDE*,built_other,built_other
+149,RIVER BED*,built_other,built_other
+150,TOOL SHED*,built_other,built_other
+151,TOW YARD*,residential,residential
+152,UNDERPASS/BRIDGE*,outdoor,outdoor
+154,TRAIN TRACKS,transit,transit
+155,DAM/RESERVOIR,built_other,built_other
+156,VALET,built_other,built_other
+157,"VEHICLE STORAGE LOT (CARS, TRUCKS, RV'S, BOATS, TRAILERS, ETC.)",vehicle,outdoor
+158,TRANSIENT ENCAMPMENT,built_other,built_other
+201,JEWELRY STORE,commercial,commercial
+202,LIQUOR STORE,commercial,commercial
+203,OTHER BUSINESS,commercial,commercial
+204,MANUFACTURING COMPANY,built_other,built_other
+205,GUN/SPORTING GOODS,built_other,built_other
+206,TV/RADIO/APPLIANCE,built_other,built_other
+207,BAR/COCKTAIL/NIGHTCLUB,commercial,commercial
+208,AUTO SALES LOT,built_other,built_other
+209,EQUIPMENT RENTAL,built_other,built_other
+210,RESTAURANT/FAST FOOD,commercial,commercial
+211,PAWN SHOP,commercial,commercial
+212,TRANSPORTATION FACILITY (AIRPORT),transit,transit
+213,WAREHOUSE,commercial,commercial
+214,"BUS DEPOT/TERMINAL, OTHER THAN MTA",transit,transit
+215,"TRAIN DEPOT/TERMINAL, OTHER THAN MTA",transit,transit
+216,SWAP MEET,built_other,built_other
+217,AUTO REPAIR SHOP,commercial,commercial
+218,BEAUTY/BARBER SHOP,commercial,commercial
+219,CLEANER/LAUNDROMAT,built_other,built_other
+220,NAIL SALON,built_other,built_other
+221,PUBLIC STORAGE,built_other,built_other
+222,LAUNDROMAT,built_other,built_other
+223,VIDEO RENTAL STORE,commercial,commercial
+224,SURPLUS SURVIVAL STORE,commercial,commercial
+225,RECORD-CD MUSIC/COMPUTER GAME STORE,commercial,commercial
+227,ABORTION CLINIC/ABORTION FACILITY*,public_institutional,public_institutional
+228,BOWLING ALLEY*,outdoor,outdoor
+229,CHECK CASHING*,built_other,built_other
+230,DAY CARE/ADULTS*,built_other,built_other
+231,DAY CARE/CHILDREN*,built_other,built_other
+232,"DELIVERY SERVICE (FED EX, UPS, COURIERS,COURIER SERVICE)*",built_other,built_other
+233,TATTOO PARLOR*,built_other,built_other
+234,OPTICAL OFFICE INSIDE STORE OR SUPERMARKET*,commercial,commercial
+235,PHARMACY INSIDE STORE OR SUPERMARKET*,commercial,commercial
+236,VISION CARE FACILITY*,built_other,built_other
+237,HOSPICE,built_other,built_other
+238,TELECOMMUNICATION FACILITY/LOCATION,built_other,built_other
+239,MEDICAL MARIJUANA FACILITIES/BUSINESSES,built_other,built_other
+240,DEPT OF DEFENSE FACILITY,built_other,built_other
+241,ENERGY PLANT/FACILITY,built_other,built_other
+242,"DISCOUNT STORE (99 CENT,DOLLAR,ETC.",commercial,commercial
+243,"DIY CENTER (LOWE'S,HOME DEPOT,OSH,CONTRACTORS WAREHOUSE)",commercial,commercial
+244,TOBACCO SHOP,commercial,commercial
+245,CATERING/ICE CREAM TRUCK,vehicle,outdoor
+246,METHADONE CLINIC,public_institutional,public_institutional
+247,CAR WASH,built_other,built_other
+248,CELL PHONE STORE,commercial,commercial
+249,NURSERY/FLOWER SHOP,commercial,commercial
+250,COMPUTER SERVICES/REPAIRS/SALES,built_other,built_other
+251,RECYCLING CENTER,built_other,built_other
+252,"COFFEE SHOP (STARBUCKS, COFFEE BEAN, PEET'S, ETC.)",commercial,commercial
+253,MORTUARY,built_other,built_other
+254,STUDIO (FILM/PHOTOGRAPHIC/MUSIC),built_other,built_other
+255,"AUTO DEALERSHIP (CHEVY, FORD, BMW, MERCEDES, ETC.)",built_other,built_other
+256,,unknown,built_other
+301,GAS STATION,transit,transit
+302,FACTORY,commercial,commercial
+303,OIL REFINERY,built_other,built_other
+304,GARMENT MANUFACTURER,built_other,built_other
+305,CHEMICAL STORAGE/MANUFACTURING PLANT,built_other,built_other
+401,MINI-MART,built_other,built_other
+402,MARKET,commercial,commercial
+403,DRUG STORE,commercial,commercial
+404,DEPARTMENT STORE,commercial,commercial
+405,CLOTHING STORE,commercial,commercial
+406,OTHER STORE,commercial,commercial
+407,HARDWARE/BUILDING SUPPLY,built_other,built_other
+408,AUTO SUPPLY STORE*,commercial,commercial
+409,BEAUTY SUPPLY STORE,commercial,commercial
+410,"MEMBERSHIP STORE (COSTCO,SAMS CLUB)*",commercial,commercial
+411,PET STORE,commercial,commercial
+412,"ELECTRONICS STORE (IE:RADIO SHACK, ETC.)",commercial,commercial
+413,FURNITURE STORE,commercial,commercial
+414,BOOK STORE,commercial,commercial
+415,THE GROVE,built_other,built_other
+416,THE BEVERLY CENTER,built_other,built_other
+417,THE BEVERLY CONNECTION,built_other,built_other
+418,,unknown,built_other
+501,SINGLE FAMILY DWELLING,residential,residential
+502,"MULTI-UNIT DWELLING (APARTMENT, DUPLEX, ETC)",residential,residential
+503,HOTEL,residential,residential
+504,OTHER RESIDENCE,residential,residential
+505,MOTEL,residential,residential
+506,ABANDONED BUILDING ABANDONED HOUSE,built_other,built_other
+507,CONDOMINIUM/TOWNHOUSE,residential,residential
+508,FRAT HOUSE/SORORITY/DORMITORY,built_other,built_other
+509,MOBILE HOME/TRAILERS/CONSTRUCTION TRAILERS/RV'S/MOTORHOME,built_other,built_other
+510,NURSING/CONVALESCENT/RETIREMENT HOME,built_other,built_other
+511,PROJECT/TENEMENT/PUBLIC HOUSING,built_other,built_other
+512,FOSTER HOME BOYS OR GIRLS*,built_other,built_other
+513,ABATEMENT LOCATION,built_other,built_other
+514,GROUP HOME,built_other,built_other
+515,APARTMENT/CONDO COMMON LAUNDRY ROOM,residential,residential
+516,SINGLE RESIDENCE OCCUPANCY (SRO'S) LOCATIONS,residential,residential
+517,MISSIONS/SHELTERS,built_other,built_other
+518,TRANSITIONAL HOUSING/HALFWAY HOUSE,built_other,built_other
+519,SHORT-TERM VACATION RENTAL,built_other,built_other
+601,SAVINGS & LOAN,built_other,built_other
+602,BANK,commercial,commercial
+603,CREDIT UNION,built_other,built_other
+604,FINANCE COMPANY,built_other,built_other
+605,AUTOMATED TELLER MACHINE (ATM),built_other,built_other
+606,DRIVE THRU BANKING (WINDOW)*,built_other,built_other
+607,BANKING INSIDE MARKET-STORE *,commercial,commercial
+608,BANK DROP BOX/MONEY DROP-OUTSIDE OF BANK*,commercial,commercial
+701,HOSPITAL,public_institutional,public_institutional
+702,OFFICE BUILDING/OFFICE,commercial,commercial
+703,ENTERTAINMENT/COMEDY CLUB (OTHER),built_other,built_other
+704,ELEMENTARY SCHOOL,public_institutional,public_institutional
+705,SLIPS/DOCK/MARINA/BOAT,built_other,built_other
+706,SEX ORIENTED/BOOK STORE/STRIP CLUB/GENTLEMAN'S CLUB,commercial,commercial
+707,GARAGE/CARPORT,residential,residential
+708,CHURCH/CHAPEL (CHANGED 03-03 FROM CHURCH/TEMPLE),public_institutional,public_institutional
+709,PUBLIC RESTROOM(INDOORS-INSIDE),built_other,built_other
+710,OTHER PREMISE,built_other,built_other
+711,"ARCADE,GAME ROOM/VIDEO GAMES (EXAMPLE CHUCKIE CHEESE)*",built_other,built_other
+712,COLISEUM,built_other,built_other
+713,CONVENTION CENTER,built_other,built_other
+714,DODGER STADIUM,built_other,built_other
+715,HORSE RACING/SANTA ANITA PARK*,public_institutional,public_institutional
+716,THEATRE/MOVIE,commercial,commercial
+717,HEALTH SPA/GYM,built_other,built_other
+718,MASSAGE PARLOR,built_other,built_other
+719,MEDICAL/DENTAL OFFICES,built_other,built_other
+720,JUNIOR HIGH SCHOOL,public_institutional,public_institutional
+721,HIGH SCHOOL,public_institutional,public_institutional
+722,COLLEGE/JUNIOR COLLEGE/UNIVERSITY,public_institutional,public_institutional
+723,PRIVATE SCHOOL/PRESCHOOL,public_institutional,public_institutional
+724,TRADE SCHOOL (MEDICAL-TECHNICAL-BUSINESS)*,public_institutional,public_institutional
+725,"GOVERNMENT FACILITY (FEDERAL,STATE, COUNTY & CITY)",public_institutional,public_institutional
+726,POLICE FACILITY,public_institutional,public_institutional
+727,SHOPPING MALL (COMMON AREA),commercial,commercial
+728,ELEVATOR,built_other,built_other
+729,SPECIALTY SCHOOL/OTHER,public_institutional,public_institutional
+730,SYNAGOGUE/TEMPLE,public_institutional,public_institutional
+731,MOSQUE*,public_institutional,public_institutional
+732,POST OFFICE,commercial,commercial
+733,BAR/SPORTS BAR (OPEN DAY & NIGHT),commercial,commercial
+734,HOCKEY RINK/ICE HOCKEY,built_other,built_other
+735,NIGHT CLUB (OPEN EVENINGS ONLY),built_other,built_other
+736,SKATEBOARD FACILITY/SKATEBOARD PARK*,public_institutional,public_institutional
+737,SKATING RINK*,built_other,built_other
+738,LIBRARY,public_institutional,public_institutional
+739,SPORTS ARENA,built_other,built_other
+740,OTHER PLACE OF WORSHIP,built_other,built_other
+741,STAPLES CENTER *,built_other,built_other
+742,"SPORTS VENUE, OTHER",built_other,built_other
+743,MASS GATHERING LOCATION,built_other,built_other
+744,HIGH-RISE BUILDING,built_other,built_other
+745,WATER FACILITY,built_other,built_other
+746,SEWAGE FACILITY/PIPE,built_other,built_other
+748,CULTURAL SIGNIFICANCE/MONUMENT,built_other,built_other
+750,CYBERSPACE,built_other,built_other
+751,WEBSITE,built_other,built_other
+752,FIRE STATION,transit,transit
+753,DETENTION/JAIL FACILITY,built_other,built_other
+754,MUSEUM,built_other,built_other
+755,VETERINARIAN/ANIMAL HOSPITAL,public_institutional,public_institutional
+756,MUSCLE BEACH,outdoor,outdoor
+757,BASKETBALL COURTS,built_other,built_other
+758,HANDBALL COURTS,built_other,built_other
+801,MTA BUS,transit,transit
+802,MUNICIPAL BUS LINE INCLUDES LADOT/DASH,transit,transit
+803,RETIRED (DUPLICATE) DO NOT USE THIS CODE,built_other,built_other
+804,GREYHOUND OR INTERSTATE BUS,transit,transit
+805,RETIRED (DUPLICATE) DO NOT USE THIS CODE,built_other,built_other
+809,METROLINK TRAIN,transit,transit
+810,AMTRAK TRAIN,transit,transit
+811,"OTHER RR TRAIN (UNION PAC, SANTE FE ETC",transit,transit
+834,LA UNION STATION (NOT LINE SPECIFIC),transit,transit
+835,7TH AND METRO CENTER (NOT LINE SPECIFIC),transit,transit
+836,HARBOR FRWY STATION (NOT LINE SPECIFIC),transit,transit
+868,MTA - ORANGE LINE - NORTH HOLLYWOOD,built_other,built_other
+869,MTA - ORANGE LINE - LAUREL CANYON,built_other,built_other
+870,MTA - ORANGE LINE - VALLEY COLLEGE,public_institutional,public_institutional
+871,MTA - ORANGE LINE - WOODMAN,built_other,built_other
+872,MTA - ORANGE LINE - VAN NUYS,built_other,built_other
+873,MTA - ORANGE LINE - SEPULVEDA,built_other,built_other
+874,MTA - ORANGE LINE - WOODLEY,built_other,built_other
+875,MTA - ORANGE LINE - BALBOA,built_other,built_other
+876,MTA - ORANGE LINE - RESEDA,built_other,built_other
+877,MTA - ORANGE LINE - TAMPA,built_other,built_other
+878,MTA - ORANGE LINE - PIERCE COLLEGE,public_institutional,public_institutional
+879,MTA - ORANGE LINE - DE SOTO,built_other,built_other
+880,MTA - ORANGE LINE - CANOGA,built_other,built_other
+882,MTA - ORANGE LINE - SHERMAN WAY,built_other,built_other
+883,MTA - ORANGE LINE - ROSCOE,built_other,built_other
+884,MTA - ORANGE LINE - NORDHOFF,built_other,built_other
+885,MTA - ORANGE LINE - CHATSWORTH,built_other,built_other
+889,MTA - SILVER LINE - LAC/USC MEDICAL CENTER,built_other,built_other
+890,MTA - SILVER LINE - UNION STATION,transit,transit
+891,MTA - SILVER LINE - DOWNTOWN STREET STOPS,outdoor,outdoor
+892,MTA - SILVER LINE - 37TH ST/USC,built_other,built_other
+893,MTA - SILVER LINE - SLAUSON,built_other,built_other
+894,MTA - SILVER LINE - MANCHESTER,built_other,built_other
+895,MTA - SILVER LINE - HARBOR FWY,built_other,built_other
+896,MTA - SILVER LINE - ROSECRANS,built_other,built_other
+897,MTA - SILVER LINE - HARBOR GATEWAY TRANSIT CTR,built_other,built_other
+898,MTA - SILVER LINE - PACIFIC COAST HWY,built_other,built_other
+900,MTA - RED LINE - UNION STATION,transit,transit
+901,MTA - RED LINE - CIVIC CENTER/GRAND PARK,public_institutional,public_institutional
+902,MTA - RED LINE - PERSHING SQUARE,built_other,built_other
+903,MTA - RED LINE - 7TH AND METRO CENTER,transit,transit
+904,MTA - RED LINE - WESTLAKE/MACARTHUR PARK,public_institutional,public_institutional
+905,MTA - RED LINE - WILSHIRE/VERMONT,built_other,built_other
+906,MTA - RED LINE - VERMONT/BEVERLY,built_other,built_other
+907,MTA - RED LINE - VERMONT/SANTA MONICA,built_other,built_other
+908,MTA - RED LINE - VERMONT/SUNSET,built_other,built_other
+909,MTA - RED LINE - HOLLYWOOD/WESTERN,built_other,built_other
+910,MTA - RED LINE - HOLLYWOOD/VINE,built_other,built_other
+911,MTA - RED LINE - HOLLYWOOD/HIGHLAND,built_other,built_other
+912,MTA - RED LINE - UNIVERSAL CITY/STUDIO CITY,built_other,built_other
+913,MTA - RED LINE - NORTH HOLLYWOOD,built_other,built_other
+915,MTA - PURPLE LINE - UNION STATION,transit,transit
+916,MTA - PURPLE LINE - CIVIC CENTER/GRAND PARK,public_institutional,public_institutional
+917,MTA - PURPLE LINE - PERSHING SQUARE,built_other,built_other
+918,MTA - PURPLE LINE - 7TH AND METRO CENTER,transit,transit
+919,MTA - PURPLE LINE - WESTLAKE/MACARTHUR PARK,public_institutional,public_institutional
+920,MTA - PURPLE LINE - WILSHIRE/VERMONT,built_other,built_other
+921,MTA - PURPLE LINE - WILSHIRE/NORMANDIE,built_other,built_other
+922,MTA - PURPLE LINE - WILSHIRE/WESTERN,built_other,built_other
+931,MTA - BLUE LINE - 7TH AND METRO CENTER,transit,transit
+932,MTA - BLUE LINE - PICO,built_other,built_other
+933,MTA - BLUE LINE - GRAND/LATTC,built_other,built_other
+934,MTA - BLUE LINE - SAN PEDRO,built_other,built_other
+935,MTA - BLUE LINE - WASHINGTON,built_other,built_other
+936,MTA - BLUE LINE - VERNON,built_other,built_other
+937,MTA - BLUE LINE - 103RD/WATTS TOWERS,built_other,built_other
+940,MTA - EXPO LINE - 7TH AND METRO CENTER,transit,transit
+941,MTA - EXPO LINE - PICO,built_other,built_other
+942,MTA - EXPO LINE - LATTC/ORTHO INSTITUTE,built_other,built_other
+943,MTA - EXPO LINE - JEFFERSON/USC,built_other,built_other
+944,MTA - EXPO LINE - EXPO PARK/USC,public_institutional,public_institutional
+945,MTA - EXPO LINE - EXPO/VERMONT,built_other,built_other
+946,MTA - EXPO LINE - EXPO/WESTERN,built_other,built_other
+947,MTA - EXPO LINE - EXPO/CRENSHAW,built_other,built_other
+948,MTA - EXPO LINE - FARMDALE,built_other,built_other
+949,MTA - EXPO LINE - EXPO/LA BREA,built_other,built_other
+950,MTA - EXPO LINE - LA CIENEGA/JEFFERSON,built_other,built_other
+951,MTA - EXPO LINE - PALMS,built_other,built_other
+952,MTA - EXPO LINE - WESTWOOD/RANCHO PARK,public_institutional,public_institutional
+953,MTA - EXPO LINE - EXPO/SEPULVEDA,built_other,built_other
+954,MTA - EXPO LINE - EXPO/BUNDY,built_other,built_other
+956,MTA - GREEN LINE - AVALON,built_other,built_other
+957,MTA - GREEN LINE - HARBOR FWY,built_other,built_other
+958,MTA - GREEN LINE - AVIATION/LAX,built_other,built_other
+961,MTA - GOLD LINE - INDIANA,built_other,built_other
+962,MTA - GOLD LINE - SOTO,built_other,built_other
+963,MTA - GOLD LINE - MARIACHI PLAZA,built_other,built_other
+964,MTA - GOLD LINE - PICO/ALISO,built_other,built_other
+965,MTA - GOLD LINE - LITTLE TOKYO/ARTS DISTRICT,built_other,built_other
+966,MTA - GOLD LINE - UNION STATION,transit,transit
+967,MTA - GOLD LINE - CHINATOWN,built_other,built_other
+968,MTA - GOLD LINE - LINCOLN/CYPRESS,built_other,built_other
+969,MTA - GOLD LINE - HERITAGE SQ,built_other,built_other
+970,MTA - GOLD LINE - SOUTHWEST MUSEUM,built_other,built_other
+971,MTA - GOLD LINE - HIGHLAND PARK,public_institutional,public_institutional
+972,,unknown,built_other
+973,,unknown,built_other
+974,,unknown,built_other
+975,,unknown,built_other
+976,,unknown,built_other

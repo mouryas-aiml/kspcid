@@ -1,0 +1,159 @@
+source_code,source_description,crime_category,crime_subcategory
+110,CRIMINAL HOMICIDE,violent_crime,homicide
+113,"MANSLAUGHTER, NEGLIGENT",violent_crime,homicide
+121,"RAPE, FORCIBLE",sexual_offence,sexual_offence
+122,"RAPE, ATTEMPTED",sexual_offence,sexual_offence
+210,ROBBERY,violent_crime,robbery
+220,ATTEMPTED ROBBERY,violent_crime,robbery
+230,"ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT",violent_crime,assault
+231,ASSAULT WITH DEADLY WEAPON ON POLICE OFFICER,violent_crime,assault
+235,CHILD ABUSE (PHYSICAL) - AGGRAVATED ASSAULT,family_child_offence,child_related_offence
+236,INTIMATE PARTNER - AGGRAVATED ASSAULT,family_child_offence,domestic_violence
+237,CHILD NEGLECT (SEE 300 W.I.C.),family_child_offence,child_related_offence
+250,"SHOTS FIRED AT MOVING VEHICLE, TRAIN OR AIRCRAFT",violent_crime,assault
+251,SHOTS FIRED AT INHABITED DWELLING,violent_crime,assault
+310,BURGLARY,property_crime,burglary
+320,"BURGLARY, ATTEMPTED",property_crime,burglary
+330,BURGLARY FROM VEHICLE,property_crime,theft_from_vehicle
+331,THEFT FROM MOTOR VEHICLE - GRAND ($950.01 AND OVER),property_crime,theft_from_vehicle
+341,"THEFT-GRAND ($950.01 & OVER)EXCPT,GUNS,FOWL,LIVESTK,PROD",property_crime,theft
+343,SHOPLIFTING-GRAND THEFT ($950.01 & OVER),property_crime,shoplifting
+345,DISHONEST EMPLOYEE - GRAND THEFT,property_crime,theft
+347,GRAND THEFT / INSURANCE FRAUD,fraud_cyber_crime,fraud
+349,GRAND THEFT / AUTO REPAIR,property_crime,theft
+350,"THEFT, PERSON",property_crime,theft
+351,PURSE SNATCHING,property_crime,theft
+352,PICKPOCKET,property_crime,theft
+353,DRUNK ROLL,property_crime,theft
+354,THEFT OF IDENTITY,fraud_cyber_crime,fraud
+410,"BURGLARY FROM VEHICLE, ATTEMPTED",property_crime,theft_from_vehicle
+420,THEFT FROM MOTOR VEHICLE - PETTY ($950 & UNDER),property_crime,theft_from_vehicle
+421,THEFT FROM MOTOR VEHICLE - ATTEMPT,property_crime,theft_from_vehicle
+430,VEHICLE-RELATED OFFENCE (LEGACY SECONDARY CODE),property_crime,vehicle_related_offence
+431,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+432,BLOCKING DOOR INDUCTION CENTER,public_order,public_disorder
+433,DRIVING WITHOUT OWNER CONSENT (DWOC),public_order,traffic_offence
+434,FALSE IMPRISONMENT,violent_crime,unlawful_confinement
+435,LYNCHING,violent_crime,assault
+436,LYNCHING - ATTEMPTED,violent_crime,assault
+437,RESISTING ARREST,public_order,justice_or_corruption_offence
+438,RECKLESS DRIVING,public_order,traffic_offence
+439,FALSE POLICE REPORT,public_order,justice_or_corruption_offence
+440,THEFT PLAIN - PETTY ($950 & UNDER),property_crime,theft
+441,THEFT PLAIN - ATTEMPT,property_crime,theft
+442,SHOPLIFTING - PETTY THEFT ($950 & UNDER),property_crime,shoplifting
+443,SHOPLIFTING - ATTEMPT,property_crime,shoplifting
+444,DISHONEST EMPLOYEE - PETTY THEFT,property_crime,theft
+445,DISHONEST EMPLOYEE ATTEMPTED THEFT,property_crime,theft
+446,PETTY THEFT - AUTO REPAIR,property_crime,theft
+450,THEFT FROM PERSON - ATTEMPT,property_crime,theft
+451,PURSE SNATCHING - ATTEMPT,property_crime,theft
+452,"PICKPOCKET, ATTEMPT",property_crime,theft
+453,DRUNK ROLL - ATTEMPT,property_crime,theft
+470,TILL TAP - GRAND THEFT ($950.01 & OVER),property_crime,theft
+471,TILL TAP - PETTY ($950 & UNDER),property_crime,theft
+473,"THEFT, COIN MACHINE - GRAND ($950.01 & OVER)",property_crime,theft
+474,"THEFT, COIN MACHINE - PETTY ($950 & UNDER)",property_crime,theft
+475,"THEFT, COIN MACHINE - ATTEMPT",property_crime,theft
+480,BIKE - STOLEN,property_crime,theft
+485,BIKE - ATTEMPTED STOLEN,property_crime,theft
+486,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+487,BOAT - STOLEN,property_crime,theft
+510,VEHICLE - STOLEN,property_crime,vehicle_theft
+520,VEHICLE - ATTEMPT STOLEN,property_crime,vehicle_theft
+521,VEHICLE-RELATED OFFENCE (LEGACY SECONDARY CODE),property_crime,vehicle_related_offence
+522,"VEHICLE, STOLEN - OTHER (MOTORIZED SCOOTERS, BIKES, ETC)",property_crime,vehicle_theft
+622,BATTERY ON A FIREFIGHTER,violent_crime,assault
+623,BATTERY POLICE (SIMPLE),violent_crime,assault
+624,BATTERY - SIMPLE ASSAULT,violent_crime,assault
+625,OTHER ASSAULT,violent_crime,assault
+626,INTIMATE PARTNER - SIMPLE ASSAULT,family_child_offence,domestic_violence
+627,CHILD ABUSE (PHYSICAL) - SIMPLE ASSAULT,family_child_offence,child_related_offence
+647,THROWING OBJECT AT MOVING VEHICLE,violent_crime,assault
+648,ARSON,property_crime,arson
+649,DOCUMENT FORGERY / STOLEN FELONY,fraud_cyber_crime,fraud
+651,DOCUMENT WORTHLESS ($200.01 & OVER),fraud_cyber_crime,fraud
+652,DOCUMENT WORTHLESS ($200 & UNDER),fraud_cyber_crime,fraud
+653,"CREDIT CARDS, FRAUD USE ($950.01 & OVER)",fraud_cyber_crime,fraud
+654,"CREDIT CARDS, FRAUD USE ($950 & UNDER",fraud_cyber_crime,fraud
+660,COUNTERFEIT,fraud_cyber_crime,fraud
+661,UNAUTHORIZED COMPUTER ACCESS,fraud_cyber_crime,cybercrime
+662,"BUNCO, GRAND THEFT",fraud_cyber_crime,fraud
+664,"BUNCO, PETTY THEFT",fraud_cyber_crime,fraud
+666,"BUNCO, ATTEMPT",fraud_cyber_crime,fraud
+668,"EMBEZZLEMENT, GRAND THEFT ($950.01 & OVER)",fraud_cyber_crime,fraud
+670,"EMBEZZLEMENT, PETTY THEFT ($950 & UNDER)",fraud_cyber_crime,fraud
+740,"VANDALISM - FELONY ($400 & OVER, ALL CHURCH VANDALISMS)",property_crime,property_damage
+745,VANDALISM - MISDEAMEANOR ($399 OR UNDER),property_crime,property_damage
+753,DISCHARGE FIREARMS/SHOTS FIRED,violent_crime,assault
+755,BOMB SCARE,weapons_offence,weapons_offence
+756,WEAPONS POSSESSION/BOMBING,weapons_offence,weapons_offence
+760,LEWD/LASCIVIOUS ACTS WITH CHILD,sexual_offence,sexual_offence
+761,BRANDISH WEAPON,weapons_offence,weapons_offence
+762,LEWD CONDUCT,sexual_offence,sexual_offence
+763,STALKING,public_order,threat_or_harassment
+805,PIMPING,sexual_offence,sexual_exploitation
+806,PANDERING,sexual_offence,sexual_exploitation
+810,"SEX,UNLAWFUL(INC MUTUAL CONSENT, PENETRATION W/ FRGN OBJ",sexual_offence,sexual_offence
+812,CRM AGNST CHLD (13 OR UNDER) (14-15 & SUSP 10 YRS OLDER),family_child_offence,child_related_offence
+813,CHILD ANNOYING (17YRS & UNDER),family_child_offence,child_related_offence
+814,CHILD PORNOGRAPHY,family_child_offence,child_related_offence
+815,SEXUAL PENETRATION W/FOREIGN OBJECT,sexual_offence,sexual_offence
+820,ORAL COPULATION,sexual_offence,sexual_offence
+821,SODOMY/SEXUAL CONTACT B/W PENIS OF ONE PERS TO ANUS OTH,sexual_offence,sexual_offence
+822,HUMAN TRAFFICKING - COMMERCIAL SEX ACTS,violent_crime,human_trafficking
+830,INCEST (SEXUAL ACTS BETWEEN BLOOD RELATIVES),sexual_offence,sexual_offence
+840,"BEASTIALITY, CRIME AGAINST NATURE SEXUAL ASSLT WITH ANIM",sexual_offence,sexual_offence
+845,SEX OFFENDER REGISTRANT OUT OF COMPLIANCE,sexual_offence,sexual_offence
+846,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+850,INDECENT EXPOSURE,sexual_offence,sexual_offence
+860,BATTERY WITH SEXUAL CONTACT,sexual_offence,sexual_offence
+865,"DRUGS, TO A MINOR",drug_offence,drug_offence
+870,CHILD ABANDONMENT,family_child_offence,child_related_offence
+880,DISRUPT SCHOOL,public_order,public_disorder
+882,INCITING A RIOT,public_order,public_disorder
+884,FAILURE TO DISPERSE,public_order,public_disorder
+886,DISTURBING THE PEACE,public_order,public_disorder
+888,TRESPASSING,public_order,trespass
+890,FAILURE TO YIELD,public_order,traffic_offence
+900,VIOLATION OF COURT ORDER,public_order,order_violation
+901,VIOLATION OF RESTRAINING ORDER,public_order,order_violation
+902,VIOLATION OF TEMPORARY RESTRAINING ORDER,public_order,order_violation
+903,CONTEMPT OF COURT,public_order,order_violation
+904,FIREARMS EMERGENCY PROTECTIVE ORDER (FIREARMS EPO),weapons_offence,weapons_offence
+906,FIREARMS RESTRAINING ORDER (FIREARMS RO),weapons_offence,weapons_offence
+910,KIDNAPPING,violent_crime,kidnapping
+920,KIDNAPPING - GRAND ATTEMPT,violent_crime,kidnapping
+921,HUMAN TRAFFICKING - INVOLUNTARY SERVITUDE,violent_crime,human_trafficking
+922,CHILD STEALING,family_child_offence,child_related_offence
+924,TELEPHONE PROPERTY - DAMAGE,property_crime,property_damage
+926,TRAIN WRECKING,other_incident,train_wrecking
+928,THREATENING PHONE CALLS/LETTERS,public_order,threat_or_harassment
+930,CRIMINAL THREATS - NO WEAPON DISPLAYED,weapons_offence,weapons_offence
+931,"REPLICA FIREARMS(SALE,DISPLAY,MANUFACTURE OR DISTRIBUTE)",weapons_offence,weapons_offence
+932,PEEPING TOM,public_order,privacy_or_harassment_offence
+933,PROWLER,public_order,privacy_or_harassment_offence
+940,EXTORTION,fraud_cyber_crime,fraud
+942,BRIBERY,public_order,justice_or_corruption_offence
+943,CRUELTY TO ANIMALS,other_incident,animal_related_offence
+944,CONSPIRACY,public_order,justice_or_corruption_offence
+945,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+946,OTHER MISCELLANEOUS CRIME,other_incident,other_miscellaneous_crime
+948,BIGAMY,family_child_offence,family_related_offence
+949,ILLEGAL DUMPING,public_order,illegal_dumping
+950,"DEFRAUDING INNKEEPER/THEFT OF SERVICES, OVER $950.01",fraud_cyber_crime,fraud
+951,"DEFRAUDING INNKEEPER/THEFT OF SERVICES, $950 & UNDER",fraud_cyber_crime,fraud
+954,CONTRIBUTING,family_child_offence,child_related_offence
+956,"LETTERS, LEWD  -  TELEPHONE CALLS, LEWD",sexual_offence,sexual_offence
+972,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+976,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+978,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+979,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+980,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+990,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+993,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+994,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+996,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+997,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+998,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
+999,UNSPECIFIED LEGACY SECONDARY CODE,other_incident,unspecified_legacy_secondary_code
