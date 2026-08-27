@@ -22,6 +22,7 @@ import { resolve } from 'node:path'
 
 import { OUTPUT } from './00_config.js'
 import { GENERATION_VERSION, sha256File } from './lib/hash.js'
+import { negativeBinomialQuantile } from './lib/count_limits.js'
 import { recordOutput } from './lib/manifest.js'
 import { ParquetWriter, query, type Column } from './lib/parquet.js'
 
@@ -93,35 +94,6 @@ function isoWeek(epochMs: number): IsoWeek {
 
 function dateText(epochMs: number): string {
   return new Date(epochMs).toISOString().slice(0, 10)
-}
-
-function poissonQuantile(mean: number, quantile: number): number {
-  if (mean <= 0) return 0
-  let probability = Math.exp(-mean)
-  let cumulative = probability
-  let k = 0
-  while (cumulative < quantile && k < 10_000) {
-    k++
-    probability *= mean / k
-    cumulative += probability
-  }
-  return k
-}
-
-function negativeBinomialQuantile(mean: number, r: number, quantile: number): number {
-  if (mean <= 0) return 0
-  if (!Number.isFinite(r) || r > 1_000_000) return poissonQuantile(mean, quantile)
-  const success = r / (r + mean)
-  const failure = 1 - success
-  let probability = Math.pow(success, r)
-  let cumulative = probability
-  let k = 0
-  while (cumulative < quantile && k < 10_000) {
-    probability *= ((k + r) / (k + 1)) * failure
-    k++
-    cumulative += probability
-  }
-  return k
 }
 
 function weekIndex(weekStart: string): number {
