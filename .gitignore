@@ -51,5 +51,20 @@ client/public/basemap/
 *.tsbuildinfo
 .env
 .env.local
+
+# ── Local presentation and editor artifacts ────────────────────────────────
+.claude/
+.codex-deck-work/
+KPSCID_Dataset_Bundle/
+KSPCID_Dataset_Bundle/
+KSPCID_Datasets_DropIn.zip
+KSPCID_Hackathon_Canva_Import.html
+KSPCID_Hackathon_Canva_Import.zip
+KSPCID_PPT_Sample.pptx
+
+# ── Local documentation and generated reports ──────────────────────────────
+# Existing tracked files are unaffected; later commits must leave their
+# modifications unstaged. Mapping CSVs remain visible because the donor build
+# and validation scripts read them directly.
 *.md
-*.csv
+reports/
