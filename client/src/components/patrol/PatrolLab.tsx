@@ -306,12 +306,51 @@ function ScorePanel({
     source_checksum: data.scenario.provenance.source_checksum,
     generation_version: data.scenario.provenance.generation_version,
   }
+  /**
+   * Plain labels, with one line saying what each is.
+   *
+   * These read "Coverage / Response p50 / Equity / Reserve / Efficiency" in the
+   * scoring code, which is right for the code and wrong for the panel: an
+   * officer looking at this for the first time cannot tell what "p50" is or
+   * whether an equity of 0.82 is good. The number and the bar are unchanged —
+   * only the words around them.
+   */
   const metrics = [
-    ['Coverage', `${(score.coverageRatio * 100).toFixed(1)}%`, score.coveragePoints, 400],
-    ['Response p50', `${score.p50Minutes.toFixed(1)}m`, score.responsePoints, 250],
-    ['Equity', score.equity.toFixed(2), score.equityPoints, 150],
-    ['Reserve', String(score.reserveCount), score.reservePoints, 100],
-    ['Efficiency', `${score.totalUnitKm.toFixed(1)} km`, score.efficiencyPoints, 100],
+    [
+      'Calls reached in time',
+      `${(score.coverageRatio * 100).toFixed(1)}%`,
+      score.coveragePoints,
+      400,
+      'Share of expected calls a unit can reach inside the response target.',
+    ],
+    [
+      'Typical response',
+      `${score.p50Minutes.toFixed(1)} min`,
+      score.responsePoints,
+      250,
+      'Half of calls are reached faster than this, half slower.',
+    ],
+    [
+      'Evenly spread',
+      score.equity.toFixed(2),
+      score.equityPoints,
+      150,
+      'Whether cover is shared across the area or concentrated in one part. 1.00 is even.',
+    ],
+    [
+      'Units held in reserve',
+      String(score.reserveCount),
+      score.reservePoints,
+      100,
+      'Units kept free for a call that has not come in yet.',
+    ],
+    [
+      'Distance driven',
+      `${score.totalUnitKm.toFixed(1)} km`,
+      score.efficiencyPoints,
+      100,
+      'Total distance across all units. Less is better for the same cover.',
+    ],
   ] as const
   return (
     <div className="space-y-4">
@@ -333,8 +372,15 @@ function ScorePanel({
           <p className="mt-1 text-xs text-[--txt-3]">{snapshot.missed} missed · {snapshot.completed} complete</p>
         </div>
       </div>
+      {/* One sentence a first-time viewer can act on, before the breakdown. */}
+      <p className="text-xs leading-5 text-[--txt-2]">
+        This plan reaches <strong className="text-[--txt-hi]">{(score.coverageRatio * 100).toFixed(0)}%</strong>{' '}
+        of expected calls in time, with a typical response of{' '}
+        <strong className="text-[--txt-hi]">{score.p50Minutes.toFixed(1)} minutes</strong>. Move a unit
+        and the score changes straight away.
+      </p>
       <div className="space-y-3">
-        {metrics.map(([label, value, points, maximum]) => (
+        {metrics.map(([label, value, points, maximum, hint]) => (
           <div key={label}>
             <div className="flex items-center justify-between text-xs">
               <span className="text-[--txt-2]">{label}</span>
@@ -346,9 +392,12 @@ function ScorePanel({
                 style={{ width: `${Math.max(0, Math.min(100, (points / maximum) * 100))}%` }}
               />
             </div>
-            <p className="mt-1 text-right font-mono text-[9px] text-[--txt-3]">
-              {points.toFixed(1)} / {maximum}
-            </p>
+            <div className="mt-1 flex items-start justify-between gap-3">
+              <p className="text-[10px] leading-4 text-[--txt-3]">{hint}</p>
+              <span className="shrink-0 font-mono text-[9px] text-[--txt-3]">
+                {points.toFixed(1)} / {maximum}
+              </span>
+            </div>
           </div>
         ))}
       </div>
