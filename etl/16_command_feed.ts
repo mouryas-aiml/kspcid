@@ -17,7 +17,34 @@ const BASELINE_PATH = resolve(OUTPUT.derived, 'weekly_baselines.parquet')
 const INCIDENT_PATH = resolve(OUTPUT.derived, 'incidents_time.parquet')
 const OUTPUT_PATH = resolve(OUTPUT.scenarios, 'command_feed.json')
 const REPORT_PATH = resolve(OUTPUT.reports, 'a16_command_feed.md')
-const FEED_LIMIT = 30
+
+/**
+ * Cold-start eligibility policy.
+ *
+ * The baseline grid is densely zero-filled: 4,853,223 of 5,797,660 rows carry
+ * `expected_count` of exactly zero, and a further 166,838 are sub-epsilon. When
+ * a long-dormant series registers its first few FIRs, `z_score` divides by a
+ * near-zero variance and returns an astronomical value — the largest in the
+ * grid is 9.017e24. Because `rank_score` is `z_score × severityWeight`, those
+ * cold-start rows outranked every genuine spike: all 30 previously shipped
+ * alerts had `expected_count` at or near zero, and the 25 candidates with real
+ * history — including the Kadugondana Halli two-wheeler series the demo
+ * corridor is built on — were crowded out entirely.
+ *
+ * The fix belongs here rather than in `06_baselines.ts`: `z_score` is
+ * `mandatory: true` in `etl/datastore/schema.json`, so the raw grid must keep
+ * emitting a value for every row. Which rows deserve to raise an alert is a
+ * consumer decision, and this is the consumer.
+ *
+ * A series must therefore carry half a year of history and a non-trivial
+ * expectation before it may alert. Do not relax these to reach a target alert
+ * count — a thinner feed of real spikes is the point.
+ */
+const MIN_EXPECTED_COUNT = 0.5
+const MIN_WINDOW_OBSERVATIONS = 26
+
+/** 25 candidates satisfy the detector and the eligibility gate. */
+const FEED_LIMIT = 25
 
 interface AlertRow extends Record<string, unknown> {
   readonly station_code: string | null
@@ -29,6 +56,7 @@ interface AlertRow extends Record<string, unknown> {
   readonly expected_count: number
   readonly ucl_99: number
   readonly z_score: number
+  readonly window_observations: number
   readonly history: { readonly items: readonly number[] }
   readonly latitude: number | null
   readonly longitude: number | null
@@ -57,7 +85,7 @@ async function main(): Promise<void> {
     `WITH series AS (
        SELECT station_key, station_code, unit_name, crime_head,
               strftime(week_start, '%Y-%m-%d') AS week_start,
-              fir_count, expected_count, ucl_99, z_score,
+              fir_count, expected_count, ucl_99, z_score, window_observations,
               list(fir_count) OVER (
                 PARTITION BY station_key, crime_head ORDER BY week_start
                 ROWS BETWEEN 12 PRECEDING AND CURRENT ROW
@@ -80,6 +108,8 @@ async function main(): Promise<void> {
      WHERE s.week_start >= '2023-07-01'
        AND s.fir_count >= 5
        AND s.fir_count > s.ucl_99
+       AND s.expected_count >= ${MIN_EXPECTED_COUNT}
+       AND s.window_observations >= ${MIN_WINDOW_OBSERVATIONS}
      ORDER BY s.week_start DESC, s.z_score DESC, s.station_key, s.crime_head`,
   ) as AlertRow[]
 
@@ -117,6 +147,7 @@ async function main(): Promise<void> {
     severity_weight: weight,
     rank_score: round(score),
     severity: score >= 10 ? 'critical' : score >= 6 ? 'high' : 'watch',
+    window_observations: row.window_observations,
     history_13_weeks: [...row.history.items],
     geography:
       row.latitude !== null && row.longitude !== null
@@ -127,7 +158,10 @@ async function main(): Promise<void> {
             method: 'mean_reported_eligible_coordinates',
           }
         : null,
-    replay_offset_ms: Math.round((index * 60_000) / Math.max(1, FEED_LIMIT - 1)),
+    // Spread across the replay window by the number of alerts actually
+    // emitted, not by FEED_LIMIT. The gate can return fewer candidates than
+    // the cap, and `verify_feed.ts` recomputes this from `alerts.length`.
+    replay_offset_ms: Math.round((index * 60_000) / Math.max(1, ranked.length - 1)),
     provenance: {
       source_authority: 'third_party_mirror',
       transformation: 'derived',
@@ -143,6 +177,9 @@ async function main(): Promise<void> {
     replay_duration_ms: 60_000,
     detector: {
       condition: 'fir_count >= 5 AND fir_count > ucl_99',
+      eligibility: `expected_count >= ${MIN_EXPECTED_COUNT} AND window_observations >= ${MIN_WINDOW_OBSERVATIONS}`,
+      eligibility_rationale:
+        'A densely zero-filled baseline grid makes z_score diverge for long-dormant series. A series needs half a year of history and a non-trivial expectation before it may alert.',
       ranking: 'z_score × deterministic crime-head severity weight',
       candidate_window: '2023-07-01 through 2023-12-31',
     },
@@ -169,10 +206,18 @@ async function main(): Promise<void> {
     REPORT_PATH,
     `# A16 Command Feed\n\n` +
       `- Ranked alerts: **${alerts.length}**\n` +
-      `- Detector candidates in H2 2023: **${rows.length}**\n` +
+      `- Eligible detector candidates in H2 2023: **${rows.length}**\n` +
+      `- Eligibility gate: **expected_count >= ${MIN_EXPECTED_COUNT}, window_observations >= ${MIN_WINDOW_OBSERVATIONS}**\n` +
       `- Alerts with an observed-coordinate station centroid: **${alerts.filter((alert) => alert.geography).length}**\n` +
+      `- Stored z-score range: **${round(Math.min(...alerts.map((alert) => alert.z_score)), 2)} – ${round(Math.max(...alerts.map((alert) => alert.z_score)), 2)}**\n` +
       `- Replay duration: **60 seconds**\n\n` +
-      `All alert facts are derived from complete-window baselines. The replay clock and acknowledgement state are presentation/session metadata.\n`,
+      `All alert facts are derived from complete-window baselines. The replay clock and acknowledgement state are presentation/session metadata.\n\n` +
+      `## Eligibility\n\n` +
+      `The baseline grid is densely zero-filled, so a long-dormant series divides by a near-zero variance and returns an\n` +
+      `astronomical z-score — the largest in the grid is 9.017e24. Ranking on that suppressed every genuine spike. The gate\n` +
+      `admits only series carrying half a year of history and a non-trivial expectation. \`06_baselines.ts\` is unchanged:\n` +
+      `\`z_score\` is mandatory in the Data Store schema, so the raw grid keeps emitting it for every row, and eligibility is\n` +
+      `decided here by the consumer.\n`,
     'utf8',
   )
   process.stdout.write(

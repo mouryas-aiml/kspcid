@@ -10,6 +10,11 @@ function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message)
 }
 
+/** Must track the documented policy in `16_command_feed.ts`. */
+const FEED_LIMIT = 25
+const MIN_EXPECTED_COUNT = 0.5
+const MIN_WINDOW_OBSERVATIONS = 26
+
 interface Alert {
   readonly id: string
   readonly station_code: string | null
@@ -19,6 +24,9 @@ interface Alert {
   readonly observed_count: number
   readonly ucl_99: number
   readonly rank_score: number
+  readonly z_score: number
+  readonly expected_count: number
+  readonly window_observations: number
   readonly history_13_weeks: readonly number[]
   readonly replay_offset_ms: number
   readonly geography: { latitude: number; longitude: number } | null
@@ -36,8 +44,32 @@ async function main(): Promise<void> {
   const fixturePath = resolve(OUTPUT.scenarios, 'command_feed.json')
   const baselinePath = resolve(OUTPUT.derived, 'weekly_baselines.parquet')
   const fixture = JSON.parse(await readFile(fixturePath, 'utf8')) as Fixture
-  assert(fixture.alerts.length === 30, 'Expected 30 ranked feed alerts')
+  assert(fixture.alerts.length === FEED_LIMIT, `Expected ${FEED_LIMIT} ranked feed alerts`)
   assert(fixture.snapshot_through === '2023-12-31', 'Snapshot cutoff drift')
+
+  // The cold-start gate. Without it the densely zero-filled baseline grid
+  // divides by a near-zero variance and returns z-scores up to 9.017e24, which
+  // outrank — and entirely suppress — every spike with real history.
+  assert(
+    fixture.alerts.every((alert) => Number.isFinite(alert.z_score)),
+    'A stored z_score is not finite',
+  )
+  assert(
+    fixture.alerts.every(
+      (alert) =>
+        alert.expected_count >= MIN_EXPECTED_COUNT &&
+        alert.window_observations >= MIN_WINDOW_OBSERVATIONS,
+    ),
+    'An alert bypassed the cold-start eligibility gate',
+  )
+  assert(
+    fixture.alerts.some(
+      (alert) =>
+        alert.station_name.includes('Kadugondana Halli') &&
+        alert.title.includes('Two Wheelers'),
+    ),
+    'The Kadugondana Halli two-wheeler series — the demo corridor narrative — is missing from the feed',
+  )
   assert(fixture.replay_duration_ms === 60_000, 'Replay must remain exactly 60 seconds')
   assert(
     fixture.alerts.every(
@@ -114,6 +146,8 @@ async function main(): Promise<void> {
       `  ranked alerts       ${fixture.alerts.length}\n` +
       `  mappable alerts     ${mappable}\n` +
       `  detector            count ≥5 and count > UCL\n` +
+      `  eligibility         expected ≥${MIN_EXPECTED_COUNT}, history ≥${MIN_WINDOW_OBSERVATIONS}w\n` +
+      `  z-score range       ${Math.min(...fixture.alerts.map((a) => a.z_score))} – ${Math.max(...fixture.alerts.map((a) => a.z_score))}\n` +
       `  replay              ${fixture.replay_duration_ms / 1000}s deterministic\n` +
       `  fixture sha256      ${checksum}\n`,
   )
