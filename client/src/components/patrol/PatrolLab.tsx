@@ -138,13 +138,13 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
     <div className="space-y-5">
       <div>
         <div className="flex items-center justify-between">
-          <p className="type-micro text-[--txt-3]">Generated force</p>
+          <p className="type-micro text-[--txt-3]">Demo patrol units</p>
           <span className="rounded-full bg-[color-mix(in_srgb,var(--prov-generated)_14%,transparent)] px-2 py-1 text-[10px] text-[--prov-generated]">
             DEMO · 16
           </span>
         </div>
         <p className="mt-2 text-xs leading-5 text-[--txt-2]">
-          Select a unit, then choose a hex. Hold units in reserve with the post toggle.
+          Select a unit, then choose an area. Use the reserve button to keep a unit available.
         </p>
       </div>
       <div className="space-y-3">
@@ -226,7 +226,7 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
           onClick={toggleRain}
           className="condition-button"
         >
-          <CloudRain size={14} /> Rain ×1.35
+          <CloudRain size={14} /> Heavy rain
         </button>
         <button
           type="button"
@@ -234,7 +234,7 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
           onClick={toggleClosure}
           className="condition-button"
         >
-          <TrafficCone size={14} /> Closure
+          <TrafficCone size={14} /> Road closure
         </button>
       </div>
 
@@ -243,19 +243,16 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
           stored free-flow durations at runtime; the durations never change. */}
       <div className="rounded-[--r-sm] border border-[--ink-600] bg-[--ink-800] px-3 py-2">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="type-micro text-[--txt-3]">ASSUMED TRAFFIC SPEED</span>
+          <span className="type-micro text-[--txt-3]">ESTIMATED TRAFFIC SPEED</span>
           <ProvenanceChip derivation={CONGESTION_DERIVATION} provenance={congestionProvenance} />
         </div>
         <div className="mt-1 font-mono text-[13px] tabular-nums text-[--txt]">
           {assumedSpeedKmh(shiftHour)} km/h
-          <span className="ml-2 text-[--txt-2]">
-            ×{congestionMultiplier(shiftHour).toFixed(2)} on free-flow
-          </span>
+          <span className="ml-2 text-[--txt-2]">traffic-adjusted</span>
         </div>
         <p className="mt-1 text-[10px] leading-snug text-[--txt-3]">
-          {formatClock(minute)} · {bandLabel(bandForHour(shiftHour))}. OSRM routes at{' '}
-          {OSRM_FREE_FLOW_KMH} km/h free-flow (validated median). Coverage blanket is still
-          measured free-flow — only response times are corrected.
+          {formatClock(minute)} · {bandLabel(bandForHour(shiftHour))}. Road coverage uses normal
+          travel times; response times include the traffic adjustment.
         </p>
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -270,7 +267,7 @@ function ForcePanel({ data }: { readonly data: PatrolData }) {
               .finally(() => setOptimizing(false))
           }}
         >
-          {optimizing ? 'Optimizing…' : 'Optimize'}
+          {optimizing ? 'Preparing…' : 'Suggest plan'}
         </button>
         <button
           type="button"
@@ -402,17 +399,18 @@ function ScorePanel({
           </div>
         ))}
       </div>
-      <Panel title="Published formula" eyebrow="EXPLAINABLE SCORE">
-        <p className="font-mono text-[10px] leading-5 text-[--txt-2]">
-          400·coverage + response(150 p50 + 100 p90) + 150·(1−Gini) + 100·reserve + 100·efficiency
+      <Panel title="How the score works" eyebrow="SCORE BREAKDOWN">
+        <p className="text-xs leading-5 text-[--txt-2]">
+          Calls reached in time: 400 points · response time: 250 · even coverage: 150 ·
+          reserve units: 100 · distance driven: 100.
         </p>
         <p className="mt-3 border-t border-[--ink-600] pt-3 text-xs leading-5 text-[--txt-3]">
-          Counterfactual incident reduction is explicitly outside this score. It measures resource reach and replay performance only.
+          The score measures reach and response only; it does not estimate changes in crime.
         </p>
       </Panel>
       <ProvenanceChip
         provenance={provenance}
-        derivation="Observed FIR-mirror records are aggregated to H3 r9 and recency weighted with a 365.25-day half-life. Coverage and response use validated OSRM road-network durations; roster identities are generated demonstration inputs."
+        derivation="Groups historical FIR registrations into nearby areas and gives more weight to recent weeks. Coverage and response follow the road network. Patrol names and staffing are demonstration inputs."
       />
       <Panel title="Dispatch feed" eyebrow={`${snapshot.active} ACTIVE`}>
         <div className="space-y-2">
@@ -596,18 +594,18 @@ function CompareCard({
                 />
               </div>
               <p className="mt-3 text-xs text-[--txt-2]">
-                {(plan.coverageRatio * 100).toFixed(1)}% coverage · {plan.p50Minutes.toFixed(1)}m p50
+                {(plan.coverageRatio * 100).toFixed(1)}% coverage · {plan.p50Minutes.toFixed(1)} min typical response
               </p>
             </motion.div>
           ))}
         </div>
         <div className="mt-6 grid gap-3 border-t border-[--ink-600] pt-5 text-sm text-[--txt-2] md:grid-cols-2">
-          <p><LocateFixed className="mr-2 inline text-[--cyan-400]" size={16} />Road-time coverage left {(100 - yours.coverageRatio * 100).toFixed(1)}% of weighted demand outside target.</p>
-          <p><Gauge className="mr-2 inline text-[--gold-400]" size={16} />Beat coverage balance was {yours.equity.toFixed(2)}; optimizer reached {optimized.equity.toFixed(2)}.</p>
+          <p><LocateFixed className="mr-2 inline text-[--cyan-400]" size={16} />Road-time coverage left {(100 - yours.coverageRatio * 100).toFixed(1)}% of expected workload outside the target.</p>
+          <p><Gauge className="mr-2 inline text-[--gold-400]" size={16} />Coverage balance was {yours.equity.toFixed(2)}; the suggested plan reached {optimized.equity.toFixed(2)}.</p>
         </div>
         <div className="mt-7 flex flex-wrap gap-3">
-          <button type="button" className="end-primary" onClick={onGhost}><Sparkles size={15} /> View optimized ghosts</button>
-          <button type="button" className="end-secondary" onClick={onClose}>Retry deployment</button>
+          <button type="button" className="end-primary" onClick={onGhost}><Sparkles size={15} /> View suggested positions</button>
+          <button type="button" className="end-secondary" onClick={onClose}>Try another plan</button>
           <button type="button" className="end-secondary" onClick={() => window.print()}>Export duty roster</button>
         </div>
       </motion.div>
@@ -856,8 +854,8 @@ export function PatrolLab() {
               {/* The press is invented; the travel time is not. */}
               <p className="mt-4 text-[10px] leading-4 text-[--txt-3]">
                 SOS points and this activation are generated for the demonstration — the archive holds
-                no device inventory or control-room log. The response time is a real OSRM road-network
-                duration from the unit&apos;s current post.
+                no device inventory or control-room log. The response time is calculated from the
+                road network and the unit&apos;s current post.
               </p>
             </motion.div>
           </motion.div>
@@ -867,7 +865,7 @@ export function PatrolLab() {
             <motion.div className="injection-card" initial={{ scale: 0.96 }} animate={{ scale: 1 }}>
               <span className="injection-icon"><TrafficCone /></span>
               <div className="flex items-center justify-between">
-                <p className="type-micro text-[--warn]">SCRIPTED INJECTION · {injection?.local_time ?? '23:00'}</p>
+                <p className="type-micro text-[--warn]">DEMO EVENT · {injection?.local_time ?? '23:00'}</p>
                 <span className="rounded-full border border-[--warn] px-2 py-1 font-mono text-xs text-[--warn]">
                   {injectionSeconds}s
                 </span>

@@ -237,18 +237,18 @@ function MapCanvas({
       <div className="h-full w-full" ref={containerRef} />
       <div className="pointer-events-none absolute left-5 top-5 z-10 flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] tabular-nums text-[--txt-2]">
         <Radar size={14} className="text-[--cyan-400]" />
-        Station centroids from eligible reported coordinates · {mappable.length}/{alerts.length}
+        Alerts with a verified station location · {mappable.length}/{alerts.length}
       </div>
       <div className="absolute bottom-5 left-5 z-10 max-w-sm rounded-[--r-md] border border-[--ink-500] bg-[rgb(10_15_22_/_0.96)] p-4">
-        <p className="type-micro text-[--gold-400]">{selected.geography ? 'Selected geography' : 'No eligible station centroid'}</p>
+        <p className="type-micro text-[--gold-400]">{selected.geography ? 'Selected station location' : 'Station location unavailable'}</p>
         <p className="mt-2 text-base font-semibold">{selected.station_name}</p>
         <p className="mt-1 text-xs leading-5 text-[--txt-2]">{selected.title}</p>
         {selected.geography ? (
           <p className="mt-3 flex items-center gap-2 text-[10px] tabular-nums text-[--txt-3]">
-            <MapPin size={12} /> Mean of {selected.geography.coordinate_records.toLocaleString('en-IN')} eligible reported coordinates
+            <MapPin size={12} /> Based on {selected.geography.coordinate_records.toLocaleString('en-IN')} records with a reported map location
           </p>
         ) : (
-          <p className="mt-3 text-[10px] text-[--warn]">Signal remains in the feed; no location is invented.</p>
+          <p className="mt-3 text-[10px] text-[--warn]">This alert remains in the list, but the map does not guess its location.</p>
         )}
       </div>
     </div>
@@ -425,7 +425,7 @@ export function CommandFeed() {
             </div>
             <label className="mt-3 flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[--ink-800] px-3 py-2">
               <Search size={14} className="text-[--txt-3]" />
-              <input aria-label="Search feed" className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[--txt-3]" onChange={(event) => setSearch(event.target.value)} placeholder="Station or crime head" value={search} />
+              <input aria-label="Search feed" className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[--txt-3]" onChange={(event) => setSearch(event.target.value)} placeholder="Station or category" value={search} />
             </label>
             {/*
               Only offer a tier that has cards behind it. A quiet period can

@@ -140,10 +140,10 @@ function Context({
   return (
     <div className="space-y-5">
       <label className="block">
-        <span className="type-micro text-[--txt-3]">Search dominant attribute</span>
+        <span className="type-micro text-[--txt-3]">Search map</span>
         <span className="mt-2 flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[--ink-800] px-3 py-2 text-[--txt-2]">
           <Search size={15} />
-          <input aria-label="Search map" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-[--txt-3]" onChange={(event) => onSearch(event.target.value)} placeholder="Station or crime head" value={search} />
+          <input aria-label="Search map" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-[--txt-3]" onChange={(event) => onSearch(event.target.value)} placeholder="Station or category" value={search} />
         </span>
       </label>
       <label className="block text-xs text-[--txt-3]">
@@ -157,29 +157,29 @@ function Context({
         </span>
       </label>
       <label className="block text-xs text-[--txt-3]">
-        DOMINANT CRIME HEAD
+        MAIN CATEGORY
         <span className="relative mt-2 block">
-          <select aria-label="Map crime head" className="w-full appearance-none rounded-[--r-sm] border border-[--ink-500] bg-[--ink-800] px-3 py-2 pr-8 text-[--txt]" onChange={(event) => onCrimeHead(event.target.value)} value={crimeHead}>
-            <option value="">All heads</option>
+          <select aria-label="Map category" className="w-full appearance-none rounded-[--r-sm] border border-[--ink-500] bg-[--ink-800] px-3 py-2 pr-8 text-[--txt]" onChange={(event) => onCrimeHead(event.target.value)} value={crimeHead}>
+            <option value="">All categories</option>
             {heads.map((head) => <option key={head}>{head}</option>)}
           </select>
           <ChevronDown className="pointer-events-none absolute right-2 top-2.5" size={14} />
         </span>
       </label>
       {/* Kept in step with the layers MapCanvas actually creates. */}
-      <Panel title="Visible layer rules" eyebrow="TRUTH CONTRACT">
+      <Panel title="What the map shows" eyebrow="MAP GUIDE">
         <ul className="space-y-2 text-xs leading-5 text-[--txt-2]">
-          <li><span className="text-[--cyan-400]">▢</span> Jurisdictions: 106 official polygons</li>
-          <li><span className="text-[--cyan-400]">◆</span> H3 aggregates: reported + inferred</li>
-          <li><span className="text-[--gold-400]">●</span> Point marks: eligible reported only</li>
-          <li><span className="text-[--critical]">◎</span> Pulses: top six ranked alerts</li>
-          <li className="text-[--txt-3]">No corridor layer — the source carries station codes and a buffer radius, no polyline.</li>
+          <li><span className="text-[--cyan-400]">▢</span> Station areas: 106 official boundaries</li>
+          <li><span className="text-[--cyan-400]">◆</span> Shaded areas: nearby records grouped together</li>
+          <li><span className="text-[--gold-400]">●</span> Dots: records with a reported map location</li>
+          <li><span className="text-[--critical]">◎</span> Rings: six highest-priority alerts</li>
+          <li className="text-[--txt-3]">A corridor is not drawn because the source does not provide a verified route.</li>
         </ul>
       </Panel>
       <div className="rounded-[--r-md] border border-[--ink-600] p-4">
-        <p className="type-micro text-[--txt-3]">Fixed complete-window view</p>
+        <p className="type-micro text-[--txt-3]">Data period</p>
         <p className="mt-2 flex items-center gap-2 text-xs"><Clock3 size={14} className="text-[--gold-400]" /> {fixture.window.start} → {fixture.window.end}</p>
-        <p className="mt-2 text-[10px] text-[--txt-3]">{fixture.window.days_inclusive} days inclusive</p>
+        <p className="mt-2 text-[10px] text-[--txt-3]">{fixture.window.days_inclusive} days included</p>
       </div>
     </div>
   )
@@ -193,33 +193,34 @@ function InspectorContent({
   readonly selected: Cell
 }) {
   const explanation = fixture.explanations.find((row) => row.h3 === selected.h3_r9)
+  const ringCell = fixture.cells.find((cell) => cell.h3_r9 === fixture.pulse_ring.h3_r9)
   return (
     <div className="space-y-4">
-      <ProvenanceChip provenance={fixture.provenance} derivation="H3 r9 aggregate over a fixed 90-day complete-window slice. Point marks require map_pin_eligible=true." />
-      <Panel title="Why here?" eyebrow={`${selected.h3_r9.slice(0, 8)}… · ${explanation?.confidence ?? 'computed'} confidence`}>
+      <ProvenanceChip provenance={fixture.provenance} derivation="Groups records into small nearby areas for the latest 90-day snapshot. Dots appear only where the source supplied a usable map location." />
+      <Panel title="Why here?" eyebrow="AREA SUMMARY">
         <p className="text-sm leading-6 text-[--txt-2]">
           {explanation?.paragraph ??
-            `${selected.top_station_name ?? 'Selected cell'} contains ${format(selected.count)} records. ${selected.top_crime_head ?? 'No dominant head'} is the largest category (${format(selected.top_crime_head_count)}).`}
+            `${selected.top_station_name ?? 'Selected area'} contains ${format(selected.count)} records. ${selected.top_crime_head ?? 'No main category'} is the largest category (${format(selected.top_crime_head_count)}).`}
         </p>
         <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-[--ink-600] pt-4 text-xs">
           <div><dt className="text-[--txt-3]">90-day records</dt><dd className="mt-1 font-mono">{format(selected.count)}</dd></div>
-          <div><dt className="text-[--txt-3]">Top-head share</dt><dd className="mt-1 font-mono">{selected.count ? ((selected.top_crime_head_count / selected.count) * 100).toFixed(1) : '0.0'}%</dd></div>
-          <div><dt className="text-[--txt-3]">Dominant station</dt><dd className="mt-1 truncate" title={selected.top_station_name ?? ''}>{selected.top_station_name ?? 'Not resolved'}</dd></div>
-          <div><dt className="text-[--txt-3]">Station records</dt><dd className="mt-1 font-mono">{format(selected.top_station_count)}</dd></div>
+          <div><dt className="text-[--txt-3]">Largest category share</dt><dd className="mt-1 font-mono">{selected.count ? ((selected.top_crime_head_count / selected.count) * 100).toFixed(1) : '0.0'}%</dd></div>
+          <div><dt className="text-[--txt-3]">Main station</dt><dd className="mt-1 truncate" title={selected.top_station_name ?? ''}>{selected.top_station_name ?? 'Not available'}</dd></div>
+          <div><dt className="text-[--txt-3]">Records from that station</dt><dd className="mt-1 font-mono">{format(selected.top_station_count)}</dd></div>
         </dl>
       </Panel>
       {selected.h3_r9 === fixture.pulse_ring.h3_r9 ? (
-        <Panel title="Pulse Ring" eyebrow="24-HOUR HEARTBEAT">
+        <Panel title="24-hour pattern" eyebrow="TIME OF DAY">
           <PulseRing data={fixture.pulse_ring} />
-          <p className="mt-3 text-[10px] leading-4 text-[--txt-3]">Occurrence hours are derived. Gold roster strength is a generated demonstration overlay, never source fact.</p>
+          <p className="mt-3 text-[10px] leading-4 text-[--txt-3]">Times are estimated from the available record details. The staffing line is demonstration data.</p>
         </Panel>
       ) : (
-        <Panel title="Pulse Ring" eyebrow="ON-DEMAND">
-          <p className="text-xs leading-5 text-[--txt-2]">The compact offline snapshot precomputes the 24-hour ring for the top-ranked cell only. Select {fixture.pulse_ring.h3_r9.slice(0, 8)}… to inspect it.</p>
+        <Panel title="24-hour pattern" eyebrow="HIGHEST-PRIORITY AREA">
+          <p className="text-xs leading-5 text-[--txt-2]">This detailed time-of-day view is available for the highest-priority area. Select {ringCell?.top_station_name ?? 'that area'} to inspect it.</p>
         </Panel>
       )}
       {explanation ? (
-        <Panel title="Evidence rows" eyebrow="COMPUTED SLOTS">
+        <Panel title="Top categories" eyebrow="SUPPORTING FIGURES">
           <div className="space-y-2 text-xs">
             {explanation.evidence.crime_heads.slice(0, 3).map((row) => <div className="flex justify-between gap-3" key={row.value}><span className="truncate text-[--txt-2]">{row.value}</span><span className="font-mono">{format(row.count)}</span></div>)}
           </div>
@@ -479,7 +480,7 @@ function MapCanvas({
     return built
   }, [cells, clock, fixture.reported_points, jurisdictions, maximum, onSelect, pulses, reduce, selected])
 
-  const rampLabel = `magma, log-scaled · ${format(minimum)} → ${format(maximum)} records`
+  const rampLabel = `Fewer records → more records · ${format(minimum)} to ${format(maximum)}`
 
   useEffect(() => {
     if (!ready) return
@@ -489,7 +490,7 @@ function MapCanvas({
         const cell = object as Cell | null
         if (!cell?.h3_r9) return null
         return {
-          text: `${cell.top_station_name ?? cell.h3_r9}\n${format(cell.count)} records · ${cell.top_crime_head ?? 'no dominant head'}`,
+          text: `${cell.top_station_name ?? 'Unnamed area'}\n${format(cell.count)} records · ${cell.top_crime_head ?? 'no main category'}`,
         }
       },
     })
@@ -508,7 +509,7 @@ function MapCanvas({
       <div className="h-full w-full" ref={containerRef} />
       <div className="pointer-events-none absolute left-5 top-5 flex flex-col gap-2">
         <span className="flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] text-[--txt-2]">
-          <Layers3 size={14} className="text-[--cyan-400]" /> {cells.length} H3 cells · {fixture.reported_points.length} eligible point marks
+          <Layers3 size={14} className="text-[--cyan-400]" /> {cells.length} local areas · {fixture.reported_points.length} mapped records
         </span>
         {/* §5.7 — a density ramp with an unnamed scale is a misleading chart. */}
         <span className="flex items-center gap-2 rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.94)] px-3 py-2 text-[10px] tabular-nums text-[--txt-2]">
@@ -549,16 +550,16 @@ function MapCanvas({
         {cells.map((cell) => (
           <li key={cell.h3_r9}>
             <button onClick={() => onSelect(cell)} type="button">
-              {cell.top_station_name ?? cell.h3_r9}: {format(cell.count)} records
+              {cell.top_station_name ?? 'Unnamed area'}: {format(cell.count)} records
             </button>
           </li>
         ))}
       </ul>
       <div className="absolute bottom-5 left-5 max-w-sm rounded-[--r-md] border border-[--ink-500] bg-[rgb(10_15_22_/_0.95)] p-4">
-        <p className="type-micro text-[--gold-400]">Selected H3 cell</p>
-        <p className="mt-2 text-base font-semibold">{selected.top_station_name ?? selected.h3_r9}</p>
-        <p className="mt-1 text-xs text-[--txt-2]">{selected.top_crime_head ?? 'No dominant category'} · {format(selected.count)} records</p>
-        <p className="mt-3 flex items-center gap-2 text-[10px] text-[--txt-3]"><LocateFixed size={12} /> Aggregate cell; inferred rows are never rendered as precise pins</p>
+        <p className="type-micro text-[--gold-400]">Selected area</p>
+        <p className="mt-2 text-base font-semibold">{selected.top_station_name ?? 'Unnamed area'}</p>
+        <p className="mt-1 text-xs text-[--txt-2]">{selected.top_crime_head ?? 'No main category'} · {format(selected.count)} records</p>
+        <p className="mt-3 flex items-center gap-2 text-[10px] text-[--txt-3]"><LocateFixed size={12} /> Nearby records are grouped here. Approximate locations are never shown as exact dots.</p>
       </div>
     </div>
   )
@@ -620,20 +621,20 @@ export function CommandMap() {
   }, [selected, visible])
 
   if (error) return <div className="grid h-screen place-items-center bg-[--ink-900] text-[--critical]"><AlertTriangle /> {error}</div>
-  if (!fixture || !selected) return <div className="grid h-screen place-items-center bg-[--ink-900] text-[--txt-2]">Loading H3 command picture…</div>
+  if (!fixture || !selected) return <div className="grid h-screen place-items-center bg-[--ink-900] text-[--txt-2]">Loading command map…</div>
 
   return (
     <OpsShell
       context={<Context crimeHead={crimeHead} fixture={fixture} onCrimeHead={setCrimeHead} onSearch={setSearch} onStation={setStation} search={search} station={station} />}
-      eyebrow="DETECT · EXPLAIN"
+      eyebrow="CITY OVERVIEW"
       inspector={<InspectorContent fixture={fixture} selected={selected} />}
       inspectorEyebrow="WHY HERE?"
-      inspectorTitle={selected.top_station_name ?? 'Selected H3 cell'}
+      inspectorTitle={selected.top_station_name ?? 'Selected area'}
       timeline={<Timeline fixture={fixture} />}
       title="Command Map"
     >
       {visible.length ? <MapCanvas cells={visible} fixture={fixture} onSelect={(cell) => setSelectedId(cell.h3_r9)} selected={selected} /> : (
-        <div className="grid h-full place-items-center bg-[--ink-900] text-center"><div><Sparkles className="mx-auto text-[--gold-400]" /><p className="mt-3">No dominant-cell matches</p><button className="mt-3 text-xs text-[--cyan-400]" onClick={() => { setStation(''); setCrimeHead(''); setSearch('') }} type="button">Clear filters</button></div></div>
+        <div className="grid h-full place-items-center bg-[--ink-900] text-center"><div><Sparkles className="mx-auto text-[--gold-400]" /><p className="mt-3">No matching areas</p><button className="mt-3 text-xs text-[--cyan-400]" onClick={() => { setStation(''); setCrimeHead(''); setSearch('') }} type="button">Clear filters</button></div></div>
       )}
     </OpsShell>
   )

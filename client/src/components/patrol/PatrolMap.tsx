@@ -650,7 +650,7 @@ export function PatrolMap({
         const cell = object as { h3?: string; value?: number } | undefined
         if (!cell?.h3) return null
         return {
-          text: `H3 ${cell.h3}\nweighted demand ${(cell.value ?? 0).toFixed(2)}`,
+          text: `Local area\nexpected workload ${(cell.value ?? 0).toFixed(2)}`,
           style: { fontSize: '11px', fontFamily: 'var(--f-mono)' },
         }
       },
@@ -664,10 +664,10 @@ export function PatrolMap({
       <div ref={containerRef} className="h-full w-full" />
 
       <div className="pointer-events-none absolute left-4 top-4 flex flex-wrap items-center gap-2">
-        <span className="map-badge">H3 r9 demand</span>
-        <span className="map-badge text-[--teal-400]">{targetMinutes}m road-time blanket</span>
+        <span className="map-badge">Historical workload by area</span>
+        <span className="map-badge text-[--teal-400]">Road coverage within {targetMinutes} min</span>
         {selectedUnit ? (
-          <span className="map-badge text-[--gold-400]">Choose a destination hex</span>
+          <span className="map-badge text-[--gold-400]">Choose a destination area</span>
         ) : null}
       </div>
 
@@ -696,7 +696,7 @@ export function PatrolMap({
       </div>
 
       <div className="pointer-events-none absolute bottom-4 left-4 max-w-[420px] rounded-[--r-sm] border border-[--ink-500] bg-[rgb(10_15_22_/_0.92)] px-3 py-2 text-[10px] text-[--txt-2]">
-        Replay marks are H3 aggregates. Coordinates inferred from text are never rendered as precise pins.
+        Replay records are grouped into nearby areas. Approximate locations are never shown as exact dots.
       </div>
 
       <div className="pointer-events-none absolute right-4 top-4 rounded-[--r-md] border border-[--ink-500] bg-[rgb(10_15_22_/_0.92)] px-3 py-2">

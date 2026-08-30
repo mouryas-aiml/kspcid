@@ -113,7 +113,7 @@ export function PulseRing({ data }: { readonly data: PulseRingData }) {
   return (
     <figure className="mt-4">
       <svg
-        aria-label={`24-hour derived occurrence pulse for ${data.h3_r9}, with the generated shift roster overlaid`}
+        aria-label="24-hour estimated activity pattern with a demonstration staffing line"
         className="mx-auto h-[250px] w-[250px]"
         role="img"
         viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -167,7 +167,7 @@ export function PulseRing({ data }: { readonly data: PulseRingData }) {
             x={CENTRE}
             y={CENTRE - 4}
           >
-            DERIVED HOURS
+            ESTIMATED TIMES
           </text>
           <text
             className="tabular-nums"
@@ -177,7 +177,7 @@ export function PulseRing({ data }: { readonly data: PulseRingData }) {
             x={CENTRE}
             y={CENTRE + 11}
           >
-            GOLD · GENERATED ROSTER
+            GOLD · DEMO STAFFING
           </text>
 
           {[0, 6, 12, 18].map((hour) => {
@@ -211,8 +211,8 @@ export function PulseRing({ data }: { readonly data: PulseRingData }) {
           {fall.drop > 0 ? ` (−${fall.drop} units)` : ''}
         </p>
         <p className="text-[--txt-3]">
-          {totalRecords} record{totalRecords === 1 ? '' : 's'} with a derived hour in this cell
-          {totalRecords < 30 ? ' — too few to read as a shift pattern; shown as the cell’s own history, not a rate.' : '.'}
+          {totalRecords} record{totalRecords === 1 ? '' : 's'} with an estimated time in this area
+          {totalRecords < 30 ? ' — too few for a reliable shift pattern; shown as this area’s history, not a rate.' : '.'}
         </p>
       </figcaption>
     </figure>

@@ -22,7 +22,7 @@ const items = [
   { label: 'Bengaluru overview', description: 'Alerts, exceedances and station briefs', route: '/', category: 'Review', icon: Shield },
   { label: 'Station briefs', description: 'One printable page per station', route: '/station/', category: 'Review', icon: BookOpen },
   { label: 'Command Feed', description: 'Ranked weekly-baseline signals', route: '/feed/', category: 'Detect', icon: RadioTower },
-  { label: 'Command Map', description: 'H3 common operational picture', route: '/map/', category: 'Detect', icon: Map },
+  { label: 'Command Map', description: 'Citywide operational map', route: '/map/', category: 'Detect', icon: Map },
   { label: 'Namma Patrol Lab', description: 'Road-time deployment exercise', route: '/patrol/', category: 'Plan', icon: Route },
   { label: 'Case Similarity', description: 'Graph-independent prior cases', route: '/similarity/', category: 'Investigate', icon: FileSearch },
   { label: 'Case Constellation', description: 'Seeded entity graph snapshot', route: '/network/', category: 'Investigate', icon: Network },
@@ -89,12 +89,12 @@ export function CommandPalette() {
             <p className="text-sm leading-6 text-[--txt-2]">Decision-support and scenario analysis for the Karnataka State Police. This local build separates source authority from transformation on every analytical surface.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {[
-                ['Local data adapter', 'VERIFIED', 'var(--ok)'],
-                ['Full routing regions', '106 / 106 PASS', 'var(--ok)'],
-                ['Offline demo path', 'VERIFIED', 'var(--ok)'],
-                ['Stored optimizer plan', 'SCORE 913', 'var(--ok)'],
-                ['Catalyst adapter', 'IMPLEMENTED', 'var(--cyan-400)'],
-                ['Catalyst deployment', 'NOT RUN', 'var(--warn)'],
+                ['Data checks', 'VERIFIED', 'var(--ok)'],
+                ['Road coverage areas', '106 / 106 READY', 'var(--ok)'],
+                ['Offline demo', 'VERIFIED', 'var(--ok)'],
+                ['Suggested patrol plan', 'SCORE 913', 'var(--ok)'],
+                ['Catalyst connection', 'READY', 'var(--cyan-400)'],
+                ['Development website', 'LIVE', 'var(--ok)'],
               ].map(([label, value, color]) => (
                 <div className="rounded-[--r-md] border border-[--ink-600] bg-[--ink-850] p-4" key={label}>
                   <p className="type-micro text-[--txt-3]">{label}</p>
@@ -103,17 +103,18 @@ export function CommandPalette() {
               ))}
             </div>
             <div className="mt-6 rounded-[--r-md] border border-[--ink-600] p-4">
-              <p className="type-micro text-[--txt-3]">Provenance legend</p>
+              <p className="type-micro text-[--txt-3]">Data source guide</p>
               <div className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
-                <span><b className="text-[--prov-official]">●</b> Official KSP / open data</span>
-                <span><b className="text-[--prov-third-party]">●</b> Third-party FIR mirror</span>
-                <span><b className="text-[--prov-open-reference]">●</b> Open reference</span>
-                <span><b className="text-[--prov-generated]">●</b> Generated demonstration</span>
+                <span><b className="text-[--prov-official]">●</b> Government or official open data</span>
+                <span><b className="text-[--prov-third-party]">●</b> Mirrored FIR dataset</span>
+                <span><b className="text-[--prov-open-reference]">●</b> Public map or reference data</span>
+                <span><b className="text-[--prov-generated]">●</b> Demonstration-only data</span>
               </div>
             </div>
             <div className="mt-4 flex gap-3 rounded-[--r-md] border border-[--warn] bg-[rgb(247_144_9_/.06)] p-4 text-xs leading-5 text-[--txt-2]">
               <Info className="mt-0.5 shrink-0 text-[--warn]" size={16} />
-              No Catalyst project, Authentication, Data Store, Signals, Mail, SmartBrowz, Pipeline, or Domain Mapping deployment is claimed by this local build.
+              The Development website is live. Cloud database, messaging, document delivery and a
+              custom domain are outside this demo.
             </div>
             <button className="mt-5 flex items-center gap-2 text-xs text-[--cyan-400]" onClick={() => setAbout(false)} type="button"><BookOpen size={14} /> Back to modules</button>
           </div>

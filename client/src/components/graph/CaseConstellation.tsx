@@ -265,7 +265,7 @@ function ContextPanel({
       </div>
       <div className="rounded-[--r-sm] border border-[--prov-generated] bg-[color-mix(in_srgb,var(--prov-generated)_6%,transparent)] p-3 text-[10px] leading-5 text-[--txt-2]">
         <Sparkles size={14} className="mb-2 text-[--prov-generated]" />
-        Entity identities and relationships are generated demonstration structure. Source incident attributes retain separate mirror provenance.
+        Names and connections in this view are demonstration data. FIR details keep their own data-source label.
       </div>
     </div>
   )
@@ -312,7 +312,7 @@ function GraphInspector({
         </Panel>
         <ProvenanceChip
           provenance={provenance}
-          derivation="This relationship discloses whether it is generated scenario structure or inferred model similarity. No generated edge is presented as source co-occurrence."
+          derivation="Shows whether a relationship is demonstration structure or a similarity suggested by the model. A demonstration link is never presented as a recorded connection."
         />
       </div>
     )

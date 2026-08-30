@@ -274,7 +274,7 @@ export function StationBrief({ stationCode }: { readonly stationCode: string }) 
             <ProvenanceChip
               variant="paper"
               provenance={fixture.provenance.baselines}
-              derivation="Every figure on this page is computed from the Karnataka FIR mirror, normalized and aggregated to this station. Expected ranges are a 52-week moving average with a seasonal factor and a negative-binomial upper limit. Kannada names, where shown, come from OpenStreetMap."
+              derivation="Every figure is calculated from the Karnataka FIR dataset and grouped by station. Expected ranges use the previous 52 weeks and seasonal patterns. Kannada names, where shown, come from OpenStreetMap."
             />
           </span>
         </div>

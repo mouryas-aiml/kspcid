@@ -44,19 +44,13 @@ export function ProvenanceChip({
       <div className="provenance-popover" role="tooltip">
         <p>{derivation}</p>
         <dl>
-          {provenance.method ? (
-            <>
-              <dt>Method</dt>
-              <dd>{provenance.method}</dd>
-            </>
-          ) : null}
           {provenance.confidence !== undefined ? (
             <>
               <dt>Confidence</dt>
               <dd>{Math.round(provenance.confidence * 100)}%</dd>
             </>
           ) : null}
-          <dt>Generation</dt>
+          <dt>Data version</dt>
           <dd>{provenance.generation_version}</dd>
         </dl>
       </div>

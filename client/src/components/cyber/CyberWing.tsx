@@ -256,7 +256,7 @@ function InspectorContent({ fixture }: { readonly fixture: CyberFixture }) {
   const maximum = Math.max(...topOutcomes.map((row) => row.count))
   return (
     <div className="space-y-4">
-      <ProvenanceChip provenance={fixture.provenance} derivation="Exact aggregates of rows whose normalized crime_group is CYBER CRIME. No coordinate, graph, or routing service is required." />
+      <ProvenanceChip provenance={fixture.provenance} derivation="Counts FIR registrations classified as cybercrime. No map or route information is used." />
       <Panel title="Current outcomes" eyebrow="OBSERVED STAGE">
         <div className="space-y-3">
           {topOutcomes.map((row) => (
@@ -297,9 +297,9 @@ export function CyberWing() {
   const topModes = useMemo(() => fixture?.complaint_modes.slice(0, 5) ?? [], [fixture])
 
   if (error) {
-    return <OpsShell title="Cyber Intelligence Wing" eyebrow="DETECT" context={<p className="text-sm text-[--critical]">{error}</p>} inspector={<p className="text-sm text-[--txt-2]">No aggregate claims rendered.</p>}><div className="grid h-full place-items-center bg-[--ink-900] text-[--critical]">Cyber snapshot unavailable</div></OpsShell>
+    return <OpsShell title="Cyber Intelligence Wing" eyebrow="DETECT" context={<p className="text-sm text-[--critical]">{error}</p>} inspector={<p className="text-sm text-[--txt-2]">No summary figures are shown.</p>}><div className="grid h-full place-items-center bg-[--ink-900] text-[--critical]">Cyber overview unavailable</div></OpsShell>
   }
-  if (!fixture) return <div className="grid h-screen place-items-center bg-[--ink-900] text-[--txt-2]">Loading cyber aggregates…</div>
+  if (!fixture) return <div className="grid h-screen place-items-center bg-[--ink-900] text-[--txt-2]">Loading cyber overview…</div>
 
   return (
     <OpsShell
@@ -327,13 +327,13 @@ export function CyberWing() {
         </section>
 
         <section className="panel">
-          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">MONTHLY VOLUME</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><BarChart3 size={16} /> Cyber FIRs against all FIRs</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Monthly counts by registration date. 2024 is visibly marked partial and is not used for trend inference." /></div>
+          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">MONTHLY VOLUME</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><BarChart3 size={16} /> Cyber FIRs against all FIRs</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Monthly counts by registration date. The incomplete 2024 period is clearly marked and excluded from comparisons." /></div>
           <VolumeChart rows={fixture.monthly_volume} />
         </section>
 
         {/* Full width: a treemap in a 250px column cannot label its own tiles. */}
         <section className="panel mt-4">
-          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">LEGAL CLASSIFICATION</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><FileText size={16} /> Top exact Act / section combinations</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Exact source act_section strings, ranked by FIR count. Similar-looking strings are not merged." /></div>
+          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">LEGAL CLASSIFICATION</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><FileText size={16} /> Most-used Act and section combinations</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Uses the Act and section wording recorded in the source and ranks it by FIR count. Similar-looking entries are kept separate." /></div>
           <SectionTreemap rows={fixture.top_act_sections} totalRecords={fixture.summary.cyber_records} />
         </section>
 
@@ -350,7 +350,7 @@ export function CyberWing() {
         </div>
 
         <section className="panel mt-4">
-          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">REGISTRATION MODE BY YEAR</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><Users size={16} /> Exact observed split</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Exact complaint_mode counts by FIR year. The 2024 collection is partial; only two cyber rows are explicitly Online." /></div>
+          <div className="panel-header"><div><p className="type-micro text-[--txt-3]">REGISTRATION MODE BY YEAR</p><h3 className="mt-1 flex items-center gap-2 text-base font-semibold"><Users size={16} /> Recorded split</h3></div><ProvenanceChip provenance={fixture.provenance} derivation="Counts the complaint method recorded for each FIR year. The 2024 collection is incomplete; only two cyber records are explicitly marked Online." /></div>
           <ModeByYear rows={fixture.complaint_modes_by_year} />
         </section>
       </div>

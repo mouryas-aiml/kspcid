@@ -574,7 +574,7 @@ export function JusticePipeline() {
 
           <section className="no-print py-8">
             <h2 className="text-lg font-semibold">Two-station comparison</h2>
-            <p className="mt-1 text-sm text-[--ink-soft]">Exact current-stage totals; no inferred station-to-station ranking.</p>
+            <p className="mt-1 text-sm text-[--ink-soft]">Current-stage totals are shown; stations are not ranked against one another.</p>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {[selectedStation, compareStation].map((station, index) => (
                 <div className="border border-[--rule] p-4" key={`${index}-${station?.station_code ?? 'none'}`}>

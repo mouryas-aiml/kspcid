@@ -235,13 +235,13 @@ function SimilarityInspector({
       </Panel>
       <dl className="grid grid-cols-2 gap-3 text-xs">
         <div><dt className="text-[--txt-3]">Earlier by</dt><dd className="mt-1 font-mono">{selected.days_earlier} days</dd></div>
-        <div><dt className="text-[--txt-3]">H3 distance</dt><dd className="mt-1 font-mono">{selected.distance_km.toFixed(2)} km</dd></div>
+        <div><dt className="text-[--txt-3]">Distance between areas</dt><dd className="mt-1 font-mono">{selected.distance_km.toFixed(2)} km</dd></div>
         <div><dt className="text-[--txt-3]">Geo origin</dt><dd className="mt-1 font-mono">{selected.geo_origin}</dd></div>
         <div><dt className="text-[--txt-3]">Time origin</dt><dd className="mt-1 font-mono">{selected.time_origin}</dd></div>
       </dl>
       <ProvenanceChip
         provenance={provenance}
-        derivation="Each result is a weighted combination of separately inspectable section, premise, geography, inferred-time, victim and weapon feature similarities. The displayed identifier is explicitly a generated case reference."
+        derivation="Compares legal sections, place type, nearby area, estimated time, victim counts and weapon details. The displayed case reference is created for this demonstration."
       />
     </div>
   )
