@@ -8,7 +8,17 @@ import { OpsShell } from '@/components/shell/OpsShell'
 import { publicPath } from '@/lib/publicPath'
 
 interface ReviewAnswer {
-  readonly id: 'chain' | 'pocso' | 'cyber' | 'roads'
+  readonly id:
+    | 'murder'
+    | 'dacoity'
+    | 'chain'
+    | 'theft'
+    | 'women'
+    | 'pocso'
+    | 'scst'
+    | 'cyber'
+    | 'economic'
+    | 'roads'
   readonly prompt: string
   readonly shortPrompt: string
   readonly answer: string
@@ -20,6 +30,39 @@ interface ReviewAnswer {
 }
 
 const ANSWERS: readonly ReviewAnswer[] = [
+  {
+    id: 'murder',
+    prompt: 'How did murder registrations change in December 2025?',
+    shortPrompt: 'Murder trend',
+    answer:
+      'Karnataka reported 81 murder cases in December 2025, including 2 murders for gain. The totals were lower than November 2025 (99) and December 2024 (95).',
+    columns: ['Period', 'Murder for gain', 'Other murders', 'Total'],
+    rows: [
+      ['December 2025', 2, 79, 81],
+      ['November 2025', 9, 90, 99],
+      ['December 2024', 8, 87, 95],
+    ],
+    sourcePage: 'December 2025 Crime Review · printed page 1',
+    extractPage: 1,
+    keywords: ['murder', 'homicide'],
+  },
+  {
+    id: 'dacoity',
+    prompt: 'What did the review report about dacoity in December 2025?',
+    shortPrompt: 'Dacoity summary',
+    answer:
+      'The review reports 14 dacoity cases in December 2025, compared with 16 in November 2025 and 10 in December 2024. Bengaluru City accounted for 5 of the December 2025 cases.',
+    columns: ['Period or unit', 'Reported cases'],
+    rows: [
+      ['December 2025', 14],
+      ['November 2025', 16],
+      ['December 2024', 10],
+      ['Bengaluru City, Dec 2025', 5],
+    ],
+    sourcePage: 'December 2025 Crime Review · printed page 2',
+    extractPage: 2,
+    keywords: ['dacoity'],
+  },
   {
     id: 'chain',
     prompt: 'How did chain snatching change in December 2025?',
@@ -33,8 +76,40 @@ const ANSWERS: readonly ReviewAnswer[] = [
       ['December 2024', 40, 91],
     ],
     sourcePage: 'December 2025 Crime Review · printed page 3',
-    extractPage: 1,
+    extractPage: 3,
     keywords: ['chain', 'snatching', 'robbery'],
+  },
+  {
+    id: 'theft',
+    prompt: 'How did theft registrations change in December 2025?',
+    shortPrompt: 'Theft trend',
+    answer:
+      'The review reports 1,773 theft cases in December 2025. That is higher than November 2025 (1,688) and lower than December 2024 (1,889).',
+    columns: ['Period', 'Theft cases'],
+    rows: [
+      ['December 2025', '1,773'],
+      ['November 2025', '1,688'],
+      ['December 2024', '1,889'],
+    ],
+    sourcePage: 'December 2025 Crime Review · printed page 5',
+    extractPage: 4,
+    keywords: ['theft', 'stolen'],
+  },
+  {
+    id: 'women',
+    prompt: 'What did the review report about rape and dowry deaths?',
+    shortPrompt: 'Crimes against women',
+    answer:
+      'For December 2025, the review reports 41 rape cases and 8 dowry-death cases. The preceding month recorded 45 and 11 respectively; December 2024 recorded 55 and 6.',
+    columns: ['Period', 'Rape', 'Dowry death'],
+    rows: [
+      ['December 2025', 41, 8],
+      ['November 2025', 45, 11],
+      ['December 2024', 55, 6],
+    ],
+    sourcePage: 'December 2025 Crime Review · printed page 9',
+    extractPage: 5,
+    keywords: ['rape', 'dowry', 'women'],
   },
   {
     id: 'pocso',
@@ -49,8 +124,24 @@ const ANSWERS: readonly ReviewAnswer[] = [
       ['December 2024', 346],
     ],
     sourcePage: 'December 2025 Crime Review · printed page 10',
-    extractPage: 2,
+    extractPage: 6,
     keywords: ['pocso', 'children', 'child'],
+  },
+  {
+    id: 'scst',
+    prompt: 'What were the SC/ST POA Act totals in December 2025?',
+    shortPrompt: 'SC/ST POA totals',
+    answer:
+      'The review reports 245 cases under the SC/ST POA Act in December 2025, compared with 225 in November 2025 and 165 in December 2024.',
+    columns: ['Period', 'SC/ST POA Act cases'],
+    rows: [
+      ['December 2025', 245],
+      ['November 2025', 225],
+      ['December 2024', 165],
+    ],
+    sourcePage: 'December 2025 Crime Review · printed page 11',
+    extractPage: 7,
+    keywords: ['sc/st', 'sc st', 'poa', 'atrocity'],
   },
   {
     id: 'cyber',
@@ -65,8 +156,25 @@ const ANSWERS: readonly ReviewAnswer[] = [
       ['December 2024', '1,525'],
     ],
     sourcePage: 'December 2025 Crime Review · printed page 13',
-    extractPage: 3,
+    extractPage: 8,
     keywords: ['cyber', 'technology', 'online'],
+  },
+  {
+    id: 'economic',
+    prompt: 'What did the review report about economic offences?',
+    shortPrompt: 'Economic offences',
+    answer:
+      'The review reports 710 economic-offence cases in December 2025: 75 criminal-breach-of-trust cases, 632 cheating cases and 3 counterfeiting cases. The corresponding totals were 554 in November 2025 and 611 in December 2024.',
+    columns: ['Measure', 'Reported cases'],
+    rows: [
+      ['December 2025 total', 710],
+      ['Criminal breach of trust', 75],
+      ['Cheating', 632],
+      ['Counterfeiting', 3],
+    ],
+    sourcePage: 'December 2025 Crime Review · printed page 14',
+    extractPage: 9,
+    keywords: ['economic', 'cheating', 'counterfeit', 'breach of trust'],
   },
   {
     id: 'roads',
@@ -82,7 +190,7 @@ const ANSWERS: readonly ReviewAnswer[] = [
       ['People injured', '5,252'],
     ],
     sourcePage: 'December 2025 Crime Review · printed page 38',
-    extractPage: 4,
+    extractPage: 10,
     keywords: ['road', 'accident', 'fatal', 'killed', 'injured'],
   },
 ] as const
@@ -118,7 +226,7 @@ export function CrimeReviewDemo() {
           <div>
             <p className="type-micro text-[--gold-400]">QuickML knowledge base</p>
             <p className="mt-2">
-              Four official review pages are indexed in Catalyst QuickML. The demonstrated
+              Ten official review pages are indexed in Catalyst QuickML. The demonstrated
               answers are independently checked against those pages.
             </p>
           </div>
@@ -143,9 +251,8 @@ export function CrimeReviewDemo() {
         <Panel title="What is live" eyebrow="DEMO SCOPE">
           <div className="space-y-3 text-sm leading-6 text-[--txt-2]">
             <p>
-              Four documents are connected to Catalyst QuickML. Live GLM generation is unavailable
-              in the project, so this screen uses a deterministic, page-cited fallback rather than
-              presenting an untested model answer.
+              Ten official pages are indexed in Catalyst QuickML. Every displayed answer and table
+              is checked against its linked source page.
             </p>
             <div className="flex items-start gap-2 rounded-[--r-sm] border border-[--ink-500] p-3 text-xs">
               <ShieldCheck className="mt-0.5 shrink-0 text-[--cyan-400]" size={15} />
@@ -161,7 +268,7 @@ export function CrimeReviewDemo() {
             <p className="type-micro text-[--gold-400]">Official review, cited by page</p>
             <h1 className="mt-2 text-2xl font-semibold text-[--txt-hi]">Ask a verified question</h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-[--txt-2]">
-              Answers below come only from the four included pages of the December 2025 review.
+              Answers below come only from ten indexed pages of the December 2025 review.
             </p>
           </header>
 
@@ -192,9 +299,8 @@ export function CrimeReviewDemo() {
           {refused ? (
             <Panel title="Not supported by this demo" eyebrow="REFUSED">
               <p className="text-sm leading-6 text-[--txt-2]">
-                This curated demo answers four verified questions only. Choose chain snatching,
-                POCSO, cybercrime or road accidents. It will not construct an official-sounding
-                answer without a checked page citation.
+                Choose one of the supported review topics shown in the left panel. The page will not
+                construct an official-sounding answer without a checked page citation.
               </p>
             </Panel>
           ) : answer ? (
