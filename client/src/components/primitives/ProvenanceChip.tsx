@@ -10,16 +10,26 @@ interface ProvenanceChipProps {
   readonly provenance: Provenance
   readonly derivation: string
   readonly className?: string
+  /**
+   * `paper` restyles the chip for the light brief shell. The popover is
+   * authored against the dark ops surface, so on paper it rendered dark text
+   * on a dark panel; every brief page was patching that inline with the same
+   * arbitrary-variant selector. One variant replaces those copies.
+   */
+  readonly variant?: 'ops' | 'paper'
 }
 
 export function ProvenanceChip({
   provenance,
   derivation,
   className,
+  variant = 'ops',
 }: ProvenanceChipProps) {
   const authority = authorityMeta[provenance.source_authority]
   return (
-    <details className={`provenance-chip ${className ?? ''}`}>
+    <details
+      className={`provenance-chip ${variant === 'paper' ? 'provenance-chip--paper' : ''} ${className ?? ''}`}
+    >
       <summary>
         <span
           className="provenance-dot"

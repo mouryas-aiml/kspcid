@@ -18,6 +18,7 @@ const files = [
   ['data/scenarios/optimizer_fallback.json', 'public/data/scenarios/optimizer_fallback.json'],
   ['data/offline/demo_snapshot.json', 'public/data/offline/demo_snapshot.json'],
   ['data/scenarios/command_map.json', 'public/data/scenarios/command_map.json'],
+  ['data/scenarios/station_brief.json', 'public/data/scenarios/station_brief.json'],
   ['data/derived/graph_snapshot.json', 'public/data/graph/graph_snapshot.json'],
   // 106 official station polygons — the §7.1 jurisdiction layer. Copied
   // verbatim: they are `official_polygon` provenance and simplifying them would

@@ -19,6 +19,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const items = [
+  { label: 'Bengaluru overview', description: 'Alerts, exceedances and station briefs', route: '/', category: 'Review', icon: Shield },
+  { label: 'Station briefs', description: 'One printable page per station', route: '/station/', category: 'Review', icon: BookOpen },
   { label: 'Command Feed', description: 'Ranked weekly-baseline signals', route: '/feed/', category: 'Detect', icon: RadioTower },
   { label: 'Command Map', description: 'H3 common operational picture', route: '/map/', category: 'Detect', icon: Map },
   { label: 'Namma Patrol Lab', description: 'Road-time deployment exercise', route: '/patrol/', category: 'Plan', icon: Route },

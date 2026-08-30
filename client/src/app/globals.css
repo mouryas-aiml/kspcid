@@ -70,6 +70,21 @@ button { color: inherit; }
 .provenance-popover dl { display: grid; grid-template-columns: 84px 1fr; margin: 12px 0 0; color: var(--txt-2); }
 .provenance-popover dd { margin: 0; font-family: var(--f-mono), monospace; overflow-wrap: anywhere; }
 
+/* The chip on the light brief shell. Same geometry, paper palette — the ops
+   variant is authored for --ink surfaces and is unreadable on --paper. */
+.provenance-chip--paper > summary {
+  border-color: var(--rule);
+  background: var(--paper);
+  color: var(--ink-soft);
+}
+.provenance-chip--paper .provenance-popover {
+  border-color: var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 20px 48px -24px rgb(20 24 31 / .35);
+}
+.provenance-chip--paper .provenance-popover dl { color: var(--ink-soft); }
+
 .metric-tile {
   min-width: 0; padding: 16px; border: 1px solid var(--ink-600);
   border-radius: var(--r-md); background: var(--ink-800);
@@ -223,11 +238,30 @@ button { color: inherit; }
 }
 
 @media print {
-  @page { size: A4; margin: 16mm; }
+  @page { size: A4; margin: 14mm; }
   :root { --paper-tint: #fff; }
   .no-print { display: none !important; }
   .brief-page { width: 100%; margin: 0; box-shadow: none; }
   body { background: #fff; color: var(--ink); }
+
+  /* The station brief must come out as ONE A4 sheet (§7.5 acceptance).
+     At screen sizing it ran to 2.6 pages: A4 inside 14mm margins is ~182mm
+     wide against an 820px page, so everything reflows narrower and taller.
+     These rules compress the sheet rather than letting it spill; they are
+     print-only, so the screen layout keeps its breathing room. */
+  .brief-a4 { gap: 7px !important; padding: 0 !important; font-size: 10px; }
+  .brief-a4 .a4-section { padding-top: 6px !important; }
+  .brief-a4 .a4-gap { gap: 6px !important; }
+  .brief-a4 h1 { font-size: 17px !important; line-height: 21px !important; }
+  .brief-a4 h2 { font-size: 8px !important; }
+  .brief-a4 .a4-kn { font-size: 12px !important; line-height: 15px !important; }
+  .brief-a4 .a4-body { font-size: 9.5px !important; line-height: 13px !important; }
+  .brief-a4 .a4-metric { font-size: 12px !important; line-height: 14px !important; }
+  .brief-a4 .a4-note { font-size: 8px !important; line-height: 11px !important; }
+  .brief-a4 table { font-size: 9px !important; }
+  .brief-a4 td, .brief-a4 th { padding-top: 1.5px !important; padding-bottom: 1.5px !important; }
+  /* Keep a section and its heading together, but never force a page break. */
+  .brief-a4 .a4-section { break-inside: avoid; }
 }
 
 @media (prefers-reduced-motion: reduce) {

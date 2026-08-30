@@ -4,6 +4,7 @@ import {
   Activity,
   BellRing,
   BookOpenText,
+  FileText,
   GitBranch,
   Map,
   Network,
@@ -23,6 +24,7 @@ const items = [
   { href: '/cyber/', label: 'Cyber Wing', icon: Activity },
   { href: '/review/', label: 'Crime Review', icon: BookOpenText },
   { href: '/justice/', label: 'Justice Pipeline', icon: GitBranch },
+  { href: '/station/', label: 'Station Brief', icon: FileText },
 ] as const
 
 export function AppRail() {
@@ -43,7 +45,8 @@ export function AppRail() {
 
   return (
     <nav className="app-rail no-print" aria-label="Primary">
-      <Link href="/map/" className="rail-mark" aria-label="KSPCID home">
+      {/* Home is the overview, not the map — the map is one module within it. */}
+      <Link href="/" className="rail-mark" aria-label="KSPCID overview">
         <Shield size={20} strokeWidth={1.8} />
       </Link>
       <div className="rail-items">

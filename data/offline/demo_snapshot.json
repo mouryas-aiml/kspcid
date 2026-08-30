@@ -15,15 +15,15 @@
     {
       "id": "feed",
       "url": "/data/scenarios/command_feed.json",
-      "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3",
-      "bytes": 35453,
+      "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662",
+      "bytes": 28557,
       "required": true
     },
     {
       "id": "command_map",
       "url": "/data/scenarios/command_map.json",
-      "sha256": "c921554b2ee7995415df9cfeb8a23d47df9278006350c209998ae043d2e36756",
-      "bytes": 433269,
+      "sha256": "0982955901411a7613fb46ba4b1ce1767adecac8365517f1912e8fc1ca932fee",
+      "bytes": 433367,
       "required": true
     },
     {
