@@ -297,10 +297,9 @@ export function CrimeReviewDemo() {
           </form>
 
           {refused ? (
-            <Panel title="Not supported by this demo" eyebrow="REFUSED">
+            <Panel title="Choose a review topic" eyebrow="TRY ANOTHER">
               <p className="text-sm leading-6 text-[--txt-2]">
-                Choose one of the supported review topics shown in the left panel. The page will not
-                construct an official-sounding answer without a checked page citation.
+                Select a topic from the left panel to view the reported figures and its source page.
               </p>
             </Panel>
           ) : answer ? (
