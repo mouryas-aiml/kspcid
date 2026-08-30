@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-07-26T08:25:16.706Z",
+  "updated_at": "2026-08-30T05:12:08.223Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -310,7 +310,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T20:26:15.470Z",
+      "generated_at": "2026-08-29T21:21:02.258Z",
       "notes": {
         "input_complete_window_rows": 412754,
         "excluded_partial_2024_rows": 12654,
@@ -381,16 +381,16 @@
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
       "rows": 13,
-      "sha256": "3adab5df9d57c960dd3b44e3232e044e5b526a51e026e5ba321bd38d92614f0a",
+      "sha256": "d1598c5144b511a4b8264c30a5aeecda66ecf709a06c67d5bffa8be7453b6417",
       "bytes": 4106,
       "inputs": [
         {
           "path": "app/data/scenarios/command_feed.json",
-          "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3"
+          "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662"
         },
         {
           "path": "app/data/scenarios/command_map.json",
-          "sha256": "c921554b2ee7995415df9cfeb8a23d47df9278006350c209998ae043d2e36756"
+          "sha256": "0982955901411a7613fb46ba4b1ce1767adecac8365517f1912e8fc1ca932fee"
         },
         {
           "path": "app/data/scenarios/demo_corridor_patrol.json",
@@ -438,7 +438,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T08:25:16.706Z",
+      "generated_at": "2026-08-29T20:18:54.630Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10777,9 +10777,9 @@
     "app/data/scenarios/command_feed.json": {
       "step": "16_command_feed",
       "path": "app/data/scenarios/command_feed.json",
-      "rows": 30,
-      "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3",
-      "bytes": 35453,
+      "rows": 25,
+      "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662",
+      "bytes": 28557,
       "inputs": [
         {
           "path": "app/data/derived/weekly_baselines.parquet",
@@ -10791,10 +10791,10 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T21:50:38.320Z",
+      "generated_at": "2026-08-30T05:12:07.097Z",
       "notes": {
-        "detector_candidates": 84,
-        "mappable_alerts": 26,
+        "detector_candidates": 25,
+        "mappable_alerts": 11,
         "replay_duration_ms": 60000
       }
     },
@@ -10802,8 +10802,8 @@
       "step": "11_command_map_fixture",
       "path": "app/data/scenarios/command_map.json",
       "rows": 500,
-      "sha256": "c921554b2ee7995415df9cfeb8a23d47df9278006350c209998ae043d2e36756",
-      "bytes": 433269,
+      "sha256": "0982955901411a7613fb46ba4b1ce1767adecac8365517f1912e8fc1ca932fee",
+      "bytes": 433367,
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
@@ -10811,11 +10811,11 @@
         },
         {
           "path": "app/data/scenarios/command_feed.json",
-          "sha256": "2ce5c798c33217a8230e90695a68949c421bea95df8a8f03983a36a49887dbe3"
+          "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T22:19:02.431Z",
+      "generated_at": "2026-08-29T20:18:37.861Z",
       "notes": {
         "reported_points": 500,
         "explanations": 24,
@@ -10910,7 +10910,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-26T08:25:16.701Z",
+      "generated_at": "2026-08-29T20:18:54.627Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,
@@ -10942,6 +10942,38 @@
       "notes": {
         "candidate_pool": 38024,
         "candidates_per_case": 100
+      }
+    },
+    "app/data/scenarios/station_brief.json": {
+      "step": "17_station_brief",
+      "path": "app/data/scenarios/station_brief.json",
+      "rows": 106,
+      "sha256": "6db3f59d8766ee6df2e94c50d53b2c1c0c2be8066e1188b50329f3a742ff2e57",
+      "bytes": 510270,
+      "inputs": [
+        {
+          "path": "app/data/derived/weekly_baselines.parquet",
+          "sha256": "7d560d83f70fc4fe3a4ce3eb1fafe02d5364e4f07c1bdefed936ab05a24c7224"
+        },
+        {
+          "path": "app/data/derived/incidents_time.parquet",
+          "sha256": "d7c313fe3e924c4ab05272a108035c6ff0ca13df1197aa03e2e15083ae27a38d"
+        },
+        {
+          "path": "app/data/derived/stations.parquet",
+          "sha256": "780edb656c93f727e297390752e7ba225352d7b96f0b0b4053bd8c03ffda2d69"
+        },
+        {
+          "path": "app/reference/raw/bengaluru_osm_overpass.json",
+          "sha256": "316477d1a313732e875d0ec0c9b60d7386006362a391bddeffa1617f60f00ef0"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-08-30T05:12:08.223Z",
+      "notes": {
+        "snapshot_week": "2023-12-25",
+        "stations_above_expected_band": 0,
+        "kannada_resolved": 43
       }
     }
   }

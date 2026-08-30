@@ -58,6 +58,16 @@ export const METHOD = {
   mo_signature_v1: 'mo_signature_v1',
   /** 06 — 52-week EWMA, seasonal factor, and negative-binomial control limit. */
   weekly_baseline_v1: 'weekly_baseline_v1',
+  /** 17 — OSM `name:kn` on an `amenity=police` feature, matched by normalized name. */
+  station_name_kn_police_v1: 'station_name_kn_police_v1',
+  /** 17 — OSM `name:kn` locality label composed with a constant station suffix. */
+  station_name_kn_locality_v1: 'station_name_kn_locality_v1',
+  /** 17 — per-station weekly deltas, ageing, victim rollup and division peers. */
+  station_brief_v1: 'station_brief_v1',
+  /** 17 — one-step-ahead EWMA outlook, no seasonal factor, NB interval. */
+  demand_outlook_v1: 'demand_outlook_v1',
+  /** 17 — generated establishment figure. Not a KSP number; demo only. */
+  station_strength_v1: 'station_strength_v1',
 } as const
 
 export type MethodId = (typeof METHOD)[keyof typeof METHOD]

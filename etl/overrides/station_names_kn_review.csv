@@ -1,0 +1,114 @@
+# Proposed Kannada display labels (BUILD_SPEC §7.5 §1). NOT authoritative.
+# tier=police   : OSM amenity=police carried its own name:kn. Transformation "normalized".
+# tier=locality : a locality name:kn composed with a constant station suffix. Transformation "derived".
+# tier=review   : no agreed match. Renders in English until a human supplies a name.
+#
+# Nothing here is transliterated or invented. An empty name_kn is the correct
+# outcome when the source is silent — do not fill one in by guessing.
+station_code,station_name,tier,confidence,name_kn,osm_source_name
+PSB-100,Pulakeshinagar,review:no_match,,,
+PSB-101,Shivajinagar,review:no_match,,,
+PSB-102,Malleshwarm,review:no_match,,,
+PSB-103,Srirampura,review:ambiguous,,,
+PSB-104,Subramanya Nagar,review:ambiguous,,,
+PSB-105,Rajaji Nagar,police,0.95,ರಾಜಾಜಿನಗರ ಆರಕ್ಷಕ ಠಾಣೆ,Rajaji Nagar Police Station
+PSB-106,Rajgopal Nagar,review:no_match,,,
+PSB-107,Mahalakshmi Layout,locality,0.7,ಮಹಾಲಕ್ಷ್ಮಿ ಬಡಾವಣೆ ಪೊಲೀಸ್ ಠಾಣೆ,Mahalakshmi Layout
+PSB-108,Nandini Layout,police,0.95,ನಂದಿನಿ ಲೇಔಟ್ ಪೋಲಿಸ್ ಠಾಣೆ,Nandini Layout Police Station
+PSB-109,Yeshwanthapura,review:no_match,,,
+PSB-110,Yeshwanthpura RMC Yard,review:no_match,,,
+PSB-111,Peenya,police,0.95,ಪೀಣ್ಯ ಆರಕ್ಷಕ ಠಾಣೆ,Peenya Police Station
+PSB-112,Bagalgunte,review:no_match,,,
+PSB-113,Gangammagudi,review:no_match,,,
+PSB-114,Soladevanahalli,review:ambiguous,,,
+PSB-115,Jalahalli,police,0.95,ಜಾಲಹಳ್ಳಿ ಆರಕ್ಷಕ ಠಾಣೆ,Jalahalli Police Station
+PSB-116,J.C. NagarPS,review:no_match,,,
+PSB-117,R.T. Nagar,review:no_match,,,
+PSB-118,Sanjay Nagara,locality,0.7,ಸಂಜಯನಗರ ಪೊಲೀಸ್ ಠಾಣೆ,Sanjay Nagara
+PSB-119,Hebbal,police,0.95,ಹೆಬ್ಬಾಳ ಆರಕ್ಷಕ ಠಾಣೆ,Hebbal Police Station
+PSB-121,Chikkajala,locality,0.7,ಚಿಕ್ಕಜಾಲ ಪೊಲೀಸ್ ಠಾಣೆ,Chikkajala
+PSB-123,Amruthahally,review:no_match,,,
+PSB-124,Kothanur,review:no_match,,,
+PSB-125,Sampigehalli,locality,0.7,ಸಂಪಿಗೆಹಳ್ಳಿ ಪೊಲೀಸ್ ಠಾಣೆ,Sampigehalli
+PSB-126,Kodigehalli,police,0.95,ಕೊಡಿಗೇಹಳ್ಳಿ ಆರಕ್ಷಕ ಠಾಣೆ,Kodigehalli Police Station
+PSB-127-01,Vidhyaranyapura,review:no_match,,,
+PSB-127-02,Yelahanka New Town,locality,0.7,ಯಲಹಂಕ ಹೊಸ ಪಟ್ಟಣ ಪೊಲೀಸ್ ಠಾಣೆ,Yelahanka New Town
+PSB-128,Yelahanka,review:ambiguous,,,
+PSB-129,Banashankari,police,0.95,ಬನಶಂಕರಿ ಆರಕ್ಷಕ ಠಾಣೆ,Banashankari Police Station
+PSB-130,Basavanagudi,locality,0.7,ಬಸವನಗುಡಿ ಪೋಲಿಸ್ ಠಾಣೆ,Basavanagudi Police Station
+PSB-131,Jayanagar,locality,0.7,ಜಯನಗರ ಪೊಲೀಸ್ ಠಾಣೆ,Jayanagar
+PSB-132,Jayaprakash Nagar,review:ambiguous,,,
+PSB-133,Siddapura,review:no_match,,,
+PSB-134,Konanakunte,locality,0.7,ಕೊಣನಕುಂಟೆ ಪೊಲೀಸ್ ಠಾಣೆ,Konanakunte
+PSB-135,Kumaraswamy Layout,review:ambiguous,,,
+PSB-136,Puttenahalli,locality,0.7,ಪುಟ್ಟೇನಹಳ್ಳಿ ಪೊಲೀಸ್ ಠಾಣೆ,Puttenahalli
+PSB-137,Subramanyapura,review:ambiguous,,,
+PSB-138,Thalaghattapura,police,0.95,ತಲಘಟ್ಟಪುರ ಆರಕ್ಷಕ ಠಾಣೆ,Thalaghattapura Police Station
+PSB-139,V.V. Puram,review:no_match,,,
+PSB-140,C.K.Acchukattu,review:no_match,,,
+PSB-141,K.G.Nagar,review:no_match,,,
+PSB-142,Girinagar,police,0.95,ಗಿರಿನಗರ ಆರಕ್ಷಕ ಠಾಣೆ,Girinagar Police Station
+PSB-143-01,Bandepalya,review:no_match,,,
+PSB-143-02,parappana Agrahara,review:no_match,,,
+PSB-144,Electronic City,locality,0.7,ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಸಿಟಿ ಪೊಲೀಸ್ ಠಾಣೆ,Electronic City
+PSB-146,Adugodi,review:ambiguous,,,
+PSB-147,H.S.R.Layout,review:no_match,,,
+PSB-148,Koramangala,review:ambiguous,,,
+PSB-150,Bommanahalli,locality,0.7,ಬೊಮ್ಮನಹಳ್ಳಿ ಪೊಲೀಸ್ ಠಾಣೆ,Bommanahalli
+PSB-151-01,Madiwala,locality,0.7,ಮಡಿವಾಳ ಪೊಲೀಸ್ ಠಾಣೆ,Madiwala
+PSB-151-02,Suddaguntepalya,locality,0.7,ಸದಗುಂಟೆ ಪಾಳ್ಯ ಪೊಲೀಸ್ ಠಾಣೆ,Suddaguntepalya
+PSB-152,Tilak Nagar,police,0.95,ತಿಲಕ್ ನಗರ ಪೋಲಿಸ್ ಟಾಣೆ,Tilaknagar Police Station
+PSB-153,Chamarajpet,review:no_match,,,
+PSB-154,City Market,review:no_match,,,
+PSB-155,Cottonpet,review:no_match,,,
+PSB-156,Kalasipalya,review:no_match,,,
+PSB-157,Upparpet,review:no_match,,,
+PSB-158,Annapoorneshwari Nagar,review:no_match,,,
+PSB-159,Byatarayanapura,locality,0.7,ಬ್ಯಾಟರಾಯನಪುರ ಪೊಲೀಸ್ ಠಾಣೆ,Byatarayanapura
+PSB-160,Chandra Layout,locality,0.7,ಚಂದ್ರಾ ಲೇಔಟ್ ಪೊಲೀಸ್ ಠಾಣೆ,Chandra Layout
+PSB-161,Jagajeevanram Nagar,review:no_match,,,
+PSB-162,Jnanabharathi,locality,0.7,ಜ್ಞಾನ ಭಾರತಿ ಪೊಲೀಸ್ ಠಾಣೆ,Jnanabharathi
+PSB-163,Kengeri,review:ambiguous,,,
+PSB-164,Rajarajeshwari Nagar,locality,0.7,ರಾಜರಾಜೇಶ್ವರಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆ,Rajarajeshwari Nagar
+PSB-165,Basaveshwara Nagar,review:no_match,,,
+PSB-166,Kamakshipalya,review:no_match,,,
+PSB-167,Kempapura Agrahara,locality,0.7,ಕೆಂಪಾಪುರ ಅಗ್ರಹಾರ ಪೊಲೀಸ್ ಠಾಣೆ,Kempapura Agrahara
+PSB-168,Magadi Road,review:ambiguous,,,
+PSB-169,Vijayanagar,police,0.95,ವಿಜಯನಗರ ಆರಕ್ಷಕ ಠಾಣೆ,Vijayanagar Police Station
+PSB-737,Bellanduru,locality,0.7,ಬೆಳ್ಳಂದೂರು ಪೊಲೀಸ್ ಠಾಣೆ,Bellanduru
+PSB-738,H.A.L.,review:no_match,,,
+PSB-739,Marathahalli,locality,0.7,ಮಾರತಹಳ್ಳಿ ಪೊಲೀಸ್ ಠಾಣೆ,Marathahalli
+PSB-740,Varthur,review:no_match,,,
+PSB-741,K.R. Puram,review:no_match,,,
+PSB-742,Kadugodi,police,0.95,ಕಾಡುಗೋಡಿ ಆರಕ್ಷಕ ಟಾಣೆ,Kadugodi Police Station
+PSB-743,Mahadevapura,locality,0.7,ಮಹಾದೇವಪುರ ಪೊಲೀಸ್ ಠಾಣೆ,Mahadevapura
+PSB-744,Whitefield,review:ambiguous,,,
+PSB-776,Shankarapuram,review:no_match,,,
+PSB-79,Cubbon Park,police,0.95,ಕಬ್ಬನ್ ಪಾರ್ಕ್ ಆರಕ್ಷಕ ಠಾಣೆ,Cubbon Park Police Station
+PSB-795,Ashokanagara,review:no_match,,,
+PSB-796,S.J. Park,review:no_match,,,
+PSB-797,Bagalur,review:no_match,,,
+PSB-798,Hanumathanagar,review:no_match,,,
+PSB-799,Begur,review:no_match,,,
+PSB-80,Vidhana Soudha,police,0.95,ವಿಧಾನ ಸೌಧ ಆರಕ್ಷಕ ಠಾಣೆ,Vidhana Soudha Police Station
+PSB-800,Hulimavu,police,0.95,ಹುಳಿಮಾವು ಆರಕ್ಷಕ ಠಾಣೆ,Hulimavu Police Station
+PSB-801,Mico layout Bangalore,review:no_match,,,
+PSB-81,Viveknagar,review:no_match,,,
+PSB-82,Halasurgate,review:no_match,,,
+PSB-83,Sampangiramanagar,review:no_match,,,
+PSB-84,Wilsongarden,review:ambiguous,,,
+PSB-85,High Grounds,locality,0.7,ಹೈಗ್ರೌಂಡ್ಸ್ ಪೊಲೀಸ್ ಠಾಣೆ,High Grounds Police Station
+PSB-86,Sadashivanagar,review:no_match,,,
+PSB-87,Seshadripuram,police,0.95,ಶೇಶಾದ್ರಿಪುರಮ್ ಆರಕ್ಷಕ ಠಾಣೆ,Seshadripuram Police Station
+PSB-88,Vyalikaval,review:ambiguous,,,
+PSB-89,Banaswadi,locality,0.7,ಬಾಣಸವಾಡಿ ಪೊಲೀಸ್ ಠಾಣೆ,Banaswadi
+PSB-90,Devarajeevanahalli,review:no_match,,,
+PSB-91,Hennur,police,0.95,ಹೆಣ್ಣೂರು ಆರಕ್ಷಕ ಠಾಣೆ,Hennur Police Station
+PSB-92,Kadugondana Halli,review:ambiguous,,,
+PSB-93,Ramamurthy Nagar,review:no_match,,,
+PSB-94,Byappanahalli,review:ambiguous,,,
+PSB-95,Halasur,locality,0.7,ಹಲಸೂರು ಆರಕ್ಷಕ ಠಾಣೆ,Halasur Police Station
+PSB-96,Indiranagar,police,0.95,ಇಂದಿರಾನಗರ ಆರಕ್ಷಕ ಠಾಣೆ,Indira Nagar Police Station
+PSB-97,Jeevan Bheemanagar,review:no_match,,,
+PSB-98,Bharathi Nagar,review:no_match,,,
+PSB-99,Commercial Street,police,0.95,ಕಮರ್ಷಿಯಲ್ ರಸ್ತೆ ಆರಕ್ಷಕ ಠಾಣೆ,Commercial Street Police Station
