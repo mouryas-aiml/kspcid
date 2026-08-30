@@ -6,7 +6,7 @@
 // was rebuilt behind the cold-start eligibility gate. Both are precached and
 // served cache-first, so without this bump an installed client keeps showing
 // the old landing page and the old alerts indefinitely.
-const CACHE_NAME = 'kspcid-offline-v10'
+const CACHE_NAME = 'kspcid-offline-v11'
 
 // The 37 MB PMTiles basemap lives in its own cache, keyed separately from
 // CACHE_NAME: a data-only bump must not force a 37 MB re-download over venue

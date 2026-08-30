@@ -1,11 +1,5 @@
-import { OpsModulePlaceholder } from '@/components/shell/OpsModulePlaceholder'
+import { CrimeReviewDemo } from '@/components/review/CrimeReviewDemo'
 
 export default function ReviewPage() {
-  return (
-    <OpsModulePlaceholder
-      title="Ask the Crime Review"
-      stage="BRIEF"
-      description="Gated until Catalyst QuickML returns reliable report and page-level citations for the four spike questions."
-    />
-  )
+  return <CrimeReviewDemo />
 }
