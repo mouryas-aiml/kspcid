@@ -11,9 +11,17 @@
     </style>
     <script>
       (function () {
+        var station = location.pathname.match(/^\/app\/station\/([^/]+)(?:\/index\.html|\/)?$/)
         var match = location.pathname.match(/^\/app\/(feed|map|similarity|network|patrol|review|justice|cyber)\/?$/)
-        var target = match ? '/app/' + match[1] + '/index.html' : '/app/index.html'
-        location.replace(target + location.search + location.hash)
+        var target = station
+          ? '/app/station/index.html?code=' + encodeURIComponent(station[1])
+          : match
+            ? '/app/' + match[1] + '/index.html'
+            : '/app/index.html'
+        var query = location.search
+          ? (target.indexOf('?') >= 0 ? '&' + location.search.slice(1) : location.search)
+          : ''
+        location.replace(target + query + location.hash)
       })()
     </script>
   </head>

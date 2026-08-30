@@ -19,7 +19,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Mic, MicOff, Send, Volume2, X } from 'lucide-react'
 
-import { fetchPublicArtifact } from '@/lib/publicPath'
+import { fetchPublicArtifact, publicPath } from '@/lib/publicPath'
 import {
   answerQuestion,
   detectLanguage,
@@ -284,7 +284,7 @@ export function Assistant() {
               </div>
               {turn.answer.stationCode ? (
                 <a
-                  href={`/station/${turn.answer.stationCode}/`}
+                  href={publicPath(`/station/?code=${encodeURIComponent(turn.answer.stationCode)}`)}
                   className="text-[11px] underline underline-offset-2"
                   style={{ color: 'var(--cyan-400)' }}
                 >

@@ -434,7 +434,7 @@ export function CommanderHome() {
                   {group.rows.map((row) => (
                     <Link
                       key={row.station_code}
-                      href={`/station/${row.station_code}/`}
+                      href={`/station/?code=${encodeURIComponent(row.station_code)}`}
                       className="flex items-center gap-2 text-[12px]"
                     >
                       <span className="w-[104px] shrink-0 truncate">{row.station_name}</span>
@@ -500,7 +500,7 @@ export function CommanderHome() {
           {visibleStations.map((station) => (
             <li key={station.station_code}>
               <Link
-                href={`/station/${station.station_code}/`}
+                href={`/station/?code=${encodeURIComponent(station.station_code)}`}
                 className="flex items-center justify-between gap-2 border-b py-1.5 text-[12px]"
                 style={{ borderColor: 'var(--rule)' }}
               >

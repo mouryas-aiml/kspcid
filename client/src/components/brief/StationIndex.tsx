@@ -8,9 +8,9 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronRight, Search } from 'lucide-react'
-import Link from 'next/link'
 
-import { fetchPublicArtifact } from '@/lib/publicPath'
+import { StationBrief } from '@/components/brief/StationBrief'
+import { fetchPublicArtifact, publicPath } from '@/lib/publicPath'
 
 interface Fixture {
   readonly snapshot_label: string
@@ -26,6 +26,11 @@ export function StationIndex() {
   const [fixture, setFixture] = useState<Fixture | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [term, setTerm] = useState('')
+  const [selectedCode, setSelectedCode] = useState<string | null>(null)
+
+  useEffect(() => {
+    setSelectedCode(new URLSearchParams(window.location.search).get('code'))
+  }, [])
 
   useEffect(() => {
     fetchPublicArtifact('/data/scenarios/station_brief.json')
@@ -78,6 +83,11 @@ export function StationIndex() {
     )
   }
 
+  // Catalyst Web Client Hosting limits ZIP entries. Its deployment keeps this
+  // directory shell and routes all station codes through `?code=`, while the
+  // standard static export still emits the 106 direct station pages.
+  if (selectedCode) return <StationBrief stationCode={selectedCode} />
+
   return (
     <article className="flex flex-col gap-5 p-6 sm:p-8" style={{ color: 'var(--ink)' }}>
       <header>
@@ -114,8 +124,8 @@ export function StationIndex() {
             <ul className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
               {stations.map((station) => (
                 <li key={station.station_code}>
-                  <Link
-                    href={`/station/${station.station_code}/`}
+                  <a
+                    href={publicPath(`/station/?code=${encodeURIComponent(station.station_code)}`)}
                     className="flex items-center justify-between gap-2 border-b py-2 text-[13px]"
                     style={{ borderColor: 'var(--rule)' }}
                   >
@@ -133,7 +143,7 @@ export function StationIndex() {
                       </span>
                       <ChevronRight size={13} style={{ color: 'var(--ink-soft)' }} />
                     </span>
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
