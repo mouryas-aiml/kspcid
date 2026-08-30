@@ -49,9 +49,32 @@ A patrol planning simulator built on Bengaluru's real road network.
 Shows every case from registration to conviction, and where cases stop moving. In Bengaluru, **92,874 FIRs are undetected** — 21.8% of the caseload.
 
 ### 6. Station Brief — brief
-A printable one-page summary per station in Kannada and English, listing the three most important changes that week.
+A printable one-page summary for each of the 106 stations, at `/station/<code>`. It lists the three largest changes in FIRs registered, the fastest-rising category against its historical expected range, the most-affected beat, the five oldest open cases, workload context, victim counts, and five comparable stations in the same division.
 
-### 7. Cyber Intelligence Wing
+Station names are shown in Kannada where a label could be sourced from OpenStreetMap — 43 of 106 today. The rest render in English; nothing is transliterated or invented, and unmatched stations are listed in `etl/overrides/station_names_kn_review.csv` for review.
+
+Every figure is stated against the **snapshot week ending 31 December 2023**, which is where the source data ends. Nothing on the page is live.
+
+> PDF rendering through Catalyst SmartBrowz, delivery by Catalyst Mail, and the acknowledgement workflow are **not built** — they are console-gated. The page prints to A4 from the browser today.
+
+### 7. Demand outlook and workload
+Two things a commander asks that the earlier build could not answer.
+
+**Expected next week** projects FIRs likely to be registered, as a **Low / Expected / High range** rather than a single number. It uses a 52-week moving average with a negative-binomial interval, and deliberately leaves out the seasonal factor — that factor is fitted across the whole series, so using it would let future weeks leak into a forward claim. It forecasts registration workload, never crime, and never anything about a person.
+
+**Where the load sits** ranks stations by open cases per officer, showing which are carrying most and which have room.
+
+> **Officer strength is generated for the demo.** The source carries no establishment or posting data at all, so station strength is synthesised — plausibly, from caseload and jurisdiction area — and every figure derived from it is tagged `generated_demo` and labelled on screen. Open-case counts are real. Read the ratio as a worked example, not as how any station is staffed.
+
+### 8. Commander's Home
+The landing screen at `/`. One scan gives the stations that raised an alert, undetected caseload, the biggest weekly jumps, next week's expected range, where the case load sits, and a station picker. Each panel carries its own scope and date, because they cover different periods.
+
+### 9. Assistant
+A bilingual question box, reachable from any screen with `⌘/`. It answers from the station briefs only — what is rising, the brief, oldest open cases, victims, workload, what is expected next week, which stations are busiest, and comparisons between two stations — and says so plainly when a question falls outside them. Kannada questions are understood and answered in Kannada.
+
+There is no language model in it: intents are matched against a fixed set and answers are filled from computed values, the same decision made for the map's "Why here?" panel. Speech output works where the device has a voice installed; speech input works where the browser supports it and degrades to typing where it does not.
+
+### 10. Cyber Intelligence Wing
 **15.19% of Bengaluru FIRs are cybercrime**, and these have no location. This screen deliberately has no map and uses charts instead.
 
 ---
@@ -151,6 +174,7 @@ npm run etl:a13            # entity graph, then Neo4j + GDS
 npm run etl:12:similarity  # case similarity
 npm run etl:15:justice     # justice pipeline
 npm run etl:16:feed        # command feed alerts
+npm run etl:17:brief       # station briefs, all 106 stations
 npm run etl:17b:cyber      # cyber wing
 npm run etl:map            # command map
 npm run etl:19b:offline    # offline demo snapshot
@@ -253,6 +277,11 @@ Rules we follow:
 | Beat boundaries are not drawn | Beat names exist, map shapes do not |
 | Coverage uses free-flow speeds | Response time is traffic-corrected; coverage correction is pending |
 | Person and vehicle links are demonstration data | Real CCTNS person records were not available |
+| Data ends 31 December 2023 | Every screen states its snapshot week; nothing is live |
+| Forecast excludes seasonality | The seasonal factor is fitted across the whole series, so it would leak future weeks into a forward claim. The outlook uses a causal moving average only, and is shown as a range |
+| Officer strength is generated | The source has no establishment or posting data. Station strength is synthesised for the demo and labelled `generated_demo`; open-case counts are real |
+| No sanctioned strength | The source has no staffing table. Workload is reported as open records against the investigating-officer aliases appearing on them — a proxy, not evidence of posting |
+| Kannada names cover 43 of 106 stations | Sourced from OpenStreetMap by exact match only; the rest render in English pending review |
 
 ---
 

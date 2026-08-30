@@ -6,7 +6,7 @@
 - Offline routes: **7**
 - Offline artifact contracts: **13**
 - Fallback SHA-256: `b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c`
-- Snapshot SHA-256: `3adab5df9d57c960dd3b44e3232e044e5b526a51e026e5ba321bd38d92614f0a`
+- Snapshot SHA-256: `d1598c5144b511a4b8264c30a5aeecda66ecf709a06c67d5bffa8be7453b6417`
 
 The bundle is a same-schema static fallback. It contains no Catalyst credentials and makes no deployment claim.
 
