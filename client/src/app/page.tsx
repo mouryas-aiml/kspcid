@@ -5,7 +5,7 @@ export const metadata = { title: 'Bengaluru overview' }
 
 export default function HomePage() {
   return (
-    <BriefShell backHref={null}>
+    <BriefShell>
       <CommanderHome />
     </BriefShell>
   )
