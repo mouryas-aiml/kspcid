@@ -59,13 +59,47 @@ async function main(): Promise<void> {
       scenario.integrated_scenario?.crosses_division_boundary,
     'A18 integrated corridor contract failed',
   )
+  // Injections are addressed by id, not position. The shift now carries an SOS
+  // activation before the closure, and an index-based assertion silently
+  // changes meaning the moment the order does.
+  const closure = scenario.injections?.find(
+    (entry) => entry.injection_id === 'old-madras-road-closure',
+  )
   assert(
-    scenario.injections?.length === 1 &&
-      scenario.injections[0]?.injection_id === 'old-madras-road-closure' &&
-      scenario.injections[0]?.simulation_minute === 180 &&
-      scenario.injections[0]?.source_authority === 'generated_demo' &&
-      scenario.injections[0]?.transformation === 'generated',
+    closure?.simulation_minute === 180 &&
+      closure.source_authority === 'generated_demo' &&
+      closure.transformation === 'generated',
     'A18 road-closure injection contract failed',
+  )
+
+  // The SOS activation must fire before the closure, name a real device, and
+  // point at a cell the routing region can actually route to — otherwise the
+  // dispatch card has no road time to report.
+  const sos = scenario.injections?.find((entry) => entry.injection_id === 'sos-activation')
+  assert(
+    sos?.type === 'sos_activation' &&
+      typeof sos.hex_index === 'number' &&
+      sos.source_authority === 'generated_demo' &&
+      sos.transformation === 'generated',
+    'SOS activation injection contract failed',
+  )
+  assert(
+    sos.simulation_minute < closure.simulation_minute,
+    'SOS activation must fire before the road closure',
+  )
+  const devices = scenario.sos_devices ?? []
+  assert(
+    devices.length > 0 && devices.every((device) => device.generated === true),
+    'SOS devices are missing or not labelled as generated',
+  )
+  assert(
+    devices.some((device) => device.device_id === sos.device_id),
+    'SOS activation references a device that does not exist',
+  )
+  const routableCells = new Set(data.hexIndex.cells.map((cell) => cell.index))
+  assert(
+    devices.every((device) => routableCells.has(device.hex_index)),
+    'An SOS device sits outside the routing region',
   )
   assert(
     scenario.conditions?.road_closure_multiplier === 1.12 &&

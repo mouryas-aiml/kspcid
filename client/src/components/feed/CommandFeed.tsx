@@ -427,10 +427,33 @@ export function CommandFeed() {
               <Search size={14} className="text-[--txt-3]" />
               <input aria-label="Search feed" className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[--txt-3]" onChange={(event) => setSearch(event.target.value)} placeholder="Station or crime head" value={search} />
             </label>
+            {/*
+              Only offer a tier that has cards behind it. A quiet period can
+              legitimately leave `critical` empty, and a filter that always
+              renders every tier then reads as a broken screen rather than an
+              honest one. The count is shown so the tab says what it holds.
+            */}
             <div className="mt-3 flex gap-1">
-              {(['all', 'critical', 'high', 'watch'] as const).map((value) => (
-                <button className="speed-button flex-1 capitalize" data-active={severity === value} key={value} onClick={() => setSeverity(value)} type="button">{value}</button>
-              ))}
+              {(['all', 'critical', 'high', 'watch'] as const)
+                .map((value) => ({
+                  value,
+                  count:
+                    value === 'all'
+                      ? fixture.alerts.length
+                      : fixture.alerts.filter((alert) => alert.severity === value).length,
+                }))
+                .filter((tier) => tier.count > 0)
+                .map(({ value, count }) => (
+                  <button
+                    className="speed-button flex-1 capitalize"
+                    data-active={severity === value}
+                    key={value}
+                    onClick={() => setSeverity(value)}
+                    type="button"
+                  >
+                    {value} {count}
+                  </button>
+                ))}
             </div>
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto">

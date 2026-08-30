@@ -15,6 +15,7 @@ import {
   Route,
   Shield,
   Sparkles,
+  Siren,
   TrafficCone,
   UserRound,
   X,
@@ -31,7 +32,7 @@ import {
   optimizeDeployment,
   optimizeDeploymentWithFallback,
 } from '@/lib/patrol/optimizer'
-import { isCovered, loadPatrolData, unionCoverage } from '@/lib/patrol/routing'
+import { isCovered, loadPatrolData, travelSeconds, unionCoverage } from '@/lib/patrol/routing'
 import { scoreDeployment } from '@/lib/patrol/scoring'
 import { simulateUntil } from '@/lib/patrol/simulation'
 import { usePatrolStore } from '@/lib/patrol/store'
@@ -634,8 +635,12 @@ export function PatrolLab() {
   const [compareOpen, setCompareOpen] = useState(false)
   const [injectionOpen, setInjectionOpen] = useState(false)
   const [injectionSeconds, setInjectionSeconds] = useState(10)
-  const injectionShown = useRef(false)
-  const injection = data?.scenario.injections[0]
+  const [injectionIndex, setInjectionIndex] = useState(0)
+  const [dispatched, setDispatched] = useState<string | null>(null)
+  // Each injection fires once. Index-keyed rather than a single flag, because
+  // the shift now carries two and a shared flag would swallow the second.
+  const injectionsShown = useRef(new Set<string>())
+  const injection = data?.scenario.injections[injectionIndex]
 
   useEffect(() => {
     void loadPatrolData().then(setData).catch((cause: unknown) => {
@@ -657,12 +662,17 @@ export function PatrolLab() {
   }, [data, minute, playing, setMinute, setPlaying, speed])
 
   useEffect(() => {
-    if (injection && minute >= injection.simulation_minute && !injectionShown.current && playing) {
-      injectionShown.current = true
-      setPlaying(false)
-      setInjectionOpen(true)
-    }
-  }, [injection, minute, playing, setPlaying])
+    if (!data || !playing) return
+    const due = data.scenario.injections.findIndex(
+      (entry) => minute >= entry.simulation_minute && !injectionsShown.current.has(entry.injection_id),
+    )
+    if (due === -1) return
+    injectionsShown.current.add(data.scenario.injections[due]!.injection_id)
+    setInjectionIndex(due)
+    setDispatched(null)
+    setPlaying(false)
+    setInjectionOpen(true)
+  }, [data, minute, playing, setPlaying])
 
   useEffect(() => {
     if (!injectionOpen) return
@@ -675,10 +685,52 @@ export function PatrolLab() {
 
   useEffect(() => {
     if (!injectionOpen || injectionSeconds > 0) return
-    if (!usePatrolStore.getState().roadClosure) usePatrolStore.getState().toggleClosure()
+    // Timing out is a decision too. A closure left undecided applies; an
+    // unanswered SOS simply resumes, and the card has already shown what the
+    // delay cost.
+    if (injection?.type === 'road_closure' && !usePatrolStore.getState().roadClosure) {
+      usePatrolStore.getState().toggleClosure()
+    }
     setInjectionOpen(false)
     setPlaying(true)
-  }, [injectionOpen, injectionSeconds, setPlaying])
+  }, [injection?.type, injectionOpen, injectionSeconds, setPlaying])
+
+  /**
+   * Nearest deployed unit to the SOS point, by real road time.
+   *
+   * This is the whole point of putting an SOS press inside the Patrol Lab
+   * rather than on a screen of its own: the answer comes from the same OSRM
+   * duration matrix the coverage engine uses, so "4.2 minutes away" is a road
+   * network figure, not a straight line.
+   */
+  const sosResponse = useMemo(() => {
+    if (!data || injection?.type !== 'sos_activation') return null
+    const target = injection.hex_index
+    if (typeof target !== 'number') return null
+    // `deployment` maps unit id → hex, with null meaning held in reserve. A
+    // reserve unit is deliberately not offered: holding one back is a decision
+    // the planner made, and quietly spending it would undo their plan.
+    const multiplier =
+      (roadClosure ? data.scenario.conditions.road_closure_multiplier : 1) *
+      (rain ? data.scenario.conditions.rain_multiplier : 1)
+    const candidates = data.scenario.roster
+      .map((unit) => ({ unit, hex: deployment[unit.unit_id] }))
+      .filter((entry): entry is { unit: PatrolUnit; hex: number } => typeof entry.hex === 'number')
+      .map((entry) => ({
+        unit: entry.unit,
+        seconds: travelSeconds(data, entry.hex, target) * multiplier,
+      }))
+      .filter((entry) => Number.isFinite(entry.seconds))
+      .sort((left, right) => left.seconds - right.seconds)
+    const nearest = candidates[0]
+    if (!nearest) return null
+    return {
+      callSign: nearest.unit.call_sign,
+      unitType: nearest.unit.unit_type,
+      minutes: nearest.seconds / 60,
+      alternatives: candidates.length,
+    }
+  }, [data, deployment, injection, rain, roadClosure])
 
   const score = useMemo(
     () =>
@@ -735,7 +787,82 @@ export function PatrolLab() {
         />
       </OpsShell>
       <AnimatePresence>
-        {injectionOpen ? (
+        {injectionOpen && injection?.type === 'sos_activation' ? (
+          <motion.div className="injection-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div
+              className="injection-card"
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
+              style={{ borderColor: 'var(--critical)' }}
+            >
+              <span className="injection-icon" style={{ background: 'color-mix(in srgb, var(--critical) 14%, transparent)', color: 'var(--critical)' }}>
+                <Siren />
+              </span>
+              <div className="flex items-center justify-between">
+                <p className="type-micro" style={{ color: 'var(--critical)' }}>
+                  SOS POINT ACTIVATED · {injection.local_time}
+                </p>
+                <span
+                  className="rounded-full border px-2 py-1 font-mono text-xs"
+                  style={{ borderColor: 'var(--critical)', color: 'var(--critical)' }}
+                >
+                  {injectionSeconds}s
+                </span>
+              </div>
+              <h2 className="mt-2 text-xl font-semibold">{injection.location}</h2>
+              {sosResponse ? (
+                <>
+                  <p className="mt-3 text-sm leading-6 text-[--txt-2]">
+                    Nearest available unit is{' '}
+                    <strong className="text-[--txt-hi]">{sosResponse.callSign}</strong> —{' '}
+                    <strong className="text-[--txt-hi]">{sosResponse.minutes.toFixed(1)} minutes</strong>{' '}
+                    away by road, from {sosResponse.alternatives} units on shift.
+                  </p>
+                  {dispatched ? (
+                    <p className="mt-2 text-sm" style={{ color: 'var(--ok)' }}>
+                      {dispatched} dispatched. Control room notified.
+                    </p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="mt-3 text-sm leading-6 text-[--txt-2]">
+                  No unit is deployed and available. Every unit is held in reserve or off the map.
+                </p>
+              )}
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  className="end-primary justify-center"
+                  disabled={!sosResponse}
+                  onClick={() => {
+                    if (!sosResponse) return
+                    setDispatched(sosResponse.callSign)
+                    window.setTimeout(() => {
+                      setInjectionOpen(false)
+                      setPlaying(true)
+                    }, 900)
+                  }}
+                >
+                  Dispatch {sosResponse?.callSign ?? 'nearest'}
+                </button>
+                <button
+                  type="button"
+                  className="end-secondary justify-center"
+                  onClick={() => setInjectionOpen(false)}
+                >
+                  Hold and redeploy
+                </button>
+              </div>
+              {/* The press is invented; the travel time is not. */}
+              <p className="mt-4 text-[10px] leading-4 text-[--txt-3]">
+                SOS points and this activation are generated for the demonstration — the archive holds
+                no device inventory or control-room log. The response time is a real OSRM road-network
+                duration from the unit&apos;s current post.
+              </p>
+            </motion.div>
+          </motion.div>
+        ) : null}
+        {injectionOpen && injection?.type !== 'sos_activation' ? (
           <motion.div className="injection-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div className="injection-card" initial={{ scale: 0.96 }} animate={{ scale: 1 }}>
               <span className="injection-icon"><TrafficCone /></span>

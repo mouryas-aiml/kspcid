@@ -15,28 +15,28 @@
     {
       "id": "feed",
       "url": "/data/scenarios/command_feed.json",
-      "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662",
-      "bytes": 28557,
+      "sha256": "360ebba9af42a278432f862aee492832afbe286d9fef2b53fa3e36481b5ce7f7",
+      "bytes": 28657,
       "required": true
     },
     {
       "id": "command_map",
       "url": "/data/scenarios/command_map.json",
-      "sha256": "0982955901411a7613fb46ba4b1ce1767adecac8365517f1912e8fc1ca932fee",
-      "bytes": 433367,
+      "sha256": "a2ed529f0b54e1a1b5a99edcd9590a0ce8868f029f54d2afb4fb433664875017",
+      "bytes": 433371,
       "required": true
     },
     {
       "id": "patrol_scenario",
       "url": "/data/scenarios/demo_corridor_patrol.json",
-      "sha256": "71e8c6ee8843e6f381aca22918d649d3d7d4ac99505810b1974783f35448ab97",
-      "bytes": 106637,
+      "sha256": "edff6c276bd07c654b3703d6614d1abb9a33c382eb52208ad1f0f7c08c4e8592",
+      "bytes": 108602,
       "required": true
     },
     {
       "id": "optimizer_fallback",
       "url": "/data/scenarios/optimizer_fallback.json",
-      "sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c",
+      "sha256": "d7597e5510aad0b14f379d028fa4e2a1a6b90c4ed497b229c7fce074e3249c47",
       "bytes": 1517,
       "required": true
     },
@@ -121,7 +121,7 @@
   "optimizer_contract": {
     "live_timeout_ms": 2000,
     "fallback_url": "/data/scenarios/optimizer_fallback.json",
-    "fallback_sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c"
+    "fallback_sha256": "d7597e5510aad0b14f379d028fa4e2a1a6b90c4ed497b229c7fce074e3249c47"
   },
   "provenance": {
     "source_authority": "generated_demo",

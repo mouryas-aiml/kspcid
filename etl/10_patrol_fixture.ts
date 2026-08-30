@@ -147,6 +147,38 @@ async function main(): Promise<void> {
     .map((cell) => cell.index)
   const candidateCells =
     rankedDemandCells.length > 0 ? rankedDemandCells.map((cell) => cell.hex_index) : fallbackCells
+  /**
+   * Public SOS points.
+   *
+   * Bengaluru City Police have installed emergency call boxes at busy public
+   * locations — a press raises the control room, which dispatches. The devices
+   * here are generated: the FIR archive records no SOS activation, no device
+   * inventory and no control-room log, so there is nothing real to draw on.
+   *
+   * They are placed on the highest-demand cells in the corridor, because that
+   * is where such a box would actually go, and because it puts the dispatch on
+   * roads the routing engine has already validated. The response time the
+   * simulation reports for one is therefore a real OSRM road-network duration
+   * from a unit's real position — only the button press is invented.
+   */
+  const sosDevices = rankedDemandCells.slice(0, 4).map((cell, index) => {
+    const hexCell = hexIndex.cells.find((entry) => entry.index === cell.hex_index)
+    const beat = cell.beat_demand[0]?.beat ?? 'Beat not recorded'
+    return {
+      device_id: `SOS-${String(index + 1).padStart(2, '0')}`,
+      hex_index: cell.hex_index,
+      location_label: hexCell?.core_station_name
+        ? `${hexCell.core_station_name} · ${beat.split(' · ')[1] ?? beat}`
+        : beat,
+      latitude: hexCell ? round(hexCell.latitude, 6) : null,
+      longitude: hexCell ? round(hexCell.longitude, 6) : null,
+      generated: true as const,
+      source_authority: 'generated_demo',
+      transformation: 'generated',
+      generation_version: GENERATION_VERSION,
+    }
+  })
+
   const roster = UNIT_TYPES.map((type, index) => {
     const candidate =
       candidateCells[
@@ -248,7 +280,27 @@ async function main(): Promise<void> {
       road_closure_multiplier: 1.12,
       geometry_changes_at_runtime: false,
     },
+    sos_devices: sosDevices,
     injections: [
+      {
+        // Fires before the closure, so the shift shows a routine dispatch
+        // before it shows a disruption.
+        injection_id: 'sos-activation',
+        type: 'sos_activation',
+        title: 'SOS point activated',
+        simulation_minute: 90,
+        local_time: '21:30',
+        decision_seconds: 12,
+        location: sosDevices[0]?.location_label ?? 'Corridor SOS point',
+        device_id: sosDevices[0]?.device_id ?? null,
+        hex_index: sosDevices[0]?.hex_index ?? null,
+        options: ['dispatch_nearest', 'hold_position'],
+        generated: true,
+        scenario_id: 'demo-corridor-patrol-2021-2023-night',
+        source_authority: 'generated_demo',
+        transformation: 'generated',
+        generation_version: GENERATION_VERSION,
+      },
       {
         injection_id: 'old-madras-road-closure',
         type: 'road_closure',

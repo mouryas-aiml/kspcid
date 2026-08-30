@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-08-30T05:12:08.223Z",
+  "updated_at": "2026-08-30T12:35:13.291Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -381,24 +381,24 @@
       "step": "19b_offline_snapshot",
       "path": "app/data/offline/demo_snapshot.json",
       "rows": 13,
-      "sha256": "d1598c5144b511a4b8264c30a5aeecda66ecf709a06c67d5bffa8be7453b6417",
+      "sha256": "f3b532800b3e839428786a9f55a212df258beb27f3ce426269916d641f10803e",
       "bytes": 4106,
       "inputs": [
         {
           "path": "app/data/scenarios/command_feed.json",
-          "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662"
+          "sha256": "360ebba9af42a278432f862aee492832afbe286d9fef2b53fa3e36481b5ce7f7"
         },
         {
           "path": "app/data/scenarios/command_map.json",
-          "sha256": "0982955901411a7613fb46ba4b1ce1767adecac8365517f1912e8fc1ca932fee"
+          "sha256": "a2ed529f0b54e1a1b5a99edcd9590a0ce8868f029f54d2afb4fb433664875017"
         },
         {
           "path": "app/data/scenarios/demo_corridor_patrol.json",
-          "sha256": "71e8c6ee8843e6f381aca22918d649d3d7d4ac99505810b1974783f35448ab97"
+          "sha256": "edff6c276bd07c654b3703d6614d1abb9a33c382eb52208ad1f0f7c08c4e8592"
         },
         {
           "path": "app/data/scenarios/optimizer_fallback.json",
-          "sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c"
+          "sha256": "d7597e5510aad0b14f379d028fa4e2a1a6b90c4ed497b229c7fce074e3249c47"
         },
         {
           "path": "app/data/scenarios/similarity_demo.json",
@@ -438,7 +438,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-08-29T20:18:54.630Z",
+      "generated_at": "2026-08-30T12:35:13.291Z",
       "notes": {
         "routes": 7,
         "demo_mode": "offline"
@@ -10778,8 +10778,8 @@
       "step": "16_command_feed",
       "path": "app/data/scenarios/command_feed.json",
       "rows": 25,
-      "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662",
-      "bytes": 28557,
+      "sha256": "360ebba9af42a278432f862aee492832afbe286d9fef2b53fa3e36481b5ce7f7",
+      "bytes": 28657,
       "inputs": [
         {
           "path": "app/data/derived/weekly_baselines.parquet",
@@ -10791,7 +10791,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-08-30T05:12:07.097Z",
+      "generated_at": "2026-08-30T12:26:29.078Z",
       "notes": {
         "detector_candidates": 25,
         "mappable_alerts": 11,
@@ -10802,8 +10802,8 @@
       "step": "11_command_map_fixture",
       "path": "app/data/scenarios/command_map.json",
       "rows": 500,
-      "sha256": "0982955901411a7613fb46ba4b1ce1767adecac8365517f1912e8fc1ca932fee",
-      "bytes": 433367,
+      "sha256": "a2ed529f0b54e1a1b5a99edcd9590a0ce8868f029f54d2afb4fb433664875017",
+      "bytes": 433371,
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
@@ -10811,11 +10811,11 @@
         },
         {
           "path": "app/data/scenarios/command_feed.json",
-          "sha256": "2ce9ad47c878ae06dc4624b38c5bf7f8877740457e2205f5153683b7a6faa662"
+          "sha256": "360ebba9af42a278432f862aee492832afbe286d9fef2b53fa3e36481b5ce7f7"
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-08-29T20:18:37.861Z",
+      "generated_at": "2026-08-30T12:26:39.483Z",
       "notes": {
         "reported_points": 500,
         "explanations": 24,
@@ -10847,8 +10847,8 @@
       "step": "10_patrol_fixture",
       "path": "app/data/scenarios/demo_corridor_patrol.json",
       "rows": 253,
-      "sha256": "71e8c6ee8843e6f381aca22918d649d3d7d4ac99505810b1974783f35448ab97",
-      "bytes": 106637,
+      "sha256": "edff6c276bd07c654b3703d6614d1abb9a33c382eb52208ad1f0f7c08c4e8592",
+      "bytes": 108602,
       "inputs": [
         {
           "path": "app/data/derived/incidents_time.parquet",
@@ -10860,7 +10860,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-07-25T22:01:09.664Z",
+      "generated_at": "2026-08-30T12:32:22.305Z",
       "notes": {
         "demand_cells": 147,
         "replay_events": 120,
@@ -10897,12 +10897,12 @@
       "step": "19b_optimizer_fallback",
       "path": "app/data/scenarios/optimizer_fallback.json",
       "rows": 16,
-      "sha256": "b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c",
+      "sha256": "d7597e5510aad0b14f379d028fa4e2a1a6b90c4ed497b229c7fce074e3249c47",
       "bytes": 1517,
       "inputs": [
         {
           "path": "app/data/scenarios/demo_corridor_patrol.json",
-          "sha256": "71e8c6ee8843e6f381aca22918d649d3d7d4ac99505810b1974783f35448ab97"
+          "sha256": "edff6c276bd07c654b3703d6614d1abb9a33c382eb52208ad1f0f7c08c4e8592"
         },
         {
           "path": "app/data/routing/coverage_bitsets.bin",
@@ -10910,7 +10910,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-08-29T20:18:54.627Z",
+      "generated_at": "2026-08-30T12:35:13.286Z",
       "notes": {
         "target_minutes": 7,
         "reserve_units": 2,
@@ -10969,7 +10969,7 @@
         }
       ],
       "generation_version": "kspcid-etl-1.0.0",
-      "generated_at": "2026-08-30T05:12:08.223Z",
+      "generated_at": "2026-08-30T12:26:40.708Z",
       "notes": {
         "snapshot_week": "2023-12-25",
         "stations_above_expected_band": 0,

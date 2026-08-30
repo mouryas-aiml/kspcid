@@ -97,6 +97,19 @@ export interface PatrolScenario {
     readonly road_closure_multiplier: number
     readonly geometry_changes_at_runtime: boolean
   }
+  /**
+   * Public emergency call points. Generated: the archive carries no device
+   * inventory and no control-room log, so the press is invented even though the
+   * road time to reach it is not.
+   */
+  readonly sos_devices?: readonly {
+    readonly device_id: string
+    readonly hex_index: number
+    readonly location_label: string
+    readonly latitude: number | null
+    readonly longitude: number | null
+    readonly generated: true
+  }[]
   readonly injections: readonly {
     readonly injection_id: string
     readonly type: string
@@ -105,6 +118,10 @@ export interface PatrolScenario {
     readonly local_time: string
     readonly decision_seconds: number
     readonly location: string
+    /** Present on `sos_activation` only. */
+    readonly device_id?: string | null
+    /** Present on `sos_activation` only — the cell the press came from. */
+    readonly hex_index?: number | null
     readonly options: readonly string[]
     readonly generated: true
     readonly scenario_id: string

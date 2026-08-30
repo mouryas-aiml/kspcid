@@ -42,8 +42,11 @@ A patrol planning simulator built on Bengaluru's real road network.
 - Coverage spreads across real streets using real road travel times
 - The score updates instantly as you move units (coverage, response time, fairness, reserve, efficiency — out of 1000)
 - Press play and last month's real incidents arrive in time order; units travel along genuine road routes
-- A road closure is injected mid-shift and you decide whether to move units or hold coverage
+- **An SOS point is activated mid-shift** — the kind of public emergency call box Bengaluru City Police have installed at busy locations. The nearest available unit and its road travel time are computed live, and you dispatch or hold
+- A road closure is injected later and you decide whether to move units or hold coverage
 - At the end, compare your plan against the baseline and against an optimised plan
+
+> The SOS points, the activation and the roster are generated for the demonstration — the archive holds no device inventory and no control-room log. The **response time is real**: an OSRM road-network duration from the unit's actual post, using the same matrix the coverage engine uses.
 
 ### 5. Justice Pipeline — act
 Shows every case from registration to conviction, and where cases stop moving. In Bengaluru, **92,874 FIRs are undetected** — 21.8% of the caseload.

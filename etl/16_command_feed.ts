@@ -46,6 +46,27 @@ const MIN_WINDOW_OBSERVATIONS = 26
 /** 25 candidates satisfy the detector and the eligibility gate. */
 const FEED_LIMIT = 25
 
+/**
+ * Severity bands, in severity-weighted sigma.
+ *
+ * `rank_score` is `z_score × severityWeight`, and the weight runs 1.0–1.5, so
+ * a band is read as "roughly this many standard deviations above the expected
+ * count, for a crime head of ordinary gravity".
+ *
+ * The previous 10 / 6 thresholds were set when the ungated feed carried scores
+ * up to 1.98e18, where any cutoff below the first order of magnitude put every
+ * card in one bucket. Against real scores those bands put nothing in
+ * `critical` and left the filter showing an empty tab.
+ *
+ * 8σ and 5σ are the anchors — an eight-sigma week on a series with half a year
+ * of history is genuinely exceptional, five is strong, below that is worth
+ * watching. They are not tuned to fill three buckets: if a quiet period puts
+ * nothing in `critical` that is the correct answer, and the feed hides tiers
+ * that have no cards rather than offering an empty filter.
+ */
+const CRITICAL_SCORE = 8
+const HIGH_SCORE = 5
+
 interface AlertRow extends Record<string, unknown> {
   readonly station_code: string | null
   readonly unit_name: string
@@ -146,7 +167,7 @@ async function main(): Promise<void> {
     display_z_score: row.z_score > 20 ? '20+σ' : `${round(row.z_score, 1)}σ`,
     severity_weight: weight,
     rank_score: round(score),
-    severity: score >= 10 ? 'critical' : score >= 6 ? 'high' : 'watch',
+    severity: score >= CRITICAL_SCORE ? 'critical' : score >= HIGH_SCORE ? 'high' : 'watch',
     window_observations: row.window_observations,
     history_13_weeks: [...row.history.items],
     geography:
@@ -181,6 +202,7 @@ async function main(): Promise<void> {
       eligibility_rationale:
         'A densely zero-filled baseline grid makes z_score diverge for long-dormant series. A series needs half a year of history and a non-trivial expectation before it may alert.',
       ranking: 'z_score × deterministic crime-head severity weight',
+      severity_bands: `critical >= ${CRITICAL_SCORE}, high >= ${HIGH_SCORE}, otherwise watch (severity-weighted sigma)`,
       candidate_window: '2023-07-01 through 2023-12-31',
     },
     alerts,

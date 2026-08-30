@@ -5,8 +5,8 @@
 - Live optimizer timeout: **2000 ms**
 - Offline routes: **7**
 - Offline artifact contracts: **13**
-- Fallback SHA-256: `b3bcd9316c8b7287c679e09ebbcfbe0a4cd1751fb3c1777dbe9f98e37b8d540c`
-- Snapshot SHA-256: `d1598c5144b511a4b8264c30a5aeecda66ecf709a06c67d5bffa8be7453b6417`
+- Fallback SHA-256: `d7597e5510aad0b14f379d028fa4e2a1a6b90c4ed497b229c7fce074e3249c47`
+- Snapshot SHA-256: `f3b532800b3e839428786a9f55a212df258beb27f3ce426269916d641f10803e`
 
 The bundle is a same-schema static fallback. It contains no Catalyst credentials and makes no deployment claim.
 
