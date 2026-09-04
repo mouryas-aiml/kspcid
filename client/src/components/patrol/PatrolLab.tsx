@@ -726,7 +726,15 @@ export function PatrolLab() {
       callSign: nearest.unit.call_sign,
       unitType: nearest.unit.unit_type,
       minutes: nearest.seconds / 60,
+      seconds: Math.round(nearest.seconds),
       alternatives: candidates.length,
+      // The next two. Showing them is what makes "every deployed unit was
+      // evaluated" visible rather than asserted — and it shows the margin,
+      // which is the part a control room actually argues about.
+      runnersUp: candidates.slice(1, 3).map((entry) => ({
+        callSign: entry.unit.call_sign,
+        minutes: entry.seconds / 60,
+      })),
     }
   }, [data, deployment, injection, rain, roadClosure])
 
@@ -814,8 +822,24 @@ export function PatrolLab() {
                     Nearest available unit is{' '}
                     <strong className="text-[--txt-hi]">{sosResponse.callSign}</strong> —{' '}
                     <strong className="text-[--txt-hi]">{sosResponse.minutes.toFixed(1)} minutes</strong>{' '}
-                    away by road, from {sosResponse.alternatives} units on shift.
+                    <span className="text-[--txt-3]">({sosResponse.seconds}s)</span> away by road.
+                    All {sosResponse.alternatives} deployed units were checked.
                   </p>
+                  {sosResponse.runnersUp.length > 0 ? (
+                    <div className="mt-2 flex flex-col gap-1">
+                      {sosResponse.runnersUp.map((entry) => (
+                        <div
+                          key={entry.callSign}
+                          className="flex items-center justify-between text-xs text-[--txt-3]"
+                        >
+                          <span className="font-mono">{entry.callSign}</span>
+                          <span className="font-mono tabular-nums">
+                            {entry.minutes.toFixed(1)} min
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
                   {dispatched ? (
                     <p className="mt-2 text-sm" style={{ color: 'var(--ok)' }}>
                       {dispatched} dispatched. Control room notified.
