@@ -2,6 +2,30 @@
   "client": {
     "source": ".catalyst-client"
   },
+  "functions": {
+    "source": ".staging/catalyst/functions",
+    "targets": [
+      "kv-incidents",
+      "kv-hotspots",
+      "kv-explain",
+      "kv-similar",
+      "kv-optimize",
+      "kv-graph",
+      "kv-state",
+      "kv-cache-warm",
+      "publish-validate-manifest",
+      "publish-start-imports",
+      "publish-poll-imports",
+      "publish-verify-stratus",
+      "publish-warm-cache",
+      "publish-smoke-checks",
+      "publish-marker"
+    ]
+  },
+  "apig": {
+    "enabled": false,
+    "rules": "catalyst-user-rules.json"
+  },
   "slate": [
     {
       "name": "KSPCID",
