@@ -24,6 +24,7 @@ async function main(): Promise<void> {
       `${result.station_aggregates} station aggregates, ` +
       `${result.bitset_scenarios} bitset scenario / ${result.bitset_chunks} chunks, ` +
       `${result.feed_cards} feed cards; ` +
+      `${result.state_outlooks} state outlooks; ` +
       `largest value ${result.largest_serialized_value} characters.\n`,
   )
 }

@@ -1,6 +1,6 @@
 {
   "generation_version": "kspcid-etl-1.0.0",
-  "updated_at": "2026-08-30T12:35:13.291Z",
+  "updated_at": "2026-09-03T11:31:49.412Z",
   "entries": {
     "app/data/derived/entity_graph_raw.json": {
       "step": "07_entity_graph",
@@ -230,6 +230,33 @@
         "section_vocabulary": 200,
         "section_encoding": "stable_feature_hash"
       }
+    },
+    "app/data/derived/state_district_outlook.csv": {
+      "step": "18_state_intelligence",
+      "path": "app/data/derived/state_district_outlook.csv",
+      "rows": 31,
+      "sha256": "0a10cf0cfb7c9e7caa8e5c44091bfbf9013daefd2a06f466737d96ade9cf489b",
+      "bytes": 2260,
+      "inputs": [
+        {
+          "path": "app/Data_Docs/third_party/kaggle/fir_details_karnataka_police_v2/FIR_Details_Data.csv",
+          "sha256": "9191e0caebf62d6cfb625800ded84fbb492d9ea59ffe9359b51fd2c33172a604"
+        },
+        {
+          "path": "app/etl/overrides/state_district_crosswalk.csv",
+          "sha256": "f420f7cab2662b6e745986acf7fdb2ce3b9dfa4b92f1762f48ab830dc6064094"
+        },
+        {
+          "path": "app/Data_Docs/official/census/pca_2011/DDW_PCA0000_2011_Indiastatedist.xlsx",
+          "sha256": "7a8f70d46c43b5dd30eefe920f251752f69f6af8589594c21ac06499074646f5"
+        },
+        {
+          "path": "app/Data_Docs/official/bharatmaps/karnataka_districts/districts-2017.geojson",
+          "sha256": "2a21ea8b71d28738655ad6491795472a214b2b955b27ac99d691492a70eac9f3"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-09-03T11:31:49.412Z"
     },
     "app/data/derived/statewide_rollup.parquet": {
       "step": "01_ingest_fir",
@@ -10944,6 +10971,38 @@
         "candidates_per_case": 100
       }
     },
+    "app/data/scenarios/state_intelligence.json": {
+      "step": "18_state_intelligence",
+      "path": "app/data/scenarios/state_intelligence.json",
+      "rows": 31,
+      "sha256": "4637bb63c4d033a31d97673c17c4791796deee0d37fc84fe48bd6d148deabbca",
+      "bytes": 301871,
+      "inputs": [
+        {
+          "path": "app/Data_Docs/third_party/kaggle/fir_details_karnataka_police_v2/FIR_Details_Data.csv",
+          "sha256": "9191e0caebf62d6cfb625800ded84fbb492d9ea59ffe9359b51fd2c33172a604"
+        },
+        {
+          "path": "app/etl/overrides/state_district_crosswalk.csv",
+          "sha256": "f420f7cab2662b6e745986acf7fdb2ce3b9dfa4b92f1762f48ab830dc6064094"
+        },
+        {
+          "path": "app/Data_Docs/official/census/pca_2011/DDW_PCA0000_2011_Indiastatedist.xlsx",
+          "sha256": "7a8f70d46c43b5dd30eefe920f251752f69f6af8589594c21ac06499074646f5"
+        },
+        {
+          "path": "app/Data_Docs/official/bharatmaps/karnataka_districts/districts-2017.geojson",
+          "sha256": "2a21ea8b71d28738655ad6491795472a214b2b955b27ac99d691492a70eac9f3"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-09-03T11:31:49.404Z",
+      "notes": {
+        "special_units": 4,
+        "crime_groups": 11,
+        "backtest_observations": 1519
+      }
+    },
     "app/data/scenarios/station_brief.json": {
       "step": "17_station_brief",
       "path": "app/data/scenarios/station_brief.json",
@@ -10974,6 +11033,28 @@
         "snapshot_week": "2023-12-25",
         "stations_above_expected_band": 0,
         "kannada_resolved": 43
+      }
+    },
+    "app/reference/processed/karnataka_districts.geojson": {
+      "step": "18_state_intelligence",
+      "path": "app/reference/processed/karnataka_districts.geojson",
+      "rows": 31,
+      "sha256": "b421715d2b3def2fcf9e7f4bfa9d8762357e7396d3c47b4dd97a13531ab61ff6",
+      "bytes": 409766,
+      "inputs": [
+        {
+          "path": "app/Data_Docs/official/census/pca_2011/DDW_PCA0000_2011_Indiastatedist.xlsx",
+          "sha256": "7a8f70d46c43b5dd30eefe920f251752f69f6af8589594c21ac06499074646f5"
+        },
+        {
+          "path": "app/Data_Docs/official/bharatmaps/karnataka_districts/districts-2017.geojson",
+          "sha256": "2a21ea8b71d28738655ad6491795472a214b2b955b27ac99d691492a70eac9f3"
+        }
+      ],
+      "generation_version": "kspcid-etl-1.0.0",
+      "generated_at": "2026-09-03T11:31:49.410Z",
+      "notes": {
+        "current_districts": 31
       }
     }
   }

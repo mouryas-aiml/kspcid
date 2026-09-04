@@ -150,6 +150,35 @@
       },
       "query_filter_columns": ["dimension_type", "station_code", "fir_year", "stage", "age_bucket"]
     },
+    "StateDistrictOutlook": {
+      "scope": "Global",
+      "source": "data/derived/state_district_outlook.csv",
+      "expected_rows": 31,
+      "columns": {
+        "district_id": { "type": "Var Char", "max_length": 8, "mandatory": true, "unique": true },
+        "district_name": { "type": "Var Char", "max_length": 64, "mandatory": true },
+        "risk_score": { "type": "Double", "mandatory": true },
+        "risk_band": { "type": "Var Char", "max_length": 16, "mandatory": true },
+        "forecast_low": { "type": "Double", "mandatory": true },
+        "forecast_expected": { "type": "Double", "mandatory": true },
+        "forecast_high": { "type": "Double", "mandatory": true },
+        "fir_rate_per_lakh": { "type": "Double", "mandatory": true }
+      },
+      "query_filter_columns": ["district_id", "risk_band", "risk_score"]
+    },
+    "DistrictContext": {
+      "scope": "Global",
+      "source": "data/derived/state_district_outlook.csv",
+      "expected_rows": 31,
+      "columns": {
+        "district_id": { "type": "Var Char", "max_length": 8, "mandatory": true, "unique": true },
+        "district_name": { "type": "Var Char", "max_length": 64, "mandatory": true },
+        "population": { "type": "BigInt", "mandatory": true },
+        "density_per_sq_km": { "type": "Double", "mandatory": true },
+        "urban_share_pct": { "type": "Double", "mandatory": true }
+      },
+      "query_filter_columns": ["district_id", "district_name"]
+    },
     "Alerts": {
       "scope": "Org",
       "source": "runtime",

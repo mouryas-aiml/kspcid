@@ -21,6 +21,7 @@
     { "name": "kv-similar", "type": "bio", "route": "/similar", "methods": ["POST"] },
     { "name": "kv-optimize", "type": "aio", "route": "/optimize", "methods": ["POST"], "timeout_seconds": 30 },
     { "name": "kv-graph", "type": "aio", "route": "/graph", "methods": ["GET"], "timeout_seconds": 30 },
+    { "name": "kv-state", "type": "bio", "route": "/state", "methods": ["GET"] },
     { "name": "kv-cache-warm", "type": "cron", "schedule": "every 24 hours" }
   ],
   "publication_functions": [
@@ -35,7 +36,8 @@
   "build": {
     "command": "npm run cloud:functions:build",
     "output": ".staging/catalyst/functions",
-    "catalyst_json_source_after_owner_init": ".staging/catalyst/functions"
+    "catalyst_json_source_after_owner_init": ".staging/catalyst/functions",
+    "package_count": 15
   },
   "api_gateway": {
     "template": "etl/cloud/api-gateway.template.json",

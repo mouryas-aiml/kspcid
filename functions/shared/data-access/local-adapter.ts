@@ -79,6 +79,7 @@ export class LocalAdapter implements DataAdapter {
     this.#dataRoot = resolve(options.dataRoot ?? join(process.cwd(), 'data'))
     this.#objectNames = {
       'graph/graph_snapshot.json.br': 'derived/graph_snapshot.json.br',
+      'state/state_intelligence.json': 'scenarios/state_intelligence.json',
       ...options.objectNames,
     }
   }

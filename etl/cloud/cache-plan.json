@@ -12,7 +12,8 @@
   "families": {
     "station": "Top 20 station aggregates, one key per station",
     "bitsets": "Every bitset-consuming scenario (currently the audited corridor patrol scenario) gets a scenario-keyed index and 12,000-character base64 chunks",
-    "command-feed": "One index key plus one key per alert card"
+    "command-feed": "One index key plus one key per alert card",
+    "state": "Default all-crime outlook plus the five most common crime-group responses and district-detail keys"
   },
   "constraints": {
     "max_value_characters": 16000,

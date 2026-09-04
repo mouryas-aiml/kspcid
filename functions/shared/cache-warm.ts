@@ -30,6 +30,7 @@ export interface WarmCacheResult {
   readonly bitset_scenarios: number
   readonly bitset_chunks: number
   readonly feed_cards: number
+  readonly state_outlooks: number
   readonly largest_serialized_value: number
 }
 
@@ -148,6 +149,18 @@ export async function warmRuntimeCache(
     })
   })
 
+  const stateBytes = await adapter.getObject('state/state_intelligence.json')
+  const state = JSON.parse(new TextDecoder().decode(stateBytes)) as {
+    schema_version: string
+    crime_groups: string[]
+    districts: Array<{ district_id: string; name: string; fir_rate_per_lakh: number; context: { urban_share_pct: number }; outlooks: Record<string, { risk: unknown; forecast_4w: unknown } | null> }>
+  }
+  const warmGroups = state.crime_groups.slice(0, 6)
+  writes.push({ key: `state:${state.schema_version}:index`, value: { crime_groups: state.crime_groups, warm_groups: warmGroups, districts: state.districts.map((d) => ({ district_id: d.district_id, name: d.name })) } })
+  for (const group of warmGroups) {
+    writes.push({ key: `state:${state.schema_version}:risk:${group}:min:max`, value: state.districts.map((district) => ({ district_id: district.district_id, name: district.name, risk: district.outlooks[group]?.risk ?? null, forecast_4w: district.outlooks[group]?.forecast_4w ?? null, fir_rate_per_lakh: district.fir_rate_per_lakh, urban_share_pct: district.context.urban_share_pct })) })
+  }
+
   let largest = 0
   for (const write of writes) {
     const size = serializedLength(write.value)
@@ -169,6 +182,7 @@ export async function warmRuntimeCache(
     bitset_scenarios: 1,
     bitset_chunks: chunks.length,
     feed_cards: feed.alerts.length,
+    state_outlooks: warmGroups.length,
     largest_serialized_value: largest,
   }
 }

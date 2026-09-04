@@ -58,5 +58,15 @@
     "authentication": ["CatalystUserManagement"],
     "throttling": { "overall": {}, "ip": {} },
     "status": true
+  },
+  {
+    "name": "KSPCID state intelligence",
+    "source_endpoint": "/state",
+    "target": "basicio",
+    "target_id": "kv-state",
+    "method": "GET",
+    "authentication": ["CatalystUserManagement"],
+    "throttling": { "overall": {}, "ip": {} },
+    "status": true
   }
 ]

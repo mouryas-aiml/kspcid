@@ -51,6 +51,22 @@
       "bytes": 243197,
       "sha256": "539a3f3a8862c153df20a77605cd52a5764be197543209009cd0ab48d48e0bfd",
       "purpose": "Patrol Lab corridor H3 index"
+    },
+    {
+      "source": "data/scenarios/state_intelligence.json",
+      "object_key": "state/state_intelligence.json",
+      "content_type": "application/json",
+      "bytes": 301871,
+      "sha256": "4637bb63c4d033a31d97673c17c4791796deee0d37fc84fe48bd6d148deabbca",
+      "purpose": "State Intelligence versioned district outlook and weekly series"
+    },
+    {
+      "source": "reference/processed/karnataka_districts.geojson",
+      "object_key": "state/karnataka_districts.geojson",
+      "content_type": "application/geo+json",
+      "bytes": 409766,
+      "sha256": "b421715d2b3def2fcf9e7f4bfa9d8762357e7396d3c47b4dd97a13531ab61ff6",
+      "purpose": "Current 31-district Karnataka geometry"
     }
   ],
   "explicitly_local": [

@@ -60,7 +60,7 @@ interface FunctionsPlan {
 
 interface ApiGatewayRule {
   readonly source_endpoint: string
-  readonly target: 'basicio' | 'advancedio'
+  readonly target: 'basicio' | 'advancedio' | 'client'
   readonly target_id?: string
   readonly target_endpoint?: string
   readonly method: string
@@ -93,7 +93,7 @@ const apiGatewayRules = await json<readonly ApiGatewayRule[]>(
 )
 
 assert.equal(allowlist.allowlist_version, '0.2')
-assert.equal(allowlist.objects.length, 6)
+assert.equal(allowlist.objects.length, 8)
 assert.equal(allowlist.control_objects.length, 1)
 assert.equal(allowlist.control_objects[0]?.object_key, 'publication/current.json')
 assert.equal(allowlist.control_objects[0]?.writer, 'publish-marker')
@@ -133,12 +133,16 @@ assert.equal(
   functions.runtime_functions.find((item) => item.name === 'kv-optimize')?.type,
   'aio',
 )
+assert.equal(
+  functions.runtime_functions.find((item) => item.name === 'kv-state')?.type,
+  'bio',
+)
 const routes = functions.runtime_functions.flatMap((item) =>
   item.route ? [item.route] : [],
 )
 assert.equal(new Set(routes).size, routes.length)
 assert.deepEqual(
-  apiGatewayRules.map((rule) => `${rule.method} ${rule.source_endpoint}`).sort(),
+  apiGatewayRules.filter((rule) => rule.target !== 'client').map((rule) => `${rule.method} ${rule.source_endpoint}`).sort(),
   functions.runtime_functions
     .filter((item) => item.type !== 'cron')
     .flatMap((item) =>
@@ -147,7 +151,7 @@ assert.deepEqual(
     .sort(),
 )
 for (const rule of apiGatewayRules) {
-  assert.deepEqual(rule.authentication, ['CatalystUserManagement'])
+  if (rule.target !== 'client') assert.deepEqual(rule.authentication, ['CatalystUserManagement'])
   assert.deepEqual(rule.throttling, { overall: {}, ip: {} })
   if (rule.target === 'basicio') assert.ok(rule.target_id)
   if (rule.target === 'advancedio') {
