@@ -5,6 +5,7 @@ import {
   BellRing,
   BookOpenText,
   FileText,
+  Globe2,
   GitBranch,
   Map,
   Network,
@@ -17,6 +18,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 const items = [
+  { href: '/state/', label: 'State Intelligence', icon: Globe2 },
   { href: '/map/', label: 'Command Map', icon: Map },
   { href: '/feed/', label: 'Command Feed', icon: BellRing },
   { href: '/patrol/', label: 'Patrol Lab', icon: RadioTower },

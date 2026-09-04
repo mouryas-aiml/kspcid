@@ -1,6 +1,6 @@
 // Bump when same-path data artifacts change so returning clients cannot retain
 // an older manifest or scenario fixture after a new Web Client deployment.
-const CACHE_NAME = 'kspcid-catalyst-v4'
+const CACHE_NAME = 'kspcid-catalyst-v6'
 const SCOPE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '')
 
 self.addEventListener('activate', (event) => {

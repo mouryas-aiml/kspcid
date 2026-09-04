@@ -12,7 +12,7 @@
     <script>
       (function () {
         var station = location.pathname.match(/^\/app\/station\/([^/]+)(?:\/index\.html|\/)?$/)
-        var match = location.pathname.match(/^\/app\/(feed|map|similarity|network|patrol|review|justice|cyber)\/?$/)
+        var match = location.pathname.match(/^\/app\/(state|feed|map|similarity|network|patrol|review|justice|cyber)\/?$/)
         var target = station
           ? '/app/station/index.html?code=' + encodeURIComponent(station[1])
           : match
