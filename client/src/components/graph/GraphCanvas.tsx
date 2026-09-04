@@ -70,11 +70,11 @@ function GraphStage({
       // addEdgeWithKey raising takes the whole Constellation down.
       if (next.hasEdge(edge.source, edge.target)) continue
       next.addEdgeWithKey(edge.id, edge.source, edge.target, {
-        size: edge.style.width,
+        size: Math.max(0.9, edge.style.width * 1.35),
         color:
           edge.support_type === 'model_similarity'
-            ? 'rgba(56,189,248,.34)'
-            : 'rgba(167,139,250,.26)',
+            ? '#245B78'
+            : '#4B4278',
         type: 'line',
       })
     }
@@ -152,9 +152,9 @@ export default function GraphCanvas(props: GraphStageProps) {
         labelFont: 'var(--f-sans)',
         labelColor: { color: '#E2E8F0' },
         defaultNodeColor: '#38BDF8',
-        defaultEdgeColor: 'rgba(56,189,248,.22)',
+        defaultEdgeColor: '#244A61',
         zIndex: true,
-        hideEdgesOnMove: true,
+        hideEdgesOnMove: false,
         hideLabelsOnMove: true,
       }}
     >

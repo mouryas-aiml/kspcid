@@ -144,6 +144,7 @@ function ContextPanel({
   onSearch,
   visibleNodes,
   visibleEdges,
+  onSelectPerson,
 }: {
   readonly snapshot: GraphSnapshot
   readonly scenario: string
@@ -157,7 +158,12 @@ function ContextPanel({
   readonly onSearch: () => void
   readonly visibleNodes: number
   readonly visibleEdges: number
+  readonly onSelectPerson: (id: string) => void
 }) {
+  const offenderCandidates = snapshot.nodes
+    .filter((node) => node.type === 'person' && (scenario === 'all' || node.scenario_id === scenario))
+    .sort((a, b) => b.degree - a.degree || b.bridge_score - a.bridge_score)
+    .slice(0, 3)
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-2">
@@ -167,6 +173,25 @@ function ContextPanel({
         <span className="rounded-[--r-sm] border border-[--cyan-400] bg-[color-mix(in_srgb,var(--cyan-400)_8%,transparent)] px-3 py-2 text-center text-xs text-[--cyan-400]">
           Constellation
         </span>
+      </div>
+      <div>
+        <div className="flex items-center justify-between">
+          <p className="type-micro text-[--txt-3]">Repeat-offender profiles</p>
+          <span className="text-[9px] text-[--gold-400]">SELECT A PERSON</span>
+        </div>
+        <div className="mt-2 grid gap-2">
+          {offenderCandidates.map((person, index) => (
+            <button
+              key={person.id}
+              type="button"
+              className="flex items-center justify-between rounded-[--r-sm] border border-[--ink-600] bg-[--ink-800] px-3 py-2 text-left hover:border-[--gold-500]"
+              onClick={() => onSelectPerson(person.id)}
+            >
+              <span><strong className="block text-xs text-[--txt]">Candidate {index + 1}</strong><small className="text-[10px] text-[--txt-3]">{person.degree} connections · community {person.community}</small></span>
+              <span className="rounded-full bg-[color-mix(in_srgb,var(--gold-400)_12%,transparent)] px-2 py-1 font-mono text-[10px] text-[--gold-400]">OPEN</span>
+            </button>
+          ))}
+        </div>
       </div>
       <div>
         <p className="type-micro text-[--txt-3]">Scenario layer</p>
@@ -274,6 +299,8 @@ function ContextPanel({
 function GraphInspector({
   node,
   edge,
+  nodes,
+  edges,
   pathStart,
   pathEnd,
   onPathStart,
@@ -282,6 +309,8 @@ function GraphInspector({
 }: {
   readonly node: SnapshotNode | null
   readonly edge: SnapshotEdge | null
+  readonly nodes: readonly SnapshotNode[]
+  readonly edges: readonly SnapshotEdge[]
   readonly pathStart: string | null
   readonly pathEnd: string | null
   readonly onPathStart: (id: string) => void
@@ -338,6 +367,16 @@ function GraphInspector({
     source_checksum: node.provenance.source_checksum,
     generation_version: node.provenance.generation_version,
   }
+  const neighbours = node
+    ? edges.filter((item) => item.source === node.id || item.target === node.id)
+      .map((item) => nodes.find((candidate) => candidate.id === (item.source === node.id ? item.target : item.source)))
+      .filter((item): item is SnapshotNode => Boolean(item))
+    : []
+  const incidents = neighbours.filter((item) => item.type === 'incident')
+  const dates = incidents.map((item) => item.attributes.registered_on).filter((item): item is string => Boolean(item)).sort()
+  const stations = [...new Set(incidents.map((item) => item.attributes.unit_name).filter(Boolean))]
+  const groups = [...new Set(incidents.map((item) => item.attributes.crime_group).filter(Boolean))]
+  const associated = (['phone', 'vehicle', 'account'] as const).map((type) => ({ type, count: neighbours.filter((item) => item.type === type).length })).filter((item) => item.count > 0)
   return (
     <div className="space-y-4">
       <div>
@@ -358,6 +397,18 @@ function GraphInspector({
           <div><dt className="text-[--txt-3]">Geo origin</dt><dd className="mt-1 font-mono">{node.attributes.geo_origin}</dd></div>
         ) : null}
       </dl>
+      {node.type === 'person' ? (
+        <Panel title="Repeat-offender profile" eyebrow="CONNECTED PATTERN">
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            <div><p className="text-[--txt-3]">Linked incidents</p><strong className="mt-1 block font-mono text-lg text-[--gold-400]">{incidents.length}</strong></div>
+            <div><p className="text-[--txt-3]">Jurisdictions</p><strong className="mt-1 block font-mono text-lg">{stations.length}</strong></div>
+            <div className="col-span-2"><p className="text-[--txt-3]">Linked period</p><p className="mt-1 font-mono">{dates.length ? `${dates[0]} → ${dates.at(-1)}` : 'No dated incident link'}</p></div>
+            {stations.length ? <div className="col-span-2"><p className="text-[--txt-3]">Stations</p><p className="mt-1 leading-5">{stations.join(' · ')}</p></div> : null}
+            {groups.length ? <div className="col-span-2"><p className="text-[--txt-3]">Recurring crime / MO signal</p><p className="mt-1 leading-5">{groups.join(' · ')}</p></div> : null}
+          </div>
+          {associated.length ? <div className="mt-4 flex flex-wrap gap-2 border-t border-[--ink-600] pt-3">{associated.map((item)=><span className="rounded-full border border-[--ink-500] px-2 py-1 text-[10px] text-[--txt-2]" key={item.type}>{item.count} {item.type}{item.count===1?'':'s'}</span>)}</div>:null}
+        </Panel>
+      ) : null}
       <Panel title="Path finder" eyebrow="SHORTEST PATH">
         <div className="grid grid-cols-2 gap-2">
           <button type="button" className="end-secondary justify-center" onClick={() => onPathStart(node.id)}>
@@ -571,12 +622,20 @@ export function CaseConstellation() {
           onSearch={searchGraph}
           visibleNodes={scenarioNodes.length}
           visibleEdges={scenarioEdges.length}
+          onSelectPerson={(id) => {
+            setReveal(false)
+            setSelectedNodeId(id)
+            setSelectedEdgeId(null)
+            setFocusNodeId(id)
+          }}
         />
       }
       inspector={
         <GraphInspector
           node={selectedNode}
           edge={selectedEdge}
+          nodes={snapshot.nodes}
+          edges={snapshot.edges}
           pathStart={pathStart}
           pathEnd={pathEnd}
           onPathStart={setPathStart}
