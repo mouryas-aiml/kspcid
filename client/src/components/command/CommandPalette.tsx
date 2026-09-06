@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const items = [
-  { label: 'Bengaluru overview', description: 'Alerts, exceedances and station briefs', route: '/', category: 'Review', icon: Shield },
+  { label: 'Bengaluru overview', description: 'Alerts, exceedances and station briefs', route: '/overview/', category: 'Review', icon: Shield },
   { label: 'Station briefs', description: 'One printable page per station', route: '/station/', category: 'Review', icon: BookOpen },
   { label: 'Command Feed', description: 'Ranked weekly-baseline signals', route: '/feed/', category: 'Detect', icon: RadioTower },
   { label: 'Command Map', description: 'Citywide operational map', route: '/map/', category: 'Detect', icon: Map },

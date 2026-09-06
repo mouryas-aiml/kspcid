@@ -42,7 +42,7 @@ export default async function StationBriefPage({
 }) {
   const { code } = await params
   return (
-    <BriefShell backHref="/" backLabel="Overview">
+    <BriefShell backHref="/overview/" backLabel="Overview">
       <StationBrief stationCode={code} />
     </BriefShell>
   )

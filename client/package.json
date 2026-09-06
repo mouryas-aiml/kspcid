@@ -9,6 +9,8 @@
     "build": "next build",
     "sync:data": "node scripts/sync-demo-data.mjs",
     "pack:catalyst": "node scripts/pack-catalyst-assets.mjs",
+    "stage:catalyst": "node scripts/stage-catalyst-client.mjs",
+    "build:catalyst": "CATALYST_CLIENT_HOSTING=1 npm run build && npm run stage:catalyst",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck",
     "basemap": "node scripts/build-basemap.mjs"

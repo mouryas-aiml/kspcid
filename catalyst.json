@@ -1,6 +1,9 @@
 {
   "client": {
-    "source": ".catalyst-client"
+    "source": ".catalyst-client",
+    "ignore": [
+      "tiles/bengaluru.pmtiles"
+    ]
   },
   "functions": {
     "source": ".staging/catalyst/functions",

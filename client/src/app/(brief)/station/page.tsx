@@ -9,7 +9,7 @@ export const metadata = { title: 'Station briefs' }
  */
 export default function StationIndexPage() {
   return (
-    <BriefShell backHref="/" backLabel="Overview">
+    <BriefShell backHref="/overview/" backLabel="Overview">
       <StationIndex />
     </BriefShell>
   )
